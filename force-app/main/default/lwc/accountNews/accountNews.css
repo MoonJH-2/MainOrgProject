@@ -1,0 +1,58 @@
+.card-wrap {
+    display: flex;
+    flex-direction: column;
+    color: #444;
+    overflow: hidden;
+    margin: 0 1rem;
+}
+
+h1 {
+    font-size: 1.5rem;
+    color: #032D60;
+    font-weight: 600;
+    border-bottom: 3px solid #032D60;
+    margin: 1rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+.card-wrap .card {
+    border-bottom: 1px solid #ced4da;
+    padding: 1.25rem;
+    transition: 0.1s;
+    border-left: 2px solid #fff;
+}
+
+.card-wrap .card:hover {
+    background-color: #f8f9fa;
+    border-left: 2px solid #032D60;
+}
+
+.card .date {
+    font-size: 14px;
+    color: #a0a0a0;
+    margin-bottom: 0.25rem;
+}
+
+.card .title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.15s;
+}
+
+.card .text {
+    font-size: 15px;
+    margin-top: 0.5rem;
+    text-overflow: ellipsis;
+    line-height: 160%;
+    text-wrap: wrap;
+    overflow: hidden;
+    white-space: nowrap;
+    padding-right: 2rem;
+}
+
+.card .title:hover {
+    text-decoration: underline;
+}

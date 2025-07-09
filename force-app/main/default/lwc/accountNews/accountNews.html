@@ -1,0 +1,20 @@
+<!--
+  @description       : 
+  @author            : Hyowon Hong
+  @last modified on  : 07-07-2025
+  @last modified by  : Hyowon Hong
+-->
+<template>
+    <div class="total-wrap">
+        <h1>네이버 뉴스</h1>
+        <ul class="card-wrap">
+            <template for:each={cardObjects} for:item="cardObject">
+                <li key={cardObject.index}  class="card">
+                    <div class="title" data-id={cardObject.index} onclick={goToLink}>{cardObject.title}</div>
+                    <p class="text">{cardObject.description}</p>
+                    <p class="date">{cardObject.uploadDate}</p>
+                </li>
+            </template>
+        </ul>
+    </div>
+</template>

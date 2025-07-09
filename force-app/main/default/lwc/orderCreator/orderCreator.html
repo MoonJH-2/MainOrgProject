@@ -1,0 +1,53 @@
+<template>
+    <lightning-card title="새 주문 생성 (납부 계획 포함)" icon-name="standard:order">
+        <div class="slds-p-around_medium">
+            <lightning-layout>
+
+                <lightning-layout-item size="5" padding="around-small">
+                    <lightning-record-picker
+                        label="Account Name"
+                        placeholder="Search Accounts..."
+                        object-api-name="Account"
+                        onchange={handleAccountSelection}
+                        required>
+                    </lightning-record-picker>
+
+                    <lightning-input type="date" name="EffectiveDate" label="Order Start Date" onchange={handleInputChange} required></lightning-input>
+                    
+                    <lightning-input type="number" name="TotalAmount" label="Total Amount" formatter="currency" step="0.01" onchange={handleInputChange} required></lightning-input>
+                    
+                    <lightning-combobox
+                        name="Payment_Method__c"
+                        label="Payment Method"
+                        value={paymentMethod}
+                        placeholder="--Select--"
+                        options={paymentMethodOptions}
+                        onchange={handleInputChange}
+                        required>
+                    </lightning-combobox>
+                    
+                    <div class="slds-m-top_medium">
+                        <lightning-button variant="brand" label="Save Order" onclick={handleSave} disabled={isSaving}></lightning-button>
+                    </div>
+                </lightning-layout-item>
+
+                <lightning-layout-item size="7" padding="around-small">
+                    <lightning-card title="납부 계획 미리보기" icon-name="standard:event">
+                        <div class="slds-p-around_medium">
+                            <template if:true={showPreview}>
+                                <lightning-datatable
+                                    key-field="id"
+                                    data={scheduleData}
+                                    columns={scheduleColumns}>
+                                </lightning-datatable>
+                            </template>
+                            <template if:false={showPreview}>
+                                <p>주문 정보와 납부 방식을 입력하면 여기에 납부 계획이 표시됩니다.</p>
+                            </template>
+                        </div>
+                    </lightning-card>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+    </lightning-card>
+</template>

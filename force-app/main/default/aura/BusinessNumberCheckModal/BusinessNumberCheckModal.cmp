@@ -1,0 +1,102 @@
+<!--
+  @description       : 
+  @author            : Hyowon Hong
+  @last modified on  : 07-07-2025
+  @last modified by  : Hyowon Hong
+-->
+<aura:component implements="force:lightningquickactionwithoutheader,force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,force:hasSObjectName,force:lightningQuickAction,lightning:isUrlAddressable,lightning:actionOverride,lightning:hasPageReference"
+                controller="BusinessNumberCheckModalController"
+                description="사업자번호 진위 확인">
+
+    <!-- Aura Attribute -->
+    <aura:attribute name="isLoading"    type="Boolean"  default="false" />
+    <aura:attribute name="isFlag"       type="Boolean"  default="false" description="계속사업자 여부" />
+    <aura:attribute name="isAlready"    type="Boolean"  default="false" description="이미 확인된 사업자등록번호" />
+    <aura:attribute name="resBody"      type="List"     default="[]" />
+    <aura:attribute name="failResult"   type="String"   default="" />
+    <aura:attribute name="status"       type="String"   default="" />
+
+    <!-- Aura Handler -->
+    <aura:handler name="init" value="{!this}" action="{! c.doInit }" />
+
+    <!-- Aura Style -->
+    <aura:html tag="style">
+        .slds-modal__container:has(.cBusinessNumberCheckModal) {
+            width:100%;
+            max-width: 40rem;
+        }
+        .slds-modal__content:has(.cBusinessNumberCheckModal) {
+            height:auto !important;
+            max-height:none !important;
+            padding: 0;
+            overflow-y: clip;
+        }
+    </aura:html>
+
+    <div class="slds-modal__container">
+        <!-- Modal Header -->
+        <header class="slds-modal__header">
+            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">사업자번호 상태 확인</h2>
+        </header>
+        <!-- Modal Body -->
+        <div class="slds-modal__content">
+            <!-- Loading Spinner -->
+            <aura:if isTrue="{! v.isLoading}">
+                <lightning:spinner size="large" variant="brand" alternativeText="Loading" />
+            </aura:if>
+            
+            <div class="modal_body">
+                <aura:if isTrue="{! v.isAlready }">
+                    <p class="main-content">이미 사업자번호 진위 확인을 완료하였습니다.</p>
+                </aura:if>
+                <aura:if isTrue="{! v.isFlag }">
+                    <p class="main-content">국세청에 등록되어 있는 사업자등록번호입니다.</p> <br />
+                    <div class="modal_body-content">
+                        <aura:iteration items="{!v.resBody}" var="item" indexVar="index">
+                            <div class="table-wrap">
+                                <table>
+                                    <colgroup>
+                                        <col width="30%" />
+                                        <col width="70%" />
+                                    </colgroup>
+                                    <tbody>
+                                        <tr>
+                                            <th>사업자번호</th>
+                                            <td>{! item.b_no }</td>
+                                        </tr>
+                                        <tr>
+                                            <th>납세자상태(명칭)</th>
+                                            <td>{! item.b_stt }</td>
+                                        </tr>
+                                        <tr>
+                                            <th>과세유형메세지(명칭)</th>
+                                            <td>{! item.tax_type }</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </aura:iteration>
+                    </div>
+
+                    <aura:set attribute="else">
+                        <aura:if isTrue="{! v.status == '폐업자' }">
+                            <p class="main-content">{! v.failResult }</p> <br />
+                            <p class="main-content-e">폐업한 사업자번호로는 추후 주문 생성 불가 하오니, 고객의 유효한 사업자번호 확인 후 진행해주세요.</p>
+
+                            <aura:set attribute="else">
+                                <p class="main-content">{! v.failResult }</p>
+                            </aura:set>
+                        </aura:if>
+                    </aura:set>
+                </aura:if>
+            </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <footer class="slds-modal__footer">
+            <lightning:button label="닫기" class="slds-m-left_x-small" onclick="{!c.handleClickClose}" />
+            <lightning:button label="확인" variant="brand" class="slds-m-left_x-small" onclick="{!c.handleClickConfirm}" />
+        </footer>
+    </div>
+
+</aura:component>
