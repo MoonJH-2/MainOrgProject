@@ -32,14 +32,14 @@
         
 
         component.set('v.selectedResult', selectedResult);
-        component.set('v.saveSearchText', component.set('v.searchText'));
+        component.set('v.saveSearchText', component.set('v.saveSearchText'));
 
         var vfHost = window.location.protocol + '//' + window.location.hostname +
                      '/apex/SearchAddressMap?admCd=' + selectedResult.admCd +
                      '&rnMgtSn=' + selectedResult.rnMgtSn  +
                      '&udrtYn='  + selectedResult.udrtYn   +
-                     '&buldMnnm' + selectedResult.buldMnnm +
-                     '&buldSlno' + selectedResult.buldSlno;
+                     '&buldMnnm=' + selectedResult.buldMnnm +
+                     '&buldSlno=' + selectedResult.buldSlno;
         component.set('v.vfHost', vfHost);
         console.log('vfHost', vfHost);
         
@@ -47,7 +47,7 @@
         component.set('v.isLoading', false);
     },
 
-    handleTrueSearchAddress: function(component, event, helper){
+    handleResearchAddress: function(component, event, helper){
         component.set('v.isLoading', true);
         component.set('v.isSelected', false);
         if(component.get('v.saveSearchText') != '' && component.get('v.searchText') != component.get('v.saveSearchText')){
@@ -57,7 +57,7 @@
         component.set('v.isLoading', false);
     },
 
-    handleTrueEnterSearch: function(component, event, helper){
+    handleReEnterSearch: function(component, event, helper){
         if(event.keyCode ==13){
             component.set('v.isLoading', true);
             component.set('v.isSelected', false);
@@ -81,6 +81,7 @@
                 changePage = 1;
                 pageCountListIndex = 0;
             }else if(name =='previous'){
+                pageCountListIndex--;
                 if(pageCountListIndex < 0){
                     pageCountListIndex = 0;
                     changePage = pageAllCountList[pageCountListIndex][0] + 1;
@@ -119,7 +120,7 @@
         helper.apexCall(component, event, helper, 'setShippingAddress',{
             recordId    : component.get('v.recordId'),
             address     : selectedResult,
-            detailInto  : component.get('v.detailedAddress') 
+            detailInfo  : component.get('v.detailedAddress') 
         })
         .then($A.getCallback(function(result){
             let r = result.r;

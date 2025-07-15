@@ -1,0 +1,260 @@
+openapi: 3.0.1
+info:
+  title: Giro OpenAPI 납부서비스
+  description: 오픈지로 납부 연동을 위한 OpenAPI 스펙
+  version: v1
+servers:
+  - url: https://api.giro.or.kr
+    description: 본番 서버
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    InquiryRequest:
+      type: object
+      properties:
+        ptco_code:
+          type: string
+          description: 제휴사 코드
+        org_tran_id:
+          type: string
+          description: 제휴사 거래고유번호
+        cls_code:
+          type: string
+          description: 고지내역 이용기관 분류코드
+        giro_no:
+          type: string
+          description: 지로번호
+        epay_no:
+          type: string
+          description: 전자납부번호
+        pay_yymm:
+          type: string
+          description: 부과 년월 (YYYYMM)
+        noti_issu_type:
+          type: string
+          description: 고지 형태
+        etc_type_code:
+          type: string
+          description: 기타 구분 코드
+        pyr_name:
+          type: string
+          description: 예금주 성명
+        pyr_brdd:
+          type: string
+          description: 예금주 생년월일/사업자번호
+        bank_code:
+          type: string
+          description: 출금 금융기관 코드
+        acnt_no:
+          type: string
+          description: 출금 계좌 번호
+        pyr_cell_no:
+          type: string
+          description: 납부자 연락처
+        pyr_ci:
+          type: string
+          description: 납부자 CI
+      required:
+        - ptco_code
+        - org_tran_id
+        - cls_code
+        - giro_no
+        - epay_no
+        - pay_yymm
+        - noti_issu_type
+        - etc_type_code
+        - pyr_name
+        - pyr_brdd
+        - bank_code
+        - acnt_no
+        - pyr_cell_no
+    InquiryResponse:
+      type: object
+      properties:
+        rsp_code:
+          type: string
+        rsp_msg:
+          type: string
+        org_tran_id:
+          type: string
+        next_redirect_url:
+          type: string
+    InputRequest:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/InquiryRequest'
+      properties:
+        prtf_kind:
+          type: string
+          description: 장표 종류
+        cust_inqr_no:
+          type: string
+          description: 고객조회번호
+        pay_amt:
+          type: string
+          description: 납부금액
+        etc_pyr_info:
+          type: string
+          description: 기타납부자정보
+      required:
+        - prtf_kind
+    LinkRequest:
+      type: object
+      properties:
+        ptco_code:
+          type: string
+        org_tran_id:
+          type: string
+        cls_code:
+          type: string
+        giro_no:
+          type: string
+        pay_meth_type:
+          type: string
+        epay_no:
+          type: string
+        pay_yymm:
+          type: string
+        noti_issu_type:
+          type: string
+        etc_type_code:
+          type: string
+      required:
+        - ptco_code
+        - org_tran_id
+        - cls_code
+        - giro_no
+        - pay_meth_type
+        - epay_no
+    LinkResponse:
+      type: object
+      properties:
+        rsp_code:
+          type: string
+        rsp_msg:
+          type: string
+        org_tran_id:
+          type: string
+        link_pay_url:
+          type: string
+    PaymentQueryRequest:
+      type: object
+      properties:
+        ptco_code:
+          type: string
+        org_tran_id:
+          type: string
+      required:
+        - ptco_code
+        - org_tran_id
+    BillInfo:
+      type: object
+      properties:
+        cls_code: { type: string }
+        giro_no: { type: string }
+        prtf_kind: { type: string }
+        pay_meth_type: { type: string }
+        epay_no: { type: string }
+        pay_yymm_seq: { type: string }
+        noti_issu_type: { type: string }
+        etc_type_code: { type: string }
+        dudt_tm1s: { type: string }
+        dudt_in_amt: { type: string }
+        dudt_tm2s: { type: string }
+        dudt_aft_amt: { type: string }
+        cust_inqr_no: { type: string }
+        etc_pyr_info: { type: string }
+        name: { type: string }
+        org_name: { type: string }
+        deflt_strt_mm: { type: string }
+        deflt_end_mm: { type: string }
+        deflt_mm_cnt: { type: string }
+    PayInfo:
+      type: object
+      properties:
+        pay_dtm: { type: string }
+        pay_amt: { type: string }
+        pyr_brdd: { type: string }
+        pyr_name: { type: string }
+        bank_name: { type: string }
+        acnt_no_masking: { type: string }
+    PaymentQueryResponse:
+      type: object
+      properties:
+        rsp_code: { type: string }
+        rsp_msg: { type: string }
+        bill_info:
+          $ref: '#/components/schemas/BillInfo'
+        pay_info:
+          $ref: '#/components/schemas/PayInfo'
+paths:
+  /v1/payments/giro-inqr-pay-url:
+    post:
+      summary: 조회납부 URL 생성
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InquiryRequest'
+      responses:
+        '200':
+          description: 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InquiryResponse'
+  /v1/payments/giro-inpt-pay-url:
+    post:
+      summary: 입력납부 URL 생성
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InputRequest'
+      responses:
+        '200':
+          description: 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InquiryResponse'
+  /v1/payments/link-pay-url:
+    post:
+      summary: 링크납부 URL 생성
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkRequest'
+      responses:
+        '200':
+          description: 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkResponse'
+  /v1/payments:
+    get:
+      summary: 납부결과 조회
+      parameters:
+        - in: query
+          name: ptco_code
+          schema:
+            type: string
+        - in: query
+          name: org_tran_id
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentQueryResponse'

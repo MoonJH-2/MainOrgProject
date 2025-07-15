@@ -155,9 +155,9 @@
 
             <!-- Address Selected -->
             <aura:if isTrue="{! v.isSelected }">
-                <div class="input-container" onkeyup="{! c.handleTrueEnterSearch }">
+                <div class="input-container" onkeyup="{! c.handleReEnterSearch }">
                     <lightning:input type="text" class="addrInputBtn" aura:id="addressTrueInput" label="주소 검색" value="{! v.searchText }" />
-                    <lightning:button label="검색" onclick="{! c.handleTrueSearchAddress }" />
+                    <lightning:button label="검색" onclick="{! c.handleResearchAddress }" />
                 </div>
 
                 <div class="select-wrap">

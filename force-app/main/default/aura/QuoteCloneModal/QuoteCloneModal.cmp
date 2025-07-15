@@ -1,0 +1,11 @@
+<!--
+  @description       : 
+  @author            : Hyowon Hong
+  @last modified on  : 07-14-2025
+  @last modified by  : Hyowon Hong
+-->
+<aura:component implements="force:lightningquickactionwithoutheader,force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,force:hasSObjectName,force:lightningQuickAction,lightning:isUrlAddressable,lightning:actionOverride,lightning:hasPageReference"
+                controller="QuoteCloneModalController"
+                description="견적 복제">
+
+</aura:component>

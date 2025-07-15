@@ -1,0 +1,345 @@
+/* 헤더 액션 영역 */
+.header-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* 진행률 섹션 */
+.progress-section {
+    background: #f3f3f3;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.progress-container {
+    width: 100%;
+    height: 1rem;
+    background-color: #e5e5e5;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    margin: 0.5rem 0;
+}
+
+.progress-complete {
+    height: 100%;
+    background: linear-gradient(90deg, #04844b, #06c167);
+    border-radius: 0.5rem;
+    width: var(--progress-width, 0%);
+    transition: width 0.3s ease;
+}
+
+.progress-good {
+    height: 100%;
+    background: linear-gradient(90deg, #0176d3, #1ab3ff);
+    border-radius: 0.5rem;
+    width: var(--progress-width, 0%);
+    transition: width 0.3s ease;
+}
+
+.progress-low {
+    height: 100%;
+    background: linear-gradient(90deg, #fe9339, #ffb75d);
+    border-radius: 0.5rem;
+    width: var(--progress-width, 0%);
+    transition: width 0.3s ease;
+}
+
+.progress-info {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+}
+
+.completed {
+    color: #04844b;
+    font-weight: 600;
+}
+
+.overdue {
+    color: #c23934;
+    font-weight: 600;
+}
+
+/* 필터 섹션 */
+.filter-section {
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 1rem;
+}
+
+/* 가로 타임라인 컨테이너 */
+.horizontal-timeline-container {
+    position: relative;
+    padding: 2rem 1rem;
+    overflow-x: auto;
+    overflow-y: visible;
+}
+
+/* 가로 타임라인 라인 */
+.horizontal-timeline-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #0176d3, #1ab3ff);
+    border-radius: 1.5px;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+/* 타임라인 아이템들 래퍼 */
+.timeline-items-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: max-content;
+    position: relative;
+    z-index: 2;
+}
+
+/* 가로 타임라인 아이템 */
+.horizontal-timeline-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    min-width: 200px;
+}
+
+/* 가로 타임라인 마커 */
+.horizontal-timeline-marker {
+    position: relative;
+    background: white;
+    border-radius: 50%;
+    padding: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.installment-number {
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #747474;
+    margin-top: 0.25rem;
+}
+
+/* 연결선 */
+.timeline-connector {
+    position: absolute;
+    top: 50%;
+    right: -1rem;
+    width: 2rem;
+    height: 3px;
+    background: linear-gradient(90deg, #0176d3, #1ab3ff);
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+/* 가로 타임라인 콘텐츠 */
+.horizontal-timeline-content {
+    width: 100%;
+    max-width: 250px;
+}
+
+.marker-paid {
+    background: #04844b;
+    color: white;
+}
+
+.marker-unpaid {
+    background: #747474;
+    color: white;
+}
+
+.marker-overdue {
+    background: #c23934;
+    color: white;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(194, 57, 52, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(194, 57, 52, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(194, 57, 52, 0); }
+}
+
+/* 타임라인 콘텐츠 */
+.timeline-content {
+    width: 45%;
+    margin: 0 2.5%;
+}
+
+.timeline-item-left .timeline-content {
+    text-align: right;
+}
+
+.timeline-item-right .timeline-content {
+    text-align: left;
+}
+
+/* 납부 카드 스타일 수정 */
+.payment-card {
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+}
+
+.payment-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.payment-card-paid {
+    border-top: 4px solid #04844b;
+}
+
+.payment-card-unpaid {
+    border-top: 4px solid #747474;
+}
+
+.payment-card-overdue {
+    border-top: 4px solid #c23934;
+    background: #fef7f7;
+}
+
+/* 납부 헤더 - 가로 타임라인용 수정 */
+.payment-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.75rem 1rem 0.5rem 1rem;
+}
+
+.payment-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+.payment-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #0176d3;
+}
+
+/* 납부 상세 정보 - 가로 타임라인용 수정 */
+.payment-details {
+    padding: 0 1rem;
+    text-align: center;
+}
+
+.detail-item {
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.amount {
+    color: #0176d3;
+    font-size: 1.1rem;
+    font-weight: bold;
+    display: block;
+}
+
+.due-date {
+    font-size: 0.875rem;
+    color: #747474;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+/* 납부 푸터 */
+.payment-footer {
+    padding: 0.5rem 1rem 1rem 1rem;
+    text-align: center;
+}
+
+.toggle-button {
+    width: 100%;
+}
+
+/* 반응형 디자인 - 가로 타임라인용 */
+@media (max-width: 768px) {
+    .horizontal-timeline-container {
+        padding: 1rem 0.5rem;
+    }
+    
+    .timeline-items-wrapper {
+        gap: 0.5rem;
+    }
+    
+    .horizontal-timeline-item {
+        min-width: 150px;
+    }
+    
+    .horizontal-timeline-content {
+        max-width: 180px;
+    }
+    
+    .payment-title {
+        font-size: 0.875rem;
+    }
+    
+    .amount {
+        font-size: 1rem;
+    }
+    
+    .due-date {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .horizontal-timeline-item {
+        min-width: 120px;
+    }
+    
+    .horizontal-timeline-content {
+        max-width: 140px;
+    }
+    
+    .payment-header {
+        padding: 0.5rem;
+    }
+    
+    .payment-details {
+        padding: 0 0.5rem;
+    }
+    
+    .payment-footer {
+        padding: 0.5rem;
+    }
+}
+
+/* 모달 스타일 */
+.slds-modal {
+    z-index: 9999;
+}
+
+.slds-backdrop {
+    z-index: 9998;
+}
+
+/* 유틸리티 클래스 */
+.text-center {
+    text-align: center;
+}
+
+.text-success {
+    color: #04844b;
+}
+
+.text-warning {
+    color: #fe9339;
+}
+
+.text-error {
+    color: #c23934;
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Field2__c</fullName>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>회사 규모</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>1-50명</fullName>
+                <default>true</default>
+                <label>1-50명</label>
+            </value>
+            <value>
+                <fullName>51-200명</fullName>
+                <default>false</default>
+                <label>51-200명</label>
+            </value>
+            <value>
+                <fullName>201-1000명</fullName>
+                <default>false</default>
+                <label>201-1000명</label>
+            </value>
+            <value>
+                <fullName>1001명 이상</fullName>
+                <default>false</default>
+                <label>1001명 이상</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

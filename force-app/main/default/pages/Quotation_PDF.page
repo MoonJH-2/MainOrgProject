@@ -1,0 +1,397 @@
+<!--
+  @description       : 
+  @author            : Hyowon Hong
+  @last modified on  : 07-14-2025
+  @last modified by  : Hyowon Hong
+-->
+<apex:page standardController="Quote" 
+            extensions="QuotationPDFController"
+            showQuickActionVfHeader="false" 
+            sidebar="false" 
+            showHeader="false" 
+            applyHtmlTag="false" 
+            contentType="text/html;charset=UTF-8"
+            standardStylesheets="false">
+    <html>
+        <head>
+            <meta charset="UTF-8" />
+            <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic" rel="stylesheet" />
+            <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet"/>
+            <style>
+                /* Common */
+                body {
+                    font-family: Arial Unicode MS;
+                    font-size: 12px;
+                    line-height: 160%;
+                }            
+                /* Styles */
+                .preface{
+                    border-bottom: 2px solid #000;
+                    padding: 0 12px;
+                }           
+                .logo{
+                    text-align: right;  
+                    padding: 0;
+                    margin: 0;
+                    margin: 12px 0;
+                }
+                .logo img{
+                    width: 162px;
+                    height: 16px;
+                }
+
+                h1{
+                    text-align: center;
+                    margin: 32px 0;                  
+                }
+                
+                .info-wrap{
+                    padding-top: 4px;
+                }
+                .info-wrap .info-title{
+                    border-bottom: 1px solid #000;
+                    padding: 2px 0;
+                    width: 60%;
+                    margin-bottom: 48px;
+                    font-size: 16px;
+                }                   
+                .info-wrap .info-title p{
+                    margin: 8px 0;
+                    text-align: center;
+                }
+                .info-wrap ul{
+                    list-style-type: none;
+                    margin: 0;
+                    padding: 0;
+                }
+                .info-wrap ul li{
+                    margin: 4px 0;
+                    font-size: 12px;
+                }  
+
+                .info-wrap .part-02 h2{
+                    font-size: 27px;
+                    margin: 0;
+                    padding: 0;
+                }
+                .info-wrap .part-02 p{
+                    margin: 4px;
+                    padding: 8px 0;
+                }
+                .info-wrap .part-02 .image{
+                    text-align: center;
+                }
+                .info-wrap .part-02 img{
+                    width: 216px;
+                    height: 168px;
+                }
+                .info-wrap .part-02 .desc{
+                    font-size: 11px;
+                    text-align: center;
+                }
+
+                .etimated-wrap{
+                    margin: 20px 0;
+                }
+                .etimated-wrap p{
+                    color: blue;
+                    font-size: 11px;
+                    margin: 0;
+                }
+                .etimated-wrap .price{
+                    font-size: 24px;
+                    margin: 8px 48px;
+                }
+                .etimated-wrap .price::after{
+                    content: '원';
+                    font-size: 13px;
+                    margin: 8px;
+                }
+
+                /* Table  */
+
+                table{
+                    width: 100%;
+                    border-spacing: 0;
+                }
+
+                .table-wrap{
+                    border-bottom: 1px solid #000;
+                    margin: 8px 0;
+                }       
+
+                .table-wrap table th{
+                    text-align: right;
+                    border-bottom: 2px solid #000;
+                    padding: 12px;
+                }    
+
+                .table-wrap table .pricing td{
+                    padding: 8px 12px;
+                    font-size: 13px;
+                }
+
+                .table-wrap table .subtotal td{
+                    border-bottom: 1px solid #000;
+                    border-top: 1px dashed #000;
+                    padding: 20px 12px;
+                    font-size: 13px;
+                }  
+                .table-wrap table td.product-code p {
+                    margin: 0;
+                    padding: 0;
+                }
+                .table-wrap table td.product-code .product {
+                    font-size: 11px;
+                }
+                .tfoot{
+                    margin: 16px 0;
+                }
+                .tfoot table th{
+                    font-size: 14px;
+                }        
+                .tfoot .filled{
+                    background-color: #d9e1f2;
+                }
+
+                /* Text Align */
+
+                .center {text-align: center !important;}
+                .right {text-align: right !important;}
+                .left {text-align: left !important;}
+
+                /* Notice */
+
+                .notice-wrap{
+                    margin: 24px 0;
+                }
+                .notice-wrap ul{
+                    list-style-type: none;
+                    padding: 0;
+                    margin: 0;
+                }
+                .notice-wrap ul h3{
+                    font-size: 20px;
+                }
+                .notice-wrap ul li{
+                    margin-left: 16px;
+                    position: relative;
+                }
+                .notice-wrap ul li::before{
+                    content: '-';
+                    padding: 0 4px;
+                    position: absolute;
+                    left: -10px;
+                    top: 3px;
+                }
+
+                /* Footer */
+                footer{
+                    padding: 12px;
+                }
+                footer ul{
+                    list-style-type: none;
+                    padding: 0;
+                    margin: 0;
+                }
+                footer .part-01{
+                    border-right: 1px solid #000;
+                }
+                footer .part-01 .logo{
+                    width: 160px;
+                    height: 16px;
+                }
+                footer .part-01 p{
+                    font-size: 16px;
+                }
+                footer .part-01 .image img{
+                    width: 53px;
+                    height: 57px;
+                }   
+                footer .part-02 ul{
+                    margin-top: 
+                }             
+                footer .clearfix{
+                    width: 1px;
+                    background-color: #000;
+                }
+
+                /* Custom Grid System */
+                .clearfix {
+                    clear: both;
+                }
+                .row {
+                    display: block;
+                }
+                .col-left {
+                    float: left;
+                } 
+                .col-right {
+                    float: right;
+                }             
+                .size-1-of-2 {
+                    width: 48%;
+                }      
+                /* 페이지 구분을 위한 점선 */
+                .page-break-line {
+                    border-top: 1px dashed #000;
+                    margin: 20px 0;
+                    display: none;
+                }
+                
+                /* 화면에서만 점선 표시 */
+                @media screen {
+                    .page-break-line {
+                        display: block;
+                    }
+                }
+
+                /* PDF에서는 점선 숨김 */
+                @media print {
+                    .page-break-line {
+                        display: none;
+                    }
+                }
+                @page {
+                    @bottom-center {
+                        content: "Page " counter(page) " of " counter(pages);
+                    }
+                }
+                
+            </style>
+        </head>
+        <body>
+            <!-- Header -->
+            <div class="preface row">
+                <p class="size-1-of-2 col-left">견적번호 : {!result['QuoteNumber']} </p>
+                <div class='clearfix'></div>
+            </div>
+
+            <!-- Title -->
+            <h1>견   적   서</h1>
+
+            <!-- Info -->
+            <div class="info-wrap">
+                <div class="part-01 size-1-of-2 col-left">
+                    <div class="info-title row">
+                        <p class="size-1-of-2 col-left">{!result['AccountName']}</p>
+                        <p class="size-1-of-2 col-right">貴中</p>
+                        <p class="clearfix"></p>
+                    </div>
+                    <ul>
+                        <li>납기 예상일 : {!result['ExpDate']}</li>
+                        <li>견적 작성 일 : {!result['CreatedDate']}</li>
+                        <li>견적 유효 기간 : 제출 일+1개월</li>
+                    </ul>
+                </div>
+
+                <div class="part-02 size-1-of-2 col-right">
+                    <h2>{!result['ModelName']}</h2>
+                    <p>{!result['ModelDescription']}</p>
+                    <p class="desc">* 상기 이미지는 데모용입니다.</p>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
+            <!-- Estimated Price -->
+            <div class="etimated-wrap">
+                <p>예상 견적 가격 (VAT 별도)</p>
+                <div class="price">{!result['AllExtPrice']}</div>
+            </div>
+
+            <!-- Table -->
+            <div class="table-wrap">
+                <colgroup>
+                    <col width="8%" />
+                    <col width="20%" />
+                    <col width="35%" />
+                    <col width="5%" />
+                    <col width="14%" />
+                    <col width="14%" />
+                </colgroup>
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="3" class="left">제품 선택 사항</th>
+                            <th>수량</th>
+                            <th>단가</th>
+                            <th>금액</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr class="pricing">
+                            <td>Model</td>
+                            <td class="product-code">
+                                <p class="model">{!result['ModelName']}</p>
+                                <p class="product">{!result['ProductCode']}</p>
+                            </td>
+                            <td>{!result['RDD']}</td>
+                            <td class="right">{!result['Quantity']}</td>
+                            <td class="right">{!result['TotalPrice']}</td>
+                            <td class="right">{!result['PrdAllPrice']}</td>
+                        </tr>
+                        <tr class="subtotal">
+                            <td colspan="2"></td>
+                            <td class="center">소 계</td>
+                            <td class="right"></td>
+                            <td class="right"></td>
+                            <td class="right">{!result['PrdAllPrice']}</td>
+                        </tr>
+                    
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tfoot">
+                <table>
+                    <colgroup>
+                        <col width="8%" />
+                        <col width="20%" />
+                        <col width="35%" />
+                        <col width="5%" />
+                        <col width="14%" />
+                        <col width="14%" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th> </th>
+                            <th> </th>
+                            <th class="right filled">총 예상 구입가 (VAT 별도)</th>
+                            <th colspan="3" class="right filled">{!result['AllExtPrice']}</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <div class="notice-wrap">
+                <h3>알립니다.</h3>
+                <ul>
+                    <li>본 견적서는 데모용입니다.</li>
+                    <li>최종 계약 시, 내용을 확인하세요.</li>
+                </ul>
+            </div>
+
+            <footer class="row">
+                <div class="part-01 size-1-of-2 col-left">
+                    <ul>
+                        <li>경남 창원시 성산구 정동로 162번길 40</li>
+                        <li>대표번호 : 055-280-4114</li>
+                    </ul>
+                    <div class="signature row">
+                        <p class="size-1-of-2 col-left">대표이사 김 원 종</p>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="part-02 size-1-of-2 col-right">
+                    <p></p>
+                    <ul>
+                        <li>{!result['quotesalesoffice']}</li>
+                        <li>{!result['mainphone']}</li>
+                    </ul>
+                </div> 
+                <div class="clearfix"></div>
+            </footer>
+        </body>
+    </html>
+</apex:page>

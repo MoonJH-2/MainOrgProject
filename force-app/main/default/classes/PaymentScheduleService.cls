@@ -1,3 +1,9 @@
+/**
+ * @description       : 
+ * @author            : JH Moon
+ * @last modified on  : 07-14-2025
+ * @last modified by  : JH Moon
+**/
 public with sharing class PaymentScheduleService {
     
     public PaymentScheduleService() {
@@ -44,6 +50,7 @@ public with sharing class PaymentScheduleService {
                 newSchedule.Amount__c = installmentAmount;
                 newSchedule.InstallmentNumber__c = i;
                 newSchedule.Status__c = '미납';
+                newSchedule.PaidDate__c = null; // 초기에는 납부일자 없음
                 if (ord.EffectiveDate != null) {
                    newSchedule.DueDate__c = ord.EffectiveDate.addMonths((i - 1) * monthIncrement);
                 }

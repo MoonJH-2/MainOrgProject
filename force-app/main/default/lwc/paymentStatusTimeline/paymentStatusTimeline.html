@@ -1,0 +1,115 @@
+<template>
+    <lightning-card title="납부 일정 타임라인" icon-name="standard:forecasts">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="로딩 중..." size="medium"></lightning-spinner>
+        </template>
+        
+        <!-- 헤더 영역 -->
+        <div slot="actions" class="header-actions">
+            <lightning-button 
+                label="PDF 다운로드" 
+                icon-name="utility:download"
+                onclick={handleDownloadPDF}
+                disabled={isLoading}>
+            </lightning-button>
+        </div>
+
+        <div class="slds-card__body slds-card__body_inner">
+            <!-- 진행률 표시 -->
+            <template if:true={timelineData}>
+                <div class="progress-section">
+                    <h3 class="slds-text-heading_small slds-m-bottom_small">
+                        납부 진행률: {timelineData.progressPercentage}%
+                        ({timelineData.completedInstallments}/{timelineData.totalInstallments})
+                    </h3>
+                    <div class="progress-container">
+                        <div class={progressBarClass}>
+                        </div>
+                    </div>
+                    <div class="progress-info">
+                        <span class="completed">완납: {timelineData.completedInstallments}건</span>
+                        <span class="overdue">연체: {timelineData.overdueInstallments}건</span>
+                    </div>
+                </div>
+            </template>
+
+            <!-- 필터 영역 -->
+            <div class="filter-section slds-m-vertical_medium">
+                <lightning-radio-group 
+                    name="statusFilter"
+                    label="상태 필터"
+                    options={filterOptions}
+                    value={filterStatus}
+                    onchange={handleFilterChange}
+                    type="button">
+                </lightning-radio-group>
+            </div>
+
+            <!-- 가로 타임라인 영역 -->
+            <div class="horizontal-timeline-container">
+                <div class="horizontal-timeline-line"></div>
+                <div class="timeline-items-wrapper">
+                    <template for:each={filteredPayments} for:item="payment">
+                        <div key={payment.Id} class="horizontal-timeline-item">
+                            <!-- 타임라인 마커 -->
+                            <div class="horizontal-timeline-marker">
+                                <lightning-icon 
+                                    icon-name="utility:money" 
+                                    size="x-small"
+                                    class={payment.markerClass}>
+                                </lightning-icon>
+                                <!-- <div class="installment-number">{payment.InstallmentNumber__c}</div> -->
+                            </div>
+                            
+                            <!-- 연결선 -->
+                            <template if:false={payment.isLast}>
+                                <div class="timeline-connector"></div>
+                            </template>
+                            
+                            <!-- 납부 카드 (마커 위에 표시) -->
+                            <div class="horizontal-timeline-content">
+                                <lightning-card class={payment.cardClass}>
+                                    <div class="payment-header">
+                                        <div class="payment-info">
+                                            <h4 class="payment-title">
+                                                {payment.InstallmentNumber__c}차
+                                            </h4>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="payment-details">
+                                        <div class="detail-item">
+                                            <span class="amount">{payment.formattedAmount}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="due-date">{payment.formattedDueDate}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <lightning-badge 
+                                                label={payment.statusLabel}
+                                                variant={payment.statusVariant}>
+                                            </lightning-badge>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="payment-footer">
+                                        <lightning-button 
+                                            label={payment.toggleButtonLabel}
+                                            variant={payment.toggleButtonVariant}
+                                            size="small"
+                                            data-id={payment.Id}
+                                            data-status={payment.Status__c}
+                                            onclick={handleStatusToggle}
+                                            disabled={isLoading}
+                                            class="toggle-button">
+                                        </lightning-button>
+                                    </div>
+                                </lightning-card>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </lightning-card>
+</template>

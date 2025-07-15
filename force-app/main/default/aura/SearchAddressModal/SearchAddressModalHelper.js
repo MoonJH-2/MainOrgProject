@@ -60,13 +60,11 @@
             if (r.isSuccess) {
                 // 검색 성공 시 결과 저장
                 component.set('v.searchResults', r.resultMap.jusoList);
-                // 전체 결과 수가 변경되었으면 페이지네이션 재계산
+                // 전체 결과 수가 변경되면 페이지네이션 재계산
                 if (component.get('v.allResultCount') != r.resultMap.totalResultCount) {
                     component.set('v.allResultCount', r.resultMap.totalResultCount);
                     helper.calcPaging(component, event, helper);
                 }
-            
-                // 로딩 상태 해제
                 component.set('v.isLoading', false);
             }
         }))
