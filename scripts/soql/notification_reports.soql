@@ -1,0 +1,35 @@
+// 리포트용 SOQL 쿼리들 - Reports & Dashboards에서 사용 가능
+
+-- 1. 알림 발송 현황 (일별)
+SELECT NotificationType__c, NotificationChannel__c, 
+       COUNT(Id) notification_count,
+       DAY_ONLY(CreatedDate) created_date
+FROM Payment_Notification__c 
+WHERE CreatedDate = LAST_N_DAYS:30
+GROUP BY NotificationType__c, NotificationChannel__c, DAY_ONLY(CreatedDate)
+ORDER BY created_date DESC
+
+-- 2. 발송 성공/실패 현황
+SELECT NotificationStatus__c, 
+       COUNT(Id) total_count
+FROM Payment_Notification__c 
+WHERE CreatedDate = LAST_N_DAYS:7
+GROUP BY NotificationStatus__c
+
+-- 3. 연체 알림 현황 (고객별)
+SELECT PaymentStatus__r.Order__r.Account.Name account_name,
+       COUNT(Id) overdue_notifications
+FROM Payment_Notification__c 
+WHERE NotificationType__c = '연체 알림'
+AND CreatedDate = LAST_N_DAYS:30
+GROUP BY PaymentStatus__r.Order__r.Account.Name
+ORDER BY overdue_notifications DESC
+
+-- 4. 채널별 성공률
+SELECT NotificationChannel__c,
+       COUNT(Id) total_sent,
+       SUM(CASE WHEN NotificationStatus__c = 'Sent' THEN 1 ELSE 0 END) successful_sent
+FROM Payment_Notification__c 
+WHERE SentDateTime__c != null
+AND CreatedDate = LAST_N_DAYS:30
+GROUP BY NotificationChannel__c

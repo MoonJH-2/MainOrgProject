@@ -1,0 +1,156 @@
+<template>
+    <lightning-card title="납부 알림 시스템 대시보드" icon-name="standard:dashboard">
+        
+        <!-- 로딩 스피너 -->
+        <div if:true={isLoading} class="slds-align_absolute-center slds-p-around_large">
+            <lightning-spinner alternative-text="로딩 중..." size="medium"></lightning-spinner>
+        </div>
+
+        <!-- 대시보드 컨텐츠 -->
+        <div if:true={stats} class="slds-p-around_medium">
+            
+            <!-- 컨트롤 패널 -->
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_large">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-combobox
+                        name="timeFrame"
+                        label="기간 선택"
+                        value={selectedTimeFrame}
+                        placeholder="기간을 선택하세요"
+                        options={timeFrameOptions}
+                        onchange={handleTimeFrameChange}>
+                    </lightning-combobox>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-text-align_right">
+                    <lightning-button 
+                        label="새로고침" 
+                        icon-name="utility:refresh" 
+                        onclick={handleRefresh}
+                        variant="brand">
+                    </lightning-button>
+                </div>
+            </div>
+
+            <!-- 통계 요약 -->
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_large">
+                
+                <!-- 총 알림 수 -->
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-5">
+                    <div class="slds-box slds-text-align_center stat-box">
+                        <div class="stat-number slds-text-heading_large">
+                            {stats.totalNotifications}
+                        </div>
+                        <div class="stat-label">총 알림</div>
+                    </div>
+                </div>
+
+                <!-- 발송 성공 -->
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-5">
+                    <div class="slds-box slds-text-align_center stat-box success">
+                        <div class="stat-number slds-text-heading_large slds-text-color_success">
+                            {stats.sentNotifications}
+                        </div>
+                        <div class="stat-label">발송 성공</div>
+                    </div>
+                </div>
+
+                <!-- 발송 실패 -->
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-5">
+                    <div class="slds-box slds-text-align_center stat-box error">
+                        <div class="stat-number slds-text-heading_large slds-text-color_error">
+                            {stats.failedNotifications}
+                        </div>
+                        <div class="stat-label">발송 실패</div>
+                    </div>
+                </div>
+
+                <!-- 대기 중 -->
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-5">
+                    <div class="slds-box slds-text-align_center stat-box warning">
+                        <div class="stat-number slds-text-heading_large slds-text-color_warning">
+                            {stats.pendingNotifications}
+                        </div>
+                        <div class="stat-label">대기 중</div>
+                    </div>
+                </div>
+
+                <!-- 성공률 -->
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-5">
+                    <div class="slds-box slds-text-align_center stat-box">
+                        <div class="stat-number slds-text-heading_large">
+                            {successRate}%
+                        </div>
+                        <div class="stat-label">성공률</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 채널별 통계 테이블 -->
+            <template if:true={stats.channelStats}>
+                <lightning-card title="채널별 발송 현황" icon-name="standard:multi_picklist" class="slds-m-bottom_large">
+                    <div class="slds-p-around_medium">
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="채널">채널</div>
+                                    </th>
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="발송 수">발송 수</div>
+                                    </th>
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="비율">비율</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={stats.channelStats} for:item="channel">
+                                    <tr key={channel.name} class="slds-hint-parent">
+                                        <th scope="row">
+                                            <div class="slds-truncate" title={channel.name}>
+                                                <lightning-icon icon-name={channel.icon} size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                                                {channel.name}
+                                            </div>
+                                        </th>
+                                        <td>
+                                            <div class="slds-truncate" title={channel.count}>{channel.count}</div>
+                                        </td>
+                                        <td>
+                                            <div class="slds-truncate" title={channel.percentage}>
+                                                <div class="progress-bar">
+                                                    <div class="progress-fill" data-width={channel.percentage}></div>
+                                                </div>
+                                                {channel.percentage}%
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </lightning-card>
+            </template>
+
+            <!-- 최근 알림 목록 -->
+            <lightning-card title="최근 알림 내역" icon-name="standard:list_email">
+                <div class="slds-p-around_medium">
+                    <template if:true={notifications}>
+                        <lightning-datatable
+                            data={notifications}
+                            columns={notificationColumns}
+                            key-field="id"
+                            hide-checkbox-column="true">
+                        </lightning-datatable>
+                    </template>
+                    <template if:false={notifications}>
+                        <div class="slds-text-align_center slds-p-around_large">
+                            <p class="slds-text-body_regular">최근 알림이 없습니다.</p>
+                        </div>
+                    </template>
+                </div>
+            </lightning-card>
+
+        </div>
+    </lightning-card>
+</template>

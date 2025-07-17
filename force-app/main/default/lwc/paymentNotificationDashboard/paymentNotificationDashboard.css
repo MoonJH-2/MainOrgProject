@@ -1,0 +1,189 @@
+.stat-card {
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.stat-number {
+    font-weight: bold;
+    color: #1589EE;
+}
+
+.stat-card.success .stat-number {
+    color: #4CAF50;
+}
+
+.stat-card.error .stat-number {
+    color: #F44336;
+}
+
+.stat-card.warning .stat-number {
+    color: #FF9800;
+}
+
+.stat-label {
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+}
+
+.chart-container {
+    height: 300px;
+    position: relative;
+}
+
+.notification-table {
+    margin-top: 16px;
+}
+
+.notification-row {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 8px 0;
+}
+
+.notification-row:last-child {
+    border-bottom: none;
+}
+
+.status-badge {
+    border-radius: 12px;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.status-sent {
+    background-color: #E8F5E8;
+    color: #2E7D32;
+}
+
+.status-failed {
+    background-color: #FFEBEE;
+    color: #C62828;
+}
+
+.status-pending {
+    background-color: #FFF3E0;
+    color: #EF6C00;
+}
+
+.status-cancelled {
+    background-color: #F5F5F5;
+    color: #616161;
+}
+
+.type-badge {
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.type-overdue {
+    background-color: #FFCDD2;
+    color: #C62828;
+}
+
+.type-upcoming {
+    background-color: #FFE0B2;
+    color: #E65100;
+}
+
+.channel-icon {
+    margin-right: 4px;
+}
+
+.success-rate-high {
+    color: #4CAF50;
+}
+
+.success-rate-medium {
+    color: #FF9800;
+}
+
+.success-rate-low {
+    color: #F44336;
+}
+
+.dashboard-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 8px 8px 0 0;
+}
+
+.dashboard-header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 300;
+}
+
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+}
+
+.metric-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.metric-value {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.metric-label {
+    font-size: 14px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.chart-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.chart-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chart-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .metric-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .chart-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-card {
+        margin-bottom: 12px;
+    }
+}

@@ -1,0 +1,192 @@
+<template>
+    <lightning-card title="납부 알림 시스템 대시보드" icon-name="standard:dashboard">
+        <!-- 로딩 스피너 -->
+        <div if:true={isLoading} class="slds-align_absolute-center slds-p-around_large">
+            <lightning-spinner alternative-text="로딩 중..." size="medium"></lightning-spinner>
+        </div>
+
+        <!-- 오류 메시지 -->
+        <div if:true={error} class="slds-p-around_medium">
+            <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                <span class="slds-assistive-text">error</span>
+                <span class="slds-icon_container slds-icon-utility-error slds-m-right_x-small" title="error">
+                    <lightning-icon icon-name="utility:error" alternative-text="error" size="x-small" variant="inverse"></lightning-icon>
+                </span>
+                <h2>데이터를 불러오는 중 오류가 발생했습니다.</h2>
+            </div>
+        </div>
+
+        <!-- 대시보드 컨텐츠 -->
+        <div if:true={dashboardData} class="slds-p-around_medium">
+            
+            <!-- 상단 액션 버튼 -->
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_large">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-button 
+                        label="새로고침" 
+                        icon-name="utility:refresh" 
+                        onclick={handleRefresh}
+                        variant="brand">
+                    </lightning-button>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-text-align_right">
+                    <lightning-button 
+                        label="배치 실행" 
+                        icon-name="utility:apex" 
+                        onclick={handleExecuteBatch}
+                        variant="success">
+                    </lightning-button>
+                </div>
+            </div>
+
+            <!-- 통계 카드 그리드 -->
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_large">
+                <!-- 오늘 총 알림 -->
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-4">
+                    <lightning-card class="stat-card">
+                        <div class="slds-text-align_center slds-p-around_medium">
+                            <div class="stat-number slds-text-heading_large">
+                                {dashboardData.todayTotal}
+                            </div>
+                            <div class="stat-label slds-text-body_small">오늘 총 알림</div>
+                        </div>
+                    </lightning-card>
+                </div>
+
+                <!-- 성공 알림 -->
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-4">
+                    <lightning-card class="stat-card success">
+                        <div class="slds-text-align_center slds-p-around_medium">
+                            <div class="stat-number slds-text-heading_large slds-text-color_success">
+                                {dashboardData.todaySuccess}
+                            </div>
+                            <div class="stat-label slds-text-body_small">발송 성공</div>
+                        </div>
+                    </lightning-card>
+                </div>
+
+                <!-- 실패 알림 -->
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-4">
+                    <lightning-card class="stat-card error">
+                        <div class="slds-text-align_center slds-p-around_medium">
+                            <div class="stat-number slds-text-heading_large slds-text-color_error">
+                                {dashboardData.todayFailed}
+                            </div>
+                            <div class="stat-label slds-text-body_small">발송 실패</div>
+                        </div>
+                    </lightning-card>
+                </div>
+
+                <!-- 성공률 -->
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-4">
+                    <lightning-card class="stat-card">
+                        <div class="slds-text-align_center slds-p-around_medium">
+                            <div class="stat-number slds-text-heading_large" 
+                                 data-success-rate={dashboardData.successRate}>
+                                {dashboardData.successRate}%
+                            </div>
+                            <div class="stat-label slds-text-body_small">성공률</div>
+                        </div>
+                    </lightning-card>
+                </div>
+            </div>
+
+            <!-- 차트 섹션 -->
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_large">
+                <!-- 채널별 통계 차트 -->
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-card title="채널별 발송 현황" icon-name="standard:multi_picklist">
+                        <div class="slds-p-around_medium">
+                            <template if:true={channelChartData}>
+                                <c-simple-chart 
+                                    chart-title="채널별 통계"
+                                    chart-data={channelChartData}>
+                                </c-simple-chart>
+                            </template>
+                            <template if:false={channelChartData}>
+                                <div class="slds-text-align_center slds-p-around_large">
+                                    <p class="slds-text-body_regular">데이터가 없습니다.</p>
+                                </div>
+                            </template>
+                        </div>
+                    </lightning-card>
+                </div>
+
+                <!-- 유형별 통계 차트 -->
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-card title="알림 유형별 현황" icon-name="standard:topic">
+                        <div class="slds-p-around_medium">
+                            <template if:true={typeChartData}>
+                                <c-simple-chart 
+                                    chart-title="유형별 통계"
+                                    chart-data={typeChartData}>
+                                </c-simple-chart>
+                            </template>
+                            <template if:false={typeChartData}>
+                                <div class="slds-text-align_center slds-p-around_large">
+                                    <p class="slds-text-body_regular">데이터가 없습니다.</p>
+                                </div>
+                            </template>
+                        </div>
+                    </lightning-card>
+                </div>
+            </div>
+
+            <!-- 스케줄러 상태 -->
+            <template if:true={schedulerStatus}>
+                <lightning-card title="스케줄러 상태" icon-name="standard:clock" class="slds-m-bottom_large">
+                    <div class="slds-p-around_medium">
+                        <template for:each={schedulerStatus} for:item="scheduler">
+                            <div key={scheduler.name} class="slds-grid slds-gutters slds-wrap slds-border_bottom slds-p-vertical_small">
+                                <div class="slds-col slds-size_1-of-4">
+                                    <strong>{scheduler.name}</strong>
+                                </div>
+                                <div class="slds-col slds-size_1-of-4">
+                                    <template if:true={scheduler.state}>
+                                        <lightning-badge label={scheduler.state} 
+                                                       variant="success">
+                                        </lightning-badge>
+                                    </template>
+                                </div>
+                                <div class="slds-col slds-size_1-of-4">
+                                    <lightning-formatted-date-time 
+                                        value={scheduler.nextFireTime}
+                                        year="numeric" month="short" day="2-digit"
+                                        hour="2-digit" minute="2-digit">
+                                    </lightning-formatted-date-time>
+                                </div>
+                                <div class="slds-col slds-size_1-of-4">
+                                    <lightning-formatted-date-time 
+                                        value={scheduler.previousFireTime}
+                                        year="numeric" month="short" day="2-digit"
+                                        hour="2-digit" minute="2-digit">
+                                    </lightning-formatted-date-time>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </lightning-card>
+            </template>
+
+            <!-- 최근 알림 목록 -->
+            <lightning-card title="최근 알림 내역" icon-name="standard:list_email">
+                <div class="slds-p-around_medium">
+                    <template if:true={recentNotifications}>
+                        <lightning-datatable
+                            data={recentNotifications}
+                            columns={notificationColumns}
+                            key-field="id"
+                            hide-checkbox-column="true">
+                        </lightning-datatable>
+                    </template>
+                    <template if:false={recentNotifications}>
+                        <div class="slds-text-align_center slds-p-around_large">
+                            <p class="slds-text-body_regular">최근 알림이 없습니다.</p>
+                        </div>
+                    </template>
+                </div>
+            </lightning-card>
+
+        </div>
+    </lightning-card>
+</template>

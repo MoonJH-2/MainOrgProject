@@ -1,0 +1,76 @@
+.stat-box {
+    border-radius: 8px;
+    padding: 16px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.stat-box:hover {
+    transform: translateY(-2px);
+}
+
+.stat-number {
+    font-weight: bold;
+    color: #1589EE;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    color: #666;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-box.success {
+    border-left: 4px solid #4CAF50;
+}
+
+.stat-box.error {
+    border-left: 4px solid #F44336;
+}
+
+.stat-box.warning {
+    border-left: 4px solid #FF9800;
+}
+
+.progress-bar {
+    width: 100px;
+    height: 8px;
+    background-color: #f3f3f3;
+    border-radius: 4px;
+    overflow: hidden;
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #1589EE;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-fill[data-width="100"] { width: 100%; }
+.progress-fill[data-width^="9"] { width: 90%; }
+.progress-fill[data-width^="8"] { width: 80%; }
+.progress-fill[data-width^="7"] { width: 70%; }
+.progress-fill[data-width^="6"] { width: 60%; }
+.progress-fill[data-width^="5"] { width: 50%; }
+.progress-fill[data-width^="4"] { width: 40%; }
+.progress-fill[data-width^="3"] { width: 30%; }
+.progress-fill[data-width^="2"] { width: 20%; }
+.progress-fill[data-width^="1"] { width: 10%; }
+
+@media (max-width: 768px) {
+    .slds-grid.slds-gutters .slds-col {
+        margin-bottom: 12px;
+    }
+    
+    .stat-box {
+        padding: 12px;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+}

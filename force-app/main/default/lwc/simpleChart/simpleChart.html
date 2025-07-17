@@ -1,0 +1,29 @@
+<template>
+    <div class="chart-container">
+        <template if:true={hasData}>
+            <div class="chart-title" if:true={chartTitle}>{chartTitle}</div>
+            
+            <!-- 간단한 막대 차트 -->
+            <div class="simple-chart">
+                <template for:each={chartItems} for:item="item">
+                    <div key={item.label} class="chart-bar">
+                        <div class="bar-label">{item.label}</div>
+                        <div class="bar-container">
+                            <div class="bar-fill" 
+                                 data-percentage={item.percentage}
+                                 data-color={item.color}>
+                            </div>
+                        </div>
+                        <div class="bar-value">{item.value} ({item.percentage}%)</div>
+                    </div>
+                </template>
+            </div>
+        </template>
+        
+        <template if:false={hasData}>
+            <div class="no-data">
+                <p>표시할 데이터가 없습니다.</p>
+            </div>
+        </template>
+    </div>
+</template>
