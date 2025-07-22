@@ -74,6 +74,7 @@ public with sharing class PaymentNotificationDashboardController {
         
         // 채널별 통계 설정
         stats.salesforceCount = 0;
+        stats.salesforceChannelCount = 0;
         stats.emailCount = 0;
         stats.slackCount = 0;
         
@@ -84,6 +85,9 @@ public with sharing class PaymentNotificationDashboardController {
             switch on channel {
                 when 'Salesforce' {
                     stats.salesforceCount = count;
+                }
+                when 'SalesforceChannel' {
+                    stats.salesforceChannelCount = count;
                 }
                 when 'Email' {
                     stats.emailCount = count;
@@ -284,6 +288,7 @@ public with sharing class PaymentNotificationDashboardController {
         
         Map<String, String> channelColors = new Map<String, String>{
             'Salesforce' => '#1589EE',
+            'SalesforceChannel' => '#00D924',
             'Email' => '#FF6B6B',
             'Slack' => '#4ECDC4'
         };
@@ -405,6 +410,7 @@ public with sharing class PaymentNotificationDashboardController {
         @AuraEnabled public Integer pendingNotifications;
         @AuraEnabled public Decimal successRate;
         @AuraEnabled public Integer salesforceCount;
+        @AuraEnabled public Integer salesforceChannelCount;
         @AuraEnabled public Integer emailCount;
         @AuraEnabled public Integer slackCount;
         @AuraEnabled public Integer reminderCount;

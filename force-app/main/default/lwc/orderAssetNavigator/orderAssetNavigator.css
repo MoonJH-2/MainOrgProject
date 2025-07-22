@@ -1,0 +1,191 @@
+/* Order Asset Navigator 컴포넌트 스타일 */
+
+.payment-progress-section {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+/* 진행률 바 스타일 */
+.progress-complete .slds-progress-bar__value {
+    background-color: #04844b;
+}
+
+.progress-good .slds-progress-bar__value {
+    background-color: #0176d3;
+}
+
+.progress-medium .slds-progress-bar__value {
+    background-color: #fe9339;
+}
+
+.progress-low .slds-progress-bar__value {
+    background-color: #c23934;
+}
+
+/* 통계 박스 스타일 */
+.stat-box {
+    text-align: center;
+    padding: 0.5rem;
+    background-color: #f3f3f3;
+    border-radius: 0.25rem;
+}
+
+.stat-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #0176d3;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #706e6b;
+    margin-top: 0.25rem;
+}
+
+/* 상태 메시지 스타일 */
+.status-message {
+    background-color: #f8f9fa;
+    border-left: 4px solid #0176d3;
+    padding: 1rem;
+    border-radius: 0.25rem;
+}
+
+.status-text {
+    font-weight: 500;
+}
+
+/* Asset 카드 스타일 */
+.asset-card {
+    border: 2px solid #0176d3;
+    border-radius: 0.5rem;
+}
+
+.asset-header {
+    background-color: #f8f9fa;
+}
+
+.asset-info h4 {
+    color: #0176d3;
+    margin-bottom: 0.25rem;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.detail-label {
+    font-weight: 500;
+    color: #706e6b;
+}
+
+.detail-value {
+    color: #080707;
+}
+
+.asset-description {
+    background-color: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 0.25rem;
+    padding: 0.75rem;
+}
+
+.asset-actions {
+    padding: 1rem;
+    background-color: #f8f9fa;
+}
+
+/* Asset 생성 카드 스타일 */
+.create-asset-card {
+    border: 2px dashed #0176d3;
+    border-radius: 0.5rem;
+}
+
+.create-icon {
+    color: #0176d3;
+}
+
+.create-button {
+    min-width: 150px;
+}
+
+/* 대기 중 카드 스타일 */
+.pending-card {
+    border: 2px dashed #fe9339;
+    border-radius: 0.5rem;
+}
+
+.pending-icon {
+    color: #fe9339;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .slds-grid.slds-gutters .slds-col {
+        padding: 0.25rem;
+    }
+    
+    .stat-box {
+        margin-bottom: 0.5rem;
+    }
+    
+    .asset-actions {
+        text-align: center;
+    }
+    
+    .asset-actions .slds-button {
+        margin: 0.25rem;
+        width: 100%;
+    }
+}
+
+/* 애니메이션 효과 */
+.asset-card,
+.create-asset-card,
+.pending-card {
+    transition: all 0.3s ease;
+}
+
+.asset-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.create-asset-card:hover {
+    border-color: #005fb2;
+    background-color: #f8f9fa;
+}
+
+.pending-card:hover {
+    border-color: #dd7a00;
+    background-color: #fef5e7;
+}
+
+/* 버튼 호버 효과 */
+.create-button:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+}
+
+/* 로딩 스피너 컨테이너 */
+.slds-align_absolute-center {
+    min-height: 200px;
+}
+
+/* 진행률 바 애니메이션 */
+.slds-progress-bar__value {
+    transition: width 0.5s ease-in-out;
+}
+
+/* 상태 뱃지 색상 조정 */
+.slds-badge_success {
+    background-color: #04844b;
+}
+
+.slds-badge_warning {
+    background-color: #fe9339;
+}
+
+.slds-badge_inverse {
+    background-color: #706e6b;
+}

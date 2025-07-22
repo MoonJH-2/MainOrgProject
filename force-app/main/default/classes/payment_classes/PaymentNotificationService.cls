@@ -75,6 +75,101 @@ public with sharing class PaymentNotificationService {
     }
     
     /**
+     * Salesforce Channel 알림 발송 (현재 비활성화 - 커스텀 필드 생성 후 활성화)
+     */
+    public static Boolean sendSalesforceChannelNotification(Payment_Notification__c notification) {
+        // TODO: Order 객체에 Salesforce_Channel_ID__c 등 커스텀 필드 생성 후 활성화
+        System.debug('⚠️ SalesforceChannel 기능은 커스텀 필드 생성 후 활성화 예정');
+        return false;
+        
+        /*
+        try {
+            // Order에 연결된 Salesforce Channel이 있는지 확인
+            List<Order> orders = [
+                SELECT Id, Salesforce_Channel_ID__c, Salesforce_Channel_Name__c, Channel_Status__c
+                FROM Order 
+                WHERE Id = :notification.PaymentStatus__r.Order__c
+                AND Salesforce_Channel_ID__c != null
+                AND Channel_Status__c = 'Active'
+                LIMIT 1
+            ];
+            
+            if (orders.isEmpty()) {
+                System.debug('❌ 활성화된 Salesforce Channel이 없습니다: Order ' + notification.PaymentStatus__r.Order__c);
+                return false;
+            }
+            
+            Order orderWithChannel = orders[0];
+            
+            // 채널에 납부 알림 메시지 발송
+            String channelMessage = createChannelNotificationMessage(notification);
+            Boolean success = SalesforceChannelService.sendChannelMessage(
+                orderWithChannel.Salesforce_Channel_ID__c, 
+                channelMessage
+            );
+            
+            if (success) {
+                System.debug('✅ Salesforce Channel 알림 발송 완료: ' + orderWithChannel.Salesforce_Channel_Name__c);
+                return true;
+            } else {
+                System.debug('❌ Salesforce Channel 메시지 발송 실패');
+                return false;
+            }
+            
+        } catch (Exception e) {
+            System.debug('❌ Salesforce Channel 알림 발송 오류: ' + e.getMessage());
+            return false;
+        }
+        */
+    }
+    
+    /**
+     * 채널용 알림 메시지 생성 (현재 비활성화)
+     */
+    private static String createChannelNotificationMessage(Payment_Notification__c notification) {
+        // TODO: Salesforce Channel 기능 활성화 시 사용
+        return 'Channel message placeholder';
+        /*
+        String message = '';
+        
+        if (notification.NotificationType__c == '예정 알림') {
+            message = '🔔 **납부 예정 알림**\n\n';
+            message += '고객님의 납부 예정일이 3일 후입니다.\n\n';
+        } else {
+            message = '🚨 **납부 연체 알림**\n\n';
+            message += '고객님의 납부가 연체되었습니다.\n\n';
+        }
+        
+        message += '📋 **납부 정보**\n';
+        message += '• **고객**: ' + notification.PaymentStatus__r.Order__r.Account.Name + '\n';
+        message += '• **주문번호**: ' + notification.PaymentStatus__r.Order__r.OrderNumber + '\n';
+        message += '• **납부 회차**: ' + notification.PaymentStatus__r.InstallmentNumber__c + '차\n';
+        message += '• **납부 금액**: ₩' + notification.PaymentStatus__r.Amount__c.format() + '\n';
+        message += '• **납부 예정일**: ' + notification.PaymentStatus__r.DueDate__c.format() + '\n';
+        
+        if (notification.NotificationType__c == '연체 알림') {
+            Integer overdueDays = Date.today().daysBetween(notification.PaymentStatus__r.DueDate__c);
+            message += '• **연체 기간**: ' + overdueDays + '일\n';
+        }
+        
+        message += '\n💡 **다음 단계**\n';
+        if (notification.NotificationType__c == '예정 알림') {
+            message += '• 고객에게 납부 예정일 사전 안내\n';
+            message += '• 납부 방법 및 계좌 정보 확인\n';
+            message += '• 필요시 납부 일정 조정 상담\n';
+        } else {
+            message += '• 고객에게 즉시 연체 안내 연락\n';
+            message += '• 납부 독촉 및 연체료 안내\n';
+            message += '• 납부 계획 수립 지원\n';
+        }
+        
+        message += '\n📞 담당자는 고객과의 소통 결과를 이 채널에 공유해주세요.';
+        
+        return message;
+        */
+    }
+    
+    /**
      * 슬랙 알림 발송
      */
     public static Boolean sendSlackNotification(Payment_Notification__c notification) {

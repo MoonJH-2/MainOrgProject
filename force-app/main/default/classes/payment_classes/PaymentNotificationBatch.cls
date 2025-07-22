@@ -92,6 +92,9 @@ public class PaymentNotificationBatch implements Database.Batchable<sObject>, Da
                 when 'Salesforce' {
                     return PaymentNotificationService.sendSalesforceNotification(notification);
                 }
+                when 'SalesforceChannel' {
+                    return PaymentNotificationService.sendSalesforceChannelNotification(notification);
+                }
                 when 'Email' {
                     return PaymentNotificationService.sendEmailNotification(notification);
                 }

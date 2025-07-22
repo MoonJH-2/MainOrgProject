@@ -110,6 +110,7 @@ export default class PaymentNotificationDashboard extends LightningElement {
     getChannelIcon(channel) {
         switch (channel) {
             case 'Salesforce': return 'standard:announcement';
+            case 'SalesforceChannel': return 'standard:groups';
             case 'Email': return 'standard:email';
             case 'Slack': return 'standard:messaging_session';
             default: return 'standard:notification';
