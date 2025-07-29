@@ -215,7 +215,108 @@ flowchart TD
 
 ---
 
-## 🔧 주요 기능
+## �️ 개발 환경 & 기술 스택
+
+### 🖥️ 개발 환경
+| 영역 | 도구 | 버전 | 라이선스 |
+|------|------|------|----------|
+| **IDE** | VS Code | Latest | Free |
+| **Platform** | Salesforce Lightning | Developer Edition | Free |
+| **Runtime** | Node.js | 16+ | MIT |
+| **CLI** | SFDX CLI | Latest | BSD-3 |
+| **버전관리** | Git + GitHub | Latest | Free |
+
+### 🔧 개발 언어 & 프레임워크
+```mermaid
+flowchart LR
+    A["⚡ Apex<br>Backend Logic"] --> B["🌐 Lightning Web Components<br>Modern Frontend"]
+    B --> C["🔄 Flow Builder<br>Low-Code Automation"]
+    C --> D["📊 SOQL<br>Data Query"]
+    D --> E["🎨 Lightning Design System<br>UI Framework"]
+    
+    classDef apex fill:#00a1e0,color:#fff
+    classDef lwc fill:#ff6b35,color:#fff
+    classDef flow fill:#00d084,color:#fff
+    classDef soql fill:#7b68ee,color:#fff
+    classDef lds fill:#ff1744,color:#fff
+    
+    A:::apex
+    B:::lwc  
+    C:::flow
+    D:::soql
+    E:::lds
+```
+
+### 🧰 핵심 기술 스택
+<table>
+<tr>
+<td width="33%">
+
+#### 💻 **Frontend**
+![Lightning](https://img.shields.io/badge/Lightning_Web_Components-FF6B35?style=for-the-badge&logo=salesforce&logoColor=white)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+
+</td>
+<td width="33%">
+
+#### ⚙️ **Backend**  
+![Apex](https://img.shields.io/badge/Apex-00A1E0?style=for-the-badge&logo=salesforce&logoColor=white)
+![REST API](https://img.shields.io/badge/REST_API-009639?style=for-the-badge&logo=fastapi&logoColor=white)
+![SOQL](https://img.shields.io/badge/SOQL-7B68EE?style=for-the-badge&logo=postgresql&logoColor=white)
+
+</td>
+<td width="33%">
+
+#### 🔄 **Automation**
+![Flow Builder](https://img.shields.io/badge/Flow_Builder-00D084?style=for-the-badge&logo=salesforce&logoColor=white)
+![Process Builder](https://img.shields.io/badge/Process_Builder-FF9500?style=for-the-badge&logo=salesforce&logoColor=white)
+![Apex Triggers](https://img.shields.io/badge/Apex_Triggers-FF1744?style=for-the-badge&logo=salesforce&logoColor=white)
+
+</td>
+</tr>
+</table>
+
+### 🔒 보안 & 품질 도구
+| 도구 | 용도 | 라이선스 |
+|------|------|----------|
+| **PMD** | Static Code Analysis | BSD-2 |
+| **ESLint** | JavaScript Linting | MIT |
+| **SARIF** | Security Analysis | Open Standard |
+| **Jest** | Unit Testing | MIT |
+| **GitHub Actions** | CI/CD Pipeline | Free (Public Repo) |
+
+### 🤝 협업 & 커뮤니케이션
+<div align="center">
+
+![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
+![Salesforce](https://img.shields.io/badge/Salesforce_Chatter-00A1E0?style=for-the-badge&logo=salesforce&logoColor=white)
+
+**💬 Slack Integration**: 실시간 알림, 고객 납부 앱, 팀 협업  
+**📋 GitHub Projects**: 이슈 트래킹, 칸반 보드  
+**🗨️ Salesforce Chatter**: 플랫폼 내 소셜 협업  
+
+</div>
+
+### 📊 라이선스 정보
+```
+🆓 Developer Edition (Salesforce)
+├── 📍 무료 개발 환경
+├── 🔧 모든 기능 사용 가능
+├── 👥 개발자 커뮤니티 지원
+└── 🚀 Production 마이그레이션 지원
+
+💝 Open Source Tools
+├── MIT License: Node.js, Jest, ESLint
+├── BSD License: SFDX CLI, PMD
+└── Apache 2.0: Various Libraries
+```
+
+---
+
+## �🔧 주요 기능
 
 ### 1. 영업 프로세스 자동화
 - **기회 → 주문 자동 전환**: Flow Builder 기반 seamless 프로세스
@@ -270,46 +371,76 @@ flowchart TD
 
 ---
 
-## 🚀 시작하기
+### 🚀 시작하기
 
-### 환경 요구사항
-- Salesforce Lightning Platform
-- Node.js 16+
+### 📋 사전 요구사항
+<table>
+<tr>
+<td>
+
+#### 🔧 **필수 도구**
+- Salesforce Developer Edition (무료)
+- Node.js 16+ 
 - SFDX CLI
 - VS Code + Salesforce Extensions
-- PMD (보안 스캔용)
+- Git
 
-### 설치 및 실행
+</td>
+<td>
+
+#### 🎯 **권장 사항**  
+- PMD (코드 품질 검사)
+- Slack 계정 (협업용)
+- GitHub 계정
+- Chrome 브라우저
+
+</td>
+</tr>
+</table>
+
+### ⚡ 빠른 시작 (5분 설정)
 ```bash
-# 1. 프로젝트 클론
+# 1️⃣ 프로젝트 클론
 git clone https://github.com/MoonJH-2/MainOrgProject.git
 cd MainOrgProject
 
-# 2. 의존성 설치
+# 2️⃣ 의존성 설치
 npm install
 
-# 3. 보안 스캔 실행 (권장)
-./scripts/run-security-scan.sh
-
-# 4. Salesforce 조직 인증
+# 3️⃣ Salesforce 조직 연결
 sfdx auth:web:login -a myorg
 
-# 5. 메타데이터 배포
+# 4️⃣ 메타데이터 배포
 sfdx force:source:deploy -p force-app/main/default
 
-# 6. 테스트 실행
+# 5️⃣ 테스트 실행
 npm test
 ```
 
-### 🔒 보안 검증 워크플로우
+### �️ 프로덕션 배포 (보안 검증 포함)
 ```bash
-# 배포 전 필수 보안 체크
+# 🔒 보안 스캔 실행 (필수)
 ./scripts/run-security-scan.sh
 
-# 결과 확인 후 배포
+# ✅ 보안 검증 통과 후 배포
 git add .
 git commit -m "feat: 새로운 기능 추가 (보안 검증 완료)"
-git push origin main  # CI/CD가 자동으로 추가 보안 스캔 실행
+git push origin main  # 🤖 CI/CD 자동 실행
+```
+
+### 📊 개발 환경 상태 확인
+```bash
+# Node.js 버전 확인
+node --version  # v16+ 필요
+
+# SFDX CLI 설치 확인  
+sfdx --version
+
+# Salesforce 조직 연결 상태
+sfdx force:org:list
+
+# 프로젝트 유효성 검사
+npm run validate
 ```
 
 ---
