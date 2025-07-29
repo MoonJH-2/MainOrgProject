@@ -582,12 +582,6 @@ git push origin main  # CI/CD가 자동으로 보안 스캔 실행
 
 ---
 
-## 📄 라이선스
-
-이 프로젝트는 MIT 라이선스 하에 배포됩니다. 자세한 내용은 `LICENSE` 파일을 참조하세요.
-
----
-
 ## 👨‍💻 개발자 정보
 
 ### 🎯 **개발 철학**: "타인의 닭을 빌려 나의 알을 낳는다"
@@ -612,66 +606,7 @@ git push origin main  # CI/CD가 자동으로 보안 스캔 실행
 - **DevOps**: GitHub Actions, CI/CD 파이프라인 자동화
 - **아키텍처**: Domain-Driven Design, Microservices 패턴 적용
 
-**연락처**: [프로필 정보]
-
 ---
-
-## �️ 트러블슈팅 가이드
-
-### 🚨 일반적인 문제 해결
-
-#### 1. Salesforce 연결 문제
-**🔴 문제**: `SFDX CLI` 인증 실패 또는 메타데이터 배포 오류
-
-**✅ 해결 방법**:
-```bash
-# 기존 인증 정보 확인
-sfdx force:org:list
-
-# 재인증 수행
-sfdx auth:web:login -a myorg --setdefaultdevhubusername
-
-# 메타데이터 유효성 검사
-sfdx force:source:deploy -p force-app/main/default --checkonly
-
-# 충돌 해결 후 강제 배포
-sfdx force:source:deploy -p force-app/main/default --ignorewarnings
-```
-
-#### 2. Lightning Web Components 오류
-**🔴 문제**: LWC 컴포넌트가 로드되지 않거나 JavaScript 오류 발생
-
-**✅ 해결 방법**:
-```bash
-# ESLint 검사 실행
-npm run lint
-
-# Jest 테스트 실행
-npm test
-
-# 브라우저 콘솔에서 확인할 사항
-console.error("Check @api properties and event handlers")
-```
-
-**🔧 일반적인 LWC 이슈**:
-- `@api` 프로퍼티 누락 → 부모-자식 컴포넌트 통신 실패
-- Event handler 바인딩 오류 → `this.handleClick = this.handleClick.bind(this)`
-- Apex method 호출 실패 → `@wire`와 `imperative call` 구분
-
-#### 3. Flow Builder 자동화 실패
-**🔴 문제**: 납부 일정 자동 생성이나 알림이 작동하지 않음
-
-**✅ 해결 방법**:
-```sql
--- SOQL로 Flow 실행 이력 확인
-SELECT Id, FlowVersionViewId, Status, ErrorMessage 
-FROM FlowInterview 
-WHERE CreatedDate = TODAY 
-ORDER BY CreatedDate DESC
-
--- Debug Log 활성화
-System.debug('Flow execution checkpoint: ' + variable_name);
-```
 
 ### 🎯 실제 명령어 사용 사례
 
