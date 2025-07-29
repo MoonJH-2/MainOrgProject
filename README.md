@@ -209,6 +209,37 @@ flowchart TD
 - **인사이트 제공**: AI 기반 고객 분석
 - **완전한 서비스 경험**: 리사이클 생태계 구축
 
+### 5. 🤖 VIBA AI Assistant (핵심 혁신)
+**Vibe-driven Intelligence Business Assistant** - 영업사원을 위한 AI 비서
+
+#### 실제 사용 명령어 예시:
+```bash
+# 일일 업무 브리핑
+"오늘 내 일정 브리핑해줘"
+"긴급 처리할 일 알려줘"
+
+# 고객 분석
+"김철수 고객 분석해줘"
+"ABC 회사 위험도 체크해줘"
+
+# 이메일 자동 생성
+"납부 기한 알림 이메일 보내줘"
+"계약 갱신 안내 이메일 만들어줘"
+
+# 영업 기회 발굴
+"이 고객에게 제안할 수 있는 상품 찾아줘"
+"추가 매출 기회 분석해줘"
+```
+
+#### AI 분석 결과 예시:
+```
+🎉 분석 완료!
+💎 고객 등급: Premium (VIP)  
+📊 VIBA Score: 95%
+⚠️ 위험도: Low
+🎯 추천 액션: 프리미엄 서비스 업그레이드 제안
+```
+
 ---
 
 ## 🚀 시작하기
@@ -386,6 +417,7 @@ git push origin main  # CI/CD가 자동으로 보안 스캔 실행
 
 - [📊 세로형 플로우차트](./documentation/flowchart_vertical_socar_b2b.md)
 - [📋 발표 스크립트](./documentation/presentation_docs/SOCAR_B2B_PERSONAL_PRESENTATION_SCRIPT.md)
+- [🤖 VIBA AI 영업사원 명령어 가이드](./documentation/VIBA_SALES_COMMANDS_GUIDE.md)
 - [📚 기술 문서](./documentation/)
 - [🚀 배포 가이드](./scripts/)
 
