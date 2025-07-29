@@ -122,15 +122,6 @@ flowchart TD
     B --> B3["Apex Triggers"]
 ```
 
-### 기술 스택
-| 영역 | 기술 | 활용도 |
-|------|------|--------|
-| **Platform** | Salesforce Lightning | 80% |
-| **Automation** | Flow Builder, Apex | 70% |
-| **Frontend** | Lightning Web Components | 60% |
-| **Integration** | REST API, Slack API | 40% |
-| **Data Management** | Custom Objects, SOQL | 90% |
-
 ---
 
 ## 🎨 비즈니스 프로세스 흐름
