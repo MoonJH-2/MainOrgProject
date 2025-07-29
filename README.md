@@ -366,7 +366,7 @@ flowchart LR
 ### 1. 영업 프로세스 자동화
 - **기회 → 주문 자동 전환**: Flow Builder 기반 seamless 프로세스
 - **제품 정보 동기화**: 클릭 한 번으로 모든 정보 복사
-- **영업 효율성 300% 향상**: 실시간 전환율 추적
+- **영업 효율성 향상**: 실시간 전환율 추적
 
 ### 2. 스마트 납부 관리
 - **다양한 납부 옵션**: 월/분기/반기/년 단위 선택
@@ -544,7 +544,7 @@ MainOrgProject/
 └── SECURITY_CHECKLIST.md           # 보안 체크리스트
 ```
 
-### 🔒 **기업급 보안 프레임워크**
+### 🔒 **보안 프레임워크**
 
 #### SARIF (Static Analysis Results Interchange Format) 통합
 - **PMD 보안 룰셋**: SOQL Injection, XSS 방지
