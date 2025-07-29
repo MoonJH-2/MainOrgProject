@@ -483,7 +483,6 @@ public void processOrders(List<Order> orders) {
 // 오류: EXCEEDED_MAX_SIZE_REQUEST: Too many query rows: 50001
 ```
 
-**❓ 신입 개발자가 놓치는 점:**
 - SOQL을 반복문 안에서 실행하면 안 됨을 모름
 - Governor Limit 개념 부족
 
@@ -515,7 +514,7 @@ public void processOrders(List<Order> orders) {
 ```
 
 **🧠 학습 포인트:**
-> "Salesforce는 SOQL 100개, 레코드 50,000개 제한이 있습니다. 'Bulkify' 패턴으로 한 번에 조회 후 Map으로 관리하세요."
+> "Salesforce는 SOQL 100개, 레코드 50,000개 제한이 있다. 'Bulkify' 패턴으로 한 번에 조회 후 Map으로 관리."
 
 
 ### 🚀 시작하기
