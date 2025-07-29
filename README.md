@@ -415,6 +415,109 @@ flowchart LR
 
 ---
 
+### 🚨 개발자 트러블슈팅
+
+#### **문제 1: Salesforce 배포 시 "Missing Field" 오류** 😰
+
+**🔴 상황:**
+```bash
+# 배포 시도
+sfdx force:source:deploy -p force-app/main/default
+
+# 오류 메시지
+Error: Entity 'Account' - missing field 'Custom_Field__c'
+```
+- 메타데이터 의존성 순서를 모름
+- Custom Field가 먼저 배포되어야 함을 인지하지 못함
+
+**✅ 해결 방법:**
+```bash
+# 1단계: 필드 먼저 배포
+sfdx force:source:deploy -p force-app/main/default/objects
+
+# 2단계: 클래스 배포
+sfdx force:source:deploy -p force-app/main/default/classes
+
+# 3단계: 전체 검증
+sfdx force:source:deploy -p force-app/main/default --checkonly
+```
+
+#### **문제 2: LWC에서 Apex 메소드 호출 시 데이터가 안 나옴** 😰
+
+**🔴 상황:**
+```javascript
+// LWC JavaScript
+import getAccountData from '@salesforce/apex/AccountController.getAccountData';
+
+export default class AccountDetails extends LightningElement {
+    @wire(getAccountData, { accountId: '$recordId' })
+    accountData;
+    
+    connectedCallback() {
+        console.log(this.accountData); // undefined 출력
+    }
+}
+```
+
+- `@wire`는 비동기적으로 작동함을 모름
+- 데이터 로딩 상태를 고려하지 않음
+
+---
+
+#### **문제 3: SOQL Governor Limit 초과 오류** 😰
+
+**🔴 상황:**
+```apex
+// 잘못된 코드 - 루프 안에서 SOQL
+public void processOrders(List<Order> orders) {
+    for(Order ord : orders) {
+        // 🚫 루프 안에서 SOQL - Governor Limit 위험!
+        List<PaymentSchedule__c> payments = [
+            SELECT Id, Amount__c FROM PaymentSchedule__c 
+            WHERE Order__c = :ord.Id
+        ];
+        // 100번 루프면 100번 쿼리 실행
+    }
+}
+
+// 오류: EXCEEDED_MAX_SIZE_REQUEST: Too many query rows: 50001
+```
+
+**❓ 신입 개발자가 놓치는 점:**
+- SOQL을 반복문 안에서 실행하면 안 됨을 모름
+- Governor Limit 개념 부족
+
+**✅ 올바른 해결 방법:**
+```apex
+public void processOrders(List<Order> orders) {
+    // ✅ 한 번에 모든 데이터 조회
+    Set<Id> orderIds = new Map<Id, Order>(orders).keySet();
+    
+    Map<Id, List<PaymentSchedule__c>> paymentMap = new Map<Id, List<PaymentSchedule__c>>();
+    
+    for(PaymentSchedule__c payment : [
+        SELECT Id, Amount__c, Order__c 
+        FROM PaymentSchedule__c 
+        WHERE Order__c IN :orderIds
+    ]) {
+        if(!paymentMap.containsKey(payment.Order__c)) {
+            paymentMap.put(payment.Order__c, new List<PaymentSchedule__c>());
+        }
+        paymentMap.get(payment.Order__c).add(payment);
+    }
+    
+    // ✅ 이제 루프에서 Map 사용
+    for(Order ord : orders) {
+        List<PaymentSchedule__c> payments = paymentMap.get(ord.Id);
+        // 비즈니스 로직 처리
+    }
+}
+```
+
+**🧠 학습 포인트:**
+> "Salesforce는 SOQL 100개, 레코드 50,000개 제한이 있습니다. 'Bulkify' 패턴으로 한 번에 조회 후 Map으로 관리하세요."
+
+
 ### 🚀 시작하기
 
 ### 📋 사전 요구사항
