@@ -237,6 +237,4 @@ MainOrgProject/
 
 **🎯 "검증된 도구를 창의적으로 활용하여 혁신적 솔루션을 만드는 실용적 개발자"**
 
-Made with ❤️ and ☕ by [Your Name]
-
 </div>
