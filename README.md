@@ -78,9 +78,9 @@ flowchart TD
 #### 1단계: 영업 및 주문 프로세스
 ```mermaid
 flowchart TD
-    A["💼 기회<br><small>영업 기회 발생</small>"] --> B["📦 기회제품<br><small>제품 정보 확인</small>"]
-    B --> C["🚀 주문시작<br><small>정식 주문 개시</small>"]
-    C --> D["📋 주문제품<br><small>기회제품→주문제품</small>"]
+    A["💼 기회<br><small>영업 기회 발생 </small>"] --> B["📦 기회제품<br><small>제품 정보 확인 </small>"]
+    B --> C["🚀 주문시작<br><small>정식 주문 개시 </small>"]
+    C --> D["📋 주문제품<br><small>기회제품→주문제품 </small>"]
     C --> E{"💳 납부방법<br>월/분기/반기/년<br><small>고객 맞춤 선택</small>"}
     
     D --> F["📅 납부일정생성<br><small>자동 일정 생성</small>"]
@@ -103,14 +103,14 @@ flowchart TD
 #### 2단계: 납부 및 모니터링 프로세스
 ```mermaid
 flowchart TD
-    G["📱 고객납부앱<br><small>Slack 앱 연동</small>"] --> H["💰 납부진행<br><small>고객 직접 납부</small>"]
-    H --> I["📈 납부현황<br><small>실시간 모니터링</small>"]
+    G["📱 고객납부앱<br><small>Slack 앱 연동</small>"] --> H["💰 납부진행 <br><small>고객 직접 납부 </small>"]
+    H --> I["📈 납부현황 <br><small>실시간 모니터링 </small>"]
     
     I --> J["⚠️ 연체알림Task<br><small>지연시 자동 알림</small>"]
     I --> K["✅ 완료알림Task<br><small>납부완료 확인</small>"]
     I --> L["📄 PDF생성Task<br><small>증빙서류 요청</small>"]
     
-    J --> M["👥 영업지원팀<br><small>Task 자동 할당</small>"]
+    J --> M["👥 영업지원팀 <br><small>Task 자동 할당 </small>"]
     K --> M
     L --> M
     
@@ -131,20 +131,20 @@ flowchart TD
 #### 3단계: 문서 생성 및 자산 관리 프로세스
 ```mermaid
 flowchart TD
-    L["📄 PDF생성Task<br><small>증빙서류 요청</small>"] --> O["🖨️ PDF생성<br><small>버튼 클릭 생성</small>"]
+    L["📄 PDF생성Task<br><small>증빙서류 요청</small>"] --> O["🖨️ PDF생성 <br><small>버튼 클릭 생성 </small>"]
     
-    O --> P["📄 납부확인서<br><small>납부 완료 증명</small>"]
-    O --> Q["📄 세금계산서<br><small>세무 신고용</small>"]
+    O --> P["📄 납부확인서<br><small>납부 완료 증명 </small>"]
+    O --> Q["📄 세금계산서<br><small>세무 신고용 </small>"]
     
-    P --> R["👤 영업사원<br><small>고객 관리 정보</small>"]
-    P --> S["🏢 고객<br><small>회계 처리용</small>"]
+    P --> R["👤 영업사원<br><small>고객 관리 정보 </small>"]
+    P --> S["🏢 고객<br><small>회계 처리용 </small>"]
     P --> AssetDoc["💾 Asset 증빙저장<br><small>납부확인서 저장</small>"]
     
     Q --> R
     Q --> S
     Q --> AssetDoc
     
-    AssetDoc --> N["🏢 자산생성<br><small>Asset 자동 생성</small>"]
+    AssetDoc --> N["🏢 자산생성 <br><small>Asset 자동 생성 </small>"]
     
     %% 스타일 정의
     L:::task
@@ -165,14 +165,14 @@ flowchart TD
 #### 4단계: 360도 고객 뷰 및 인사이트
 ```mermaid
 flowchart TD
-    N["🏢 자산생성<br><small>Asset 자동 생성</small>"] --> AccountB2B["📊 Account B2B 뷰"]
+    N["🏢 자산생성 <br><small>Asset 자동 생성 </small>"] --> AccountB2B["📊 Account B2B 뷰"]
     
     AccountB2B --> OrderStatus["📈 Order 현황"]
     AccountB2B --> OpportunityStatus["🎯 Opportunity 현황"]
     AccountB2B --> AssetStatus["🏢 Asset 현황"]
     
     OrderStatus --> OrderList["📋 Order 목록"]
-    OrderList --> Insight360["🔍 360도 인사이트<br><small>완전한 고객 뷰 실현</small>"]
+    OrderList --> Insight360["🔍 360도 인사이트 <br><small>완전한 고객 뷰 실현 </small>"]
     
     OpportunityStatus --> Insight360
     AssetStatus --> Insight360
