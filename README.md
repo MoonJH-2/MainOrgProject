@@ -74,6 +74,8 @@ flowchart TD
 ## 🎨 비즈니스 프로세스 흐름
 
 ### 전체 프로세스 맵
+
+#### 1단계: 영업 및 주문 프로세스
 ```mermaid
 flowchart TD
     A["💼 기회<br><small>영업 기회 발생</small>"] --> B["📦 기회제품<br><small>제품 정보 확인</small>"]
@@ -83,9 +85,25 @@ flowchart TD
     
     D --> F["📅 납부일정생성<br><small>자동 일정 생성</small>"]
     E --> F
-    
     F --> G["📱 고객납부앱<br><small>Slack 앱 연동</small>"]
-    G --> H["💰 납부진행<br><small>고객 직접 납부</small>"]
+    
+    %% 스타일 정의
+    A:::main
+    B:::main
+    C:::main
+    D:::main
+    E:::main
+    F:::main
+    G:::customer
+    
+    classDef main fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef customer fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+```
+
+#### 2단계: 납부 및 모니터링 프로세스
+```mermaid
+flowchart TD
+    G["📱 고객납부앱<br><small>Slack 앱 연동</small>"] --> H["💰 납부진행<br><small>고객 직접 납부</small>"]
     H --> I["📈 납부현황<br><small>실시간 모니터링</small>"]
     
     I --> J["⚠️ 연체알림Task<br><small>지연시 자동 알림</small>"]
@@ -96,7 +114,24 @@ flowchart TD
     K --> M
     L --> M
     
-    L --> O["🖨️ PDF생성<br><small>버튼 클릭 생성</small>"]
+    %% 스타일 정의
+    G:::customer
+    H:::customer
+    I:::main
+    J:::task
+    K:::task
+    L:::task
+    M:::task
+    
+    classDef customer fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef main fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef task fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+```
+
+#### 3단계: 문서 생성 및 자산 관리 프로세스
+```mermaid
+flowchart TD
+    L["📄 PDF생성Task<br><small>증빙서류 요청</small>"] --> O["🖨️ PDF생성<br><small>버튼 클릭 생성</small>"]
     
     O --> P["📄 납부확인서<br><small>납부 완료 증명</small>"]
     O --> Q["📄 세금계산서<br><small>세무 신고용</small>"]
@@ -109,10 +144,28 @@ flowchart TD
     Q --> S
     Q --> AssetDoc
     
-    I --> |전체완료시| N["🏢 자산생성<br><small>Asset 자동 생성</small>"]
-    AssetDoc --> N
+    AssetDoc --> N["🏢 자산생성<br><small>Asset 자동 생성</small>"]
     
-    N --> AccountB2B["📊 Account B2B 뷰"]
+    %% 스타일 정의
+    L:::task
+    O:::pdf
+    P:::pdf
+    Q:::pdf
+    R:::people
+    S:::people
+    AssetDoc:::pdf
+    N:::main
+    
+    classDef task fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef pdf fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef people fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef main fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+```
+
+#### 4단계: 360도 고객 뷰 및 인사이트
+```mermaid
+flowchart TD
+    N["🏢 자산생성<br><small>Asset 자동 생성</small>"] --> AccountB2B["📊 Account B2B 뷰"]
     
     AccountB2B --> OrderStatus["📈 Order 현황"]
     AccountB2B --> OpportunityStatus["🎯 Opportunity 현황"]
@@ -124,31 +177,10 @@ flowchart TD
     OpportunityStatus --> Insight360
     AssetStatus --> Insight360
     
-    R --> T["🎉 고객 360도 리사이클 실현"]
-    S --> T
-    Insight360 --> T
+    Insight360 --> T["🎉 고객 360도 리사이클 실현"]
     
     %% 스타일 정의
-    A:::main
-    B:::main
-    C:::main
-    D:::main
-    E:::main
-    F:::main
-    G:::customer
-    H:::customer
-    I:::main
-    J:::task
-    K:::task
-    L:::task
-    M:::task
-    O:::pdf
     N:::main
-    P:::pdf
-    Q:::pdf
-    R:::people
-    S:::people
-    AssetDoc:::pdf
     AccountB2B:::b2b
     OrderStatus:::b2b
     OpportunityStatus:::b2b
@@ -157,14 +189,10 @@ flowchart TD
     Insight360:::insight
     T:::people
     
-    %% 클래스 스타일 정의
     classDef main fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
-    classDef customer fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    classDef task fill:#fff3e0,stroke:#f57c00,stroke-width:2px
-    classDef pdf fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
-    classDef people fill:#fce4ec,stroke:#c2185b,stroke-width:2px
     classDef b2b fill:#f1f8e9,stroke:#558b2f,stroke-width:2px
     classDef insight fill:#e1f5fe,stroke:#0277bd,stroke-width:3px
+    classDef people fill:#fce4ec,stroke:#c2185b,stroke-width:2px
 ```
 
 ---
