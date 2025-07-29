@@ -1,0 +1,418 @@
+/* 성과 추적 대시보드 통합 스타일 */
+
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* 헤더 스타일 */
+.dashboard-header {
+    background: linear-gradient(135deg, #1b96ff 0%, #159ed9 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    color: white;
+    box-shadow: 0 4px 20px rgba(27, 150, 255, 0.3);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.dashboard-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Assets 관리 버튼 스타일 */
+.assets-setup-btn {
+    background: linear-gradient(135deg, #04844b 0%, #06a94d 100%) !important;
+    border: none !important;
+    color: white !important;
+    font-weight: 600 !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(4, 132, 75, 0.3) !important;
+    transition: all 0.2s ease !important;
+}
+
+.assets-setup-btn:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(4, 132, 75, 0.4) !important;
+}
+
+.bulk-renewal-btn {
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%) !important;
+    border: none !important;
+    color: white !important;
+    font-weight: 600 !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3) !important;
+    transition: all 0.2s ease !important;
+}
+
+.bulk-renewal-btn:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4) !important;
+}
+
+.last-updated {
+    font-size: 0.875rem;
+    opacity: 0.9;
+    white-space: nowrap;
+}
+
+.dashboard-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.last-updated {
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.metric-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.metric-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.metric-icon {
+    font-size: 1.5rem;
+}
+
+.metric-header h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.metric-main-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1589ee;
+    margin-bottom: 8px;
+}
+
+.metric-target {
+    color: #706e6b;
+    font-size: 0.875rem;
+    margin-bottom: 8px;
+}
+
+.status-ahead {
+    color: #04844b;
+    font-weight: 600;
+}
+
+.status-on-track {
+    color: #ff6900;
+    font-weight: 600;
+}
+
+.status-behind {
+    color: #c23934;
+    font-weight: 600;
+}
+
+.metric-detail {
+    font-size: 0.875rem;
+    color: #706e6b;
+    margin-top: 8px;
+}
+
+.renewal-stats {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.stat-item {
+    flex: 1;
+    text-align: center;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.75rem;
+    color: #706e6b;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.stat-amount {
+    display: block;
+    font-size: 0.875rem;
+    color: #706e6b;
+}
+
+.total-expected {
+    text-align: center;
+    font-size: 1rem;
+}
+
+.health-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.health-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.health-icon {
+    font-size: 1.125rem;
+    width: 20px;
+    text-align: center;
+}
+
+.health-label {
+    flex: 1;
+    font-weight: 600;
+}
+
+.health-count {
+    font-size: 0.875rem;
+    color: #706e6b;
+}
+
+.efficiency-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.efficiency-item {
+    text-align: center;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+}
+
+.efficiency-item.highlight {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+
+.efficiency-label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 4px;
+    opacity: 0.8;
+}
+
+.efficiency-value {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.gamification-section {
+    margin-bottom: 24px;
+}
+
+.level-card {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+}
+
+.level-header {
+    margin-bottom: 16px;
+}
+
+.level-header h2 {
+    font-size: 1.25rem;
+    margin: 0 0 12px 0;
+}
+
+.level-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 16px;
+    border-radius: 16px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.level-icon {
+    font-size: 1.5rem;
+}
+
+.level-amounts {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+.progress-percentage {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.encouragement-message {
+    font-size: 0.875rem;
+    line-height: 1.4;
+    opacity: 0.95;
+}
+
+.notifications-section {
+    margin-bottom: 24px;
+}
+
+.notifications-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.notifications-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.notification-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.notification-icon {
+    font-size: 1.25rem;
+    width: 24px;
+    text-align: center;
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-title {
+    font-weight: 600;
+    font-size: 0.875rem;
+    margin-bottom: 4px;
+}
+
+.notification-message {
+    font-size: 0.75rem;
+    color: #706e6b;
+    line-height: 1.3;
+}
+
+.notification-priority {
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 12px;
+    }
+    
+    .metrics-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
+    
+    .renewal-stats {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .efficiency-stats {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .level-card {
+        padding: 16px;
+    }
+}

@@ -1,0 +1,272 @@
+<template>
+    <!-- 로딩 스피너 -->
+    <template if:true={isLoading}>
+        <div class="loading-container">
+            <lightning-spinner alternative-text="대시보드를 불러오는 중..." size="large"></lightning-spinner>
+            <p class="loading-text">성과 데이터를 분석하고 있습니다...</p>
+        </div>
+    </template>
+
+    <!-- 에러 상태 -->
+    <template if:true={error}>
+        <div class="error-container">
+            <lightning-icon icon-name="utility:error" variant="error" size="large"></lightning-icon>
+            <h3>데이터 로딩 오류</h3>
+            <p>대시보드 데이터를 불러올 수 없습니다. 잠시 후 다시 시도해 주세요.</p>
+            <lightning-button 
+                label="다시 시도" 
+                variant="brand" 
+                onclick={handleRefresh}>
+            </lightning-button>
+        </div>
+    </template>
+
+    <!-- 메인 대시보드 -->
+    <template if:true={hasData}>
+        <div class="dashboard-container">
+            
+            <!-- 헤더 섹션 -->
+            <div class="dashboard-header">
+                <div class="header-content">
+                    <h1 class="dashboard-title">
+                        <lightning-icon icon-name="standard:dashboard" size="medium"></lightning-icon>
+                        성과 추적 대시보드
+                    </h1>
+                    <div class="header-actions">
+                        <span class="last-updated">최종 업데이트: {lastUpdated}</span>
+                        <lightning-button-icon 
+                            icon-name="utility:refresh" 
+                            variant="border-filled" 
+                            alternative-text="새로고침"
+                            title="새로고침"
+                            onclick={handleRefresh}>
+                        </lightning-button-icon>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 주요 지표 카드 섹션 -->
+            <div class="metrics-grid">
+                
+                <!-- 1. 오늘의 예상 매출 -->
+                <div class="metric-card today-revenue">
+                    <div class="metric-header">
+                        <div class="metric-icon">💰</div>
+                        <h3>오늘의 예상 매출</h3>
+                    </div>
+                    <div class="metric-content">
+                        <div class="metric-main-value">
+                            {todayRevenue.expectedAmount}
+                        </div>
+                        <div class="metric-target">
+                            목표: {todayRevenue.targetAmount}
+                        </div>
+                        <div class="achievement-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" data-progress={todayRevenue.achievementRate}></div>
+                            </div>
+                            <span class={todayRevenueStatusClass}>
+                                달성률: {todayRevenue.achievementRate}%
+                            </span>
+                        </div>
+                        <div class="metric-detail">
+                            우선순위 고객 {todayRevenue.priorityCustomers}명
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. 이번 달 갱신 현황 -->
+                <div class="metric-card monthly-renewal">
+                    <div class="metric-header">
+                        <div class="metric-icon">🎯</div>
+                        <h3>이번 달 갱신 현황</h3>
+                    </div>
+                    <div class="metric-content">
+                        <div class="renewal-stats">
+                            <div class="stat-item completed">
+                                <span class="stat-label">완료</span>
+                                <span class="stat-value">{monthlyRenewal.completedCount}건</span>
+                                <span class="stat-amount">{monthlyRenewal.completedAmount}</span>
+                            </div>
+                            <div class="stat-item in-progress">
+                                <span class="stat-label">진행중</span>
+                                <span class="stat-value">{monthlyRenewal.inProgressCount}건</span>
+                                <span class="stat-amount">{monthlyRenewal.inProgressAmount}</span>
+                            </div>
+                        </div>
+                        <div class="total-expected">
+                            <strong>예상 총 매출: {monthlyRenewal.totalExpectedAmount}</strong>
+                        </div>
+                        <div class="monthly-target">
+                            월 목표: {monthlyRenewal.monthlyTarget}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. 고객 건강도 분포 -->
+                <div class="metric-card customer-health">
+                    <div class="metric-header">
+                        <div class="metric-icon">🏥</div>
+                        <h3>고객 건강도 분포</h3>
+                    </div>
+                    <div class="metric-content">
+                        <div class="health-chart">
+                            <template for:each={customerHealthChartData} for:item="healthItem">
+                                <div key={healthItem.label} class="health-item">
+                                    <span class="health-icon">{healthItem.icon}</span>
+                                    <div class="health-info">
+                                        <span class="health-label">{healthItem.label}</span>
+                                        <span class="health-count">{healthItem.value}명</span>
+                                        <span class="health-percentage">{healthItem.percentage}%</span>
+                                    </div>
+                                    <div class="health-bar">
+                                        <div class="health-fill" 
+                                             data-color={healthItem.color}
+                                             data-width={healthItem.percentage}>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. 업무 효율성 지표 -->
+                <div class="metric-card efficiency-metrics">
+                    <div class="metric-header">
+                        <div class="metric-icon">⚡</div>
+                        <h3>업무 효율성 지표</h3>
+                    </div>
+                    <div class="metric-content">
+                        <div class="efficiency-stats">
+                            <div class="efficiency-item">
+                                <span class="efficiency-label">평균 처리 시간</span>
+                                <span class="efficiency-value">{efficiency.avgProcessingTime}초</span>
+                            </div>
+                            <div class="efficiency-item">
+                                <span class="efficiency-label">성공률</span>
+                                <span class="efficiency-value">{efficiency.successRate}%</span>
+                            </div>
+                            <div class="efficiency-item">
+                                <span class="efficiency-label">월 처리 건수</span>
+                                <span class="efficiency-value">{efficiency.monthlyProcessCount}건</span>
+                            </div>
+                            <div class="efficiency-item highlight">
+                                <span class="efficiency-label">시간 절약</span>
+                                <span class="efficiency-value time-saved">{efficiency.timeReduction}</span>
+                                <small>Logic 2 효과</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 게임화 섹션 -->
+            <div class="gamification-section">
+                <div class="level-card">
+                    <div class="level-header">
+                        <h2>현재 레벨</h2>
+                        <div class="level-badge">
+                            <span class="level-icon">{gamification.levelIcon}</span>
+                            <span class="level-name">{gamification.currentLevel}</span>
+                        </div>
+                    </div>
+                    <div class="level-progress">
+                        <div class="progress-info">
+                            <span>현재: {gamification.currentAmount}</span>
+                            <span>목표: {gamification.nextLevelAmount}</span>
+                        </div>
+                        <div class="level-progress-bar">
+                            <div class="level-progress-fill" data-progress={gamification.progressPercentage}></div>
+                        </div>
+                        <div class="progress-percentage">{gamification.progressPercentage}%</div>
+                    </div>
+                    <div class="encouragement-message">
+                        {gamification.encouragementMessage}
+                    </div>
+                </div>
+            </div>
+
+            <!-- 스마트 알림 섹션 -->
+            <div class="notifications-section">
+                <div class="notifications-header">
+                    <h2>
+                        <lightning-icon icon-name="utility:notification" size="small"></lightning-icon>
+                        스마트 알림
+                    </h2>
+                </div>
+                
+                <template if:true={sortedNotifications.length}>
+                    <div class="notifications-list">
+                        <template for:each={sortedNotifications} for:item="notification">
+                            <button key={notification.id} 
+                                 class="notification-item"
+                                 data-id={notification.id}
+                                 data-priority={notification.priority}
+                                 onclick={handleNotificationClick}
+                                 type="button"
+                                 title={notification.title}>
+                                
+                                <div class="notification-icon">
+                                    {notification.icon}
+                                </div>
+                                
+                                <div class="notification-content">
+                                    <div class="notification-title">
+                                        {notification.title}
+                                    </div>
+                                    <div class="notification-message">
+                                        {notification.message}
+                                    </div>
+                                    <div class="notification-time">
+                                        {notification.createdDate}
+                                    </div>
+                                </div>
+                                
+                                <div class="notification-priority">
+                                    <lightning-badge 
+                                        label={notification.priority}
+                                        variant={notification.priority}>
+                                    </lightning-badge>
+                                </div>
+                            </button>
+                        </template>
+                    </div>
+                </template>
+                
+                <template if:false={sortedNotifications.length}>
+                    <div class="no-notifications">
+                        <lightning-icon icon-name="utility:check" variant="success" size="large"></lightning-icon>
+                        <p>모든 알림을 확인했습니다!</p>
+                        <p>훌륭한 성과를 유지하고 계십니다.</p>
+                    </div>
+                </template>
+            </div>
+
+            <!-- 빠른 액션 버튼들 -->
+            <div class="quick-actions">
+                <lightning-button 
+                    label="우선순위 고객 보기" 
+                    variant="brand"
+                    icon-name="standard:lead"
+                    onclick={handleViewPriorityCustomers}>
+                </lightning-button>
+                
+                <lightning-button 
+                    label="갱신 프로세스 시작" 
+                    variant="success"
+                    icon-name="utility:refresh"
+                    onclick={handleStartRenewalProcess}>
+                </lightning-button>
+                
+                <lightning-button 
+                    label="상세 리포트 보기" 
+                    variant="neutral"
+                    icon-name="standard:report"
+                    onclick={handleViewDetailedReport}>
+                </lightning-button>
+            </div>
+
+        </div>
+    </template>
+</template>

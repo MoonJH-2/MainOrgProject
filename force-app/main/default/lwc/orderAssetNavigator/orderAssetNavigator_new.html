@@ -1,0 +1,151 @@
+<template>
+    <div class="asset-navigator-container">
+        <!-- 헤더 -->
+        <div class="navigator-header">
+            <h2 class="navigator-title">
+                <lightning-icon icon-name="utility:connected_apps" size="small" class="title-icon"></lightning-icon>
+                Asset 연결 정보
+            </h2>
+            <lightning-button 
+                label="새로고침" 
+                icon-name="utility:refresh"
+                variant="neutral"
+                size="small"
+                onclick={handleRefresh}
+                disabled={isLoading}
+                class="refresh-btn">
+            </lightning-button>
+        </div>
+
+        <!-- 로딩 -->
+        <template if:true={isLoading}>
+            <div class="loading-container">
+                <lightning-spinner alternative-text="로딩 중..." size="small"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- 에러 -->
+        <template if:true={error}>
+            <div class="error-container">
+                <lightning-icon icon-name="utility:error" size="small" class="error-icon"></lightning-icon>
+                <span class="error-text">데이터를 불러오는 중 오류가 발생했습니다.</span>
+            </div>
+        </template>
+
+        <!-- 메인 콘텐츠 -->
+        <template if:false={isLoading}>
+            <!-- 납부 진행률 카드 -->
+            <template if:true={paymentSummary}>
+                <div class="payment-progress-card">
+                    <div class="progress-header">
+                        <span class="progress-title">납부 진행률</span>
+                        <span class="progress-percentage">{paymentProgress}% 완료</span>
+                    </div>
+                    
+                    <lightning-progress-bar value={paymentProgress} class="modern-progress-bar"></lightning-progress-bar>
+                    
+                    <div class="progress-stats">
+                        <div class="stat-item completed">
+                            <span class="stat-number">{paymentSummary.completedPayments}</span>
+                            <span class="stat-label">완료</span>
+                        </div>
+                        <div class="stat-item remaining">
+                            <span class="stat-number">{paymentSummary.remainingPayments}</span>
+                            <span class="stat-label">남은 회차</span>
+                        </div>
+                        <div class="stat-item total">
+                            <span class="stat-number">{paymentSummary.totalAmount}</span>
+                            <span class="stat-label">총 금액</span>
+                        </div>
+                    </div>
+                    
+                    <div class="status-message">
+                        <lightning-formatted-rich-text value={paymentStatusMessage}></lightning-formatted-rich-text>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Asset 상태 카드 -->
+            <template if:true={showAssetCard}>
+                <!-- Asset이 존재하는 경우 -->
+                <template if:true={hasAsset}>
+                    <div class="asset-card connected">
+                        <div class="asset-header">
+                            <div class="asset-icon-container">
+                                <lightning-icon icon-name="standard:asset_object" size="small" class="asset-icon"></lightning-icon>
+                            </div>
+                            <div class="asset-info">
+                                <h3 class="asset-title">{assetInfo.Name}</h3>
+                                <p class="asset-serial">Serial: {assetInfo.SerialNumber}</p>
+                            </div>
+                            <div class="asset-status">
+                                <span class="status-badge connected">연결됨</span>
+                            </div>
+                        </div>
+                        
+                        <div class="asset-details">
+                            <div class="detail-row">
+                                <span class="detail-label">구매일:</span>
+                                <span class="detail-value">{assetInfo.PurchaseDate}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">설치일:</span>
+                                <span class="detail-value">{assetInfo.InstallDate}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="asset-actions">
+                            <lightning-button 
+                                label="Asset 상세보기" 
+                                variant="brand"
+                                size="small"
+                                onclick={navigateToAsset}
+                                disabled={isLoading}>
+                            </lightning-button>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Asset 생성 가능한 경우 -->
+                <template if:true={canCreateAsset}>
+                    <div class="asset-card ready">
+                        <div class="asset-header centered">
+                            <div class="ready-icon-container">
+                                <lightning-icon icon-name="utility:check" size="medium" class="ready-icon"></lightning-icon>
+                            </div>
+                            <div class="ready-content">
+                                <h3 class="ready-title">Asset 생성 준비 완료</h3>
+                                <p class="ready-description">모든 납부가 완료되어 Asset이 생성되었습니다.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="asset-actions">
+                            <lightning-button 
+                                label="Asset 생성하기" 
+                                variant="brand"
+                                icon-name="utility:new"
+                                onclick={handleCreateAsset}
+                                disabled={isLoading}>
+                            </lightning-button>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- 납부 미완료인 경우 -->
+                <template if:false={isFullyPaid}>
+                    <div class="asset-card pending">
+                        <div class="asset-header centered">
+                            <div class="pending-icon-container">
+                                <lightning-icon icon-name="utility:clock" size="medium" class="pending-icon"></lightning-icon>
+                            </div>
+                            <div class="pending-content">
+                                <h3 class="pending-title">납부 진행 중</h3>
+                                <p class="pending-description">모든 납부가 완료되면 자동으로 Asset이 생성됩니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </template>
+        </template>
+    </div>
+</template>

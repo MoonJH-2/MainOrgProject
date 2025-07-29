@@ -1,0 +1,231 @@
+<template>
+    <div class="payment-controller-container">
+        <!-- 헤더 섹션 -->
+        <div class="controller-header">
+            <div class="header-info">
+                <h3 class="section-title">
+                    <lightning-icon icon-name="utility:money" size="small"></lightning-icon>
+                    납부 일정 관리
+                </h3>
+                <template if:true={paymentDetails}>
+                    <div class="order-info">
+                        <span class="order-number">{paymentDetails.orderInfo.OrderNumber}</span>
+                        <span class="account-name">{paymentDetails.orderInfo.Account.Name}</span>
+                        <span class="total-amount">{formattedTotalAmount}</span>
+                    </div>
+                </template>
+            </div>
+            
+            <div class="header-actions">
+                <lightning-button
+                    label="납부일정 생성"
+                    variant="success"
+                    icon-name="utility:add"
+                    onclick={handleCreatePaymentStatus}
+                    disabled={isLoading}
+                    size="small">
+                </lightning-button>
+                <lightning-button
+                    label="Payment Method 변경"
+                    variant="neutral"
+                    icon-name="utility:settings"
+                    onclick={openPaymentMethodModal}
+                    size="small">
+                </lightning-button>
+                <lightning-button
+                    label="전체 완납 처리"
+                    variant="brand"
+                    icon-name="utility:check"
+                    onclick={handleMarkAllCompleted}
+                    disabled={isLoading}
+                    size="small">
+                </lightning-button>
+            </div>
+        </div>
+
+        <!-- 로딩 상태 -->
+        <template if:true={isLoading}>
+            <div class="loading-container">
+                <lightning-spinner alternative-text="처리 중..." size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- 납부 요약 정보 -->
+        <template if:true={paymentDetails}>
+            <div class="payment-summary">
+                <div class="summary-card">
+                    <div class="summary-item">
+                        <span class="label">진행률:</span>
+                        <span class="value progress">{paymentDetails.paymentSummary.progressPercentage}%</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="label">완납:</span>
+                        <span class="value completed">{paymentDetails.paymentSummary.completedPayments}건</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="label">연체:</span>
+                        <span class="value overdue">{paymentDetails.paymentSummary.overduePayments}건</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="label">미납:</span>
+                        <span class="value remaining">{paymentDetails.paymentSummary.remainingPayments}건</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 납부 상세 목록 -->
+            <div class="payment-list">
+                <template for:each={enrichedPaymentList} for:item="payment">
+                    <div key={payment.Id} class="payment-item">
+                        <div class="payment-info">
+                            <div class="installment-number">
+                                {payment.Installment_Number__c}차
+                            </div>
+                            <div class="amount">
+                                {payment.formattedAmount}
+                            </div>
+                            <div class="due-date">
+                                납부 예정: {payment.formattedDueDate}
+                            </div>
+                            <template if:true={payment.PaidDate__c}>
+                                <div class="paid-date">
+                                    납부 완료: {payment.formattedPaidDate}
+                                </div>
+                            </template>
+                        </div>
+                        
+                        <div class="payment-status">
+                            <span class={payment.statusClass}>
+                                {payment.effectiveStatus}
+                            </span>
+                        </div>
+                        
+                        <div class="payment-actions">
+                            <lightning-button
+                                label="상태 변경"
+                                variant="neutral"
+                                icon-name="utility:edit"
+                                onclick={handleEditPayment}
+                                data-payment-id={payment.Id}
+                                size="small">
+                            </lightning-button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <!-- 납부 상태 편집 모달 -->
+        <template if:true={showEditModal}>
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <h2 class="slds-text-heading_medium">납부 상태 변경</h2>
+                        <lightning-button-icon
+                            icon-name="utility:close"
+                            onclick={closeEditModal}
+                            alternative-text="Close"
+                            variant="bare"
+                            class="slds-modal__close">
+                        </lightning-button-icon>
+                    </header>
+                    
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <template if:true={selectedPaymentFormatted}>
+                            <div class="modal-info">
+                                <p><strong>{selectedPaymentFormatted.Installment_Number__c}차 납부</strong></p>
+                                <p>금액: {selectedPaymentFormatted.formattedAmount}</p>
+                                <p>납부 예정일: {selectedPaymentFormatted.formattedDueDate}</p>
+                            </div>
+                        </template>
+                        
+                        <div class="slds-form">
+                            <lightning-combobox
+                                name="status"
+                                label="납부 상태"
+                                value={newStatus}
+                                options={statusOptions}
+                                onchange={handleStatusChange}
+                                required>
+                            </lightning-combobox>
+                            
+                            <template if:true={showPaidDateInput}>
+                                <lightning-input
+                                    type="date"
+                                    name="paidDate"
+                                    label="납부 완료일"
+                                    value={newPaidDate}
+                                    onchange={handlePaidDateChange}>
+                                </lightning-input>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <footer class="slds-modal__footer">
+                        <lightning-button
+                            label="취소"
+                            onclick={closeEditModal}>
+                        </lightning-button>
+                        <lightning-button
+                            label="저장"
+                            variant="brand"
+                            onclick={handleUpdatePaymentStatus}
+                            disabled={isLoading}>
+                        </lightning-button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <!-- Payment Method 변경 모달 -->
+        <template if:true={showPaymentMethodModal}>
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <h2 class="slds-text-heading_medium">Payment Method 변경</h2>
+                        <lightning-button-icon
+                            icon-name="utility:close"
+                            onclick={closePaymentMethodModal}
+                            alternative-text="Close"
+                            variant="bare"
+                            class="slds-modal__close">
+                        </lightning-button-icon>
+                    </header>
+                    
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <div class="slds-form">
+                            <lightning-combobox
+                                name="paymentMethod"
+                                label="Payment Method"
+                                value={selectedPaymentMethod}
+                                options={paymentMethodOptions}
+                                onchange={handlePaymentMethodChange}
+                                required>
+                            </lightning-combobox>
+                            
+                            <div class="slds-text-color_error slds-m-top_small">
+                                <lightning-icon icon-name="utility:warning" size="x-small"></lightning-icon>
+                                주의: Payment Method 변경 시 기존 납부 일정이 삭제되고 새로 생성됩니다.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <footer class="slds-modal__footer">
+                        <lightning-button
+                            label="취소"
+                            onclick={closePaymentMethodModal}>
+                        </lightning-button>
+                        <lightning-button
+                            label="변경"
+                            variant="brand"
+                            onclick={handleUpdatePaymentMethod}
+                            disabled={isLoading}>
+                        </lightning-button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+    </div>
+</template>

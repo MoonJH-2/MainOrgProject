@@ -12,6 +12,7 @@ import createAssetFromOrder from '@salesforce/apex/OrderAssetNavigatorController
 export default class OrderAssetNavigator extends NavigationMixin(LightningElement) {
     @api recordId; // Order Id
     @track assetInfo;
+    @track orderInfo;
     @track paymentSummary;
     @track isLoading = true;
     @track error;
@@ -24,25 +25,49 @@ export default class OrderAssetNavigator extends NavigationMixin(LightningElemen
         this.isLoading = true;
         
         if (result.data) {
-            this.assetInfo = result.data.assetInfo;
-            this.paymentSummary = result.data.paymentSummary;
-            this.error = undefined;
+            try {
+                // 데이터 유효성 검증
+                const data = result.data;
+                this.assetInfo = data.assetInfo || null;
+                this.orderInfo = data.orderInfo || null;
+                this.paymentSummary = data.paymentSummary || {
+                    completedPayments: 0,
+                    remainingPayments: 0,
+                    totalPayments: 0,
+                    totalAmount: 0,
+                    isFullyPaid: false
+                };
+                this.error = undefined;
+                console.log('Asset 데이터 로드:', { 
+                    assetInfo: this.assetInfo, 
+                    orderInfo: this.orderInfo,
+                    paymentSummary: this.paymentSummary 
+                });
+            } catch (dataError) {
+                console.error('데이터 처리 오류:', dataError);
+                this.error = { message: '데이터 처리 중 오류가 발생했습니다.' };
+                this.assetInfo = null;
+                this.orderInfo = null;
+                this.paymentSummary = null;
+            }
         } else if (result.error) {
+            console.error('API 호출 오류:', result.error);
             this.error = result.error;
-            this.assetInfo = undefined;
-            this.paymentSummary = undefined;
+            this.assetInfo = null;
+            this.orderInfo = null;
+            this.paymentSummary = null;
         }
         this.isLoading = false;
     }
 
     // Asset이 존재하는지 확인
     get hasAsset() {
-        return this.assetInfo && this.assetInfo.Id;
+        return this.assetInfo?.Id;
     }
 
     // 모든 납부가 완료되었는지 확인
     get isFullyPaid() {
-        return this.paymentSummary && this.paymentSummary.isFullyPaid;
+        return this.paymentSummary?.isFullyPaid || false;
     }
 
     // Asset 생성 가능 상태인지 확인 (완납했지만 Asset이 없는 경우)
@@ -50,10 +75,25 @@ export default class OrderAssetNavigator extends NavigationMixin(LightningElemen
         return this.isFullyPaid && !this.hasAsset;
     }
 
+    // 안전한 납부 통계 접근
+    get safeCompletedPayments() {
+        return this.paymentSummary?.completedPayments || 0;
+    }
+
+    get safeRemainingPayments() {
+        return this.paymentSummary?.remainingPayments || 0;
+    }
+
+    get safeTotalPayments() {
+        return this.paymentSummary?.totalPayments || 0;
+    }
+
     // 납부 완료율 계산
     get paymentProgress() {
         if (!this.paymentSummary) return 0;
-        return Math.round((this.paymentSummary.completedPayments / this.paymentSummary.totalPayments) * 100);
+        const total = this.paymentSummary.totalPayments || 0;
+        const completed = this.paymentSummary.completedPayments || 0;
+        return total > 0 ? Math.round((completed / total) * 100) : 0;
     }
 
     // 진행률에 따른 스타일 클래스
@@ -68,7 +108,7 @@ export default class OrderAssetNavigator extends NavigationMixin(LightningElemen
     // Asset 상태 뱃지 스타일
     get assetStatusVariant() {
         if (!this.hasAsset) return 'warning';
-        return this.assetInfo.Status__c === 'Active' ? 'success' : 'inverse';
+        return this.assetInfo?.Status__c === 'Active' ? 'success' : 'inverse';
     }
 
     // Asset 카드 표시 여부
@@ -83,8 +123,7 @@ export default class OrderAssetNavigator extends NavigationMixin(LightningElemen
                 '✅ 모든 납부가 완료되어 Asset이 생성되었습니다.' : 
                 '⏳ 모든 납부가 완료되었습니다. Asset 생성 중...';
         } else {
-            const remaining = this.paymentSummary ? 
-                (this.paymentSummary.totalPayments - this.paymentSummary.completedPayments) : 0;
+            const remaining = this.safeRemainingPayments;
             return `📋 ${remaining}개의 납부가 남아있습니다.`;
         }
     }
@@ -96,6 +135,8 @@ export default class OrderAssetNavigator extends NavigationMixin(LightningElemen
             return;
         }
 
+        console.log('Asset 네비게이션:', this.assetInfo.Id);
+        
         this[NavigationMixin.Navigate]({
             type: 'standard__recordPage',
             attributes: {
@@ -103,6 +144,9 @@ export default class OrderAssetNavigator extends NavigationMixin(LightningElemen
                 objectApiName: 'Asset',
                 actionName: 'view'
             }
+        }).catch(error => {
+            console.error('Asset 네비게이션 오류:', error);
+            this.showToast('오류', 'Asset 페이지로 이동할 수 없습니다.', 'error');
         });
     }
 
@@ -184,7 +228,8 @@ export default class OrderAssetNavigator extends NavigationMixin(LightningElemen
             await refreshApex(this.wiredResult);
             this.showToast('성공', '데이터가 새로고침되었습니다.', 'success');
         } catch (error) {
-            this.showToast('오류', '데이터 새로고침 중 오류가 발생했습니다.', 'error');
+            console.error('데이터 새로고침 오류:', error);
+            this.showToast('오류', `데이터 새로고침 중 오류가 발생했습니다: ${error.message || '알 수 없는 오류'}`, 'error');
         } finally {
             this.isLoading = false;
         }
@@ -203,6 +248,52 @@ export default class OrderAssetNavigator extends NavigationMixin(LightningElemen
     formatDate(dateString) {
         if (!dateString) return '';
         return new Date(dateString).toLocaleDateString('ko-KR');
+    }
+
+    // 포맷된 총 금액 getter
+    get formattedTotalAmount() {
+        const amount = this.paymentSummary?.totalAmount;
+        if (amount === null || amount === undefined || isNaN(amount)) {
+            return '₩0';
+        }
+        return this.formatCurrency(amount);
+    }
+
+    // 포맷된 구매일 getter
+    get formattedPurchaseDate() {
+        return this.assetInfo?.PurchaseDate ? this.formatDate(this.assetInfo.PurchaseDate) : '미정';
+    }
+
+    // 포맷된 설치일 getter
+    get formattedInstallDate() {
+        return this.assetInfo?.InstallDate ? this.formatDate(this.assetInfo.InstallDate) : '미정';
+    }
+
+    // OrderItem 정보 getter
+    get orderItem() {
+        return this.orderInfo?.OrderItems?.length > 0 ? this.orderInfo.OrderItems[0] : null;
+    }
+
+    // 제품명 getter
+    get productName() {
+        return this.orderItem?.Product2?.Name || '제품 정보 없음';
+    }
+
+    // 포맷된 제품 단가 getter
+    get formattedUnitPrice() {
+        const unitPrice = this.orderItem?.UnitPrice;
+        return unitPrice ? this.formatCurrency(unitPrice) : '₩0';
+    }
+
+    // 포맷된 제품 총액 getter
+    get formattedProductTotalPrice() {
+        const totalPrice = this.orderItem?.TotalPrice;
+        return totalPrice ? this.formatCurrency(totalPrice) : '₩0';
+    }
+
+    // 수량 getter
+    get productQuantity() {
+        return this.orderItem?.Quantity || 0;
     }
 
     // 토스트 메시지

@@ -1,0 +1,257 @@
+<template>
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-action-new-custom91">
+                        <lightning-icon icon-name="action:new_custom91" alternative-text="원클릭 갱신" size="small"></lightning-icon>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <span>{cardTitle}</span>
+                    </h2>
+                </div>
+            </header>
+            <div class="slds-no-flex">
+                <lightning-button-icon icon-name="utility:refresh" alternative-text="새로고침" title="새로고침" onclick={refreshData}></lightning-button-icon>
+            </div>
+        </div>
+        
+        <div class="slds-card__body slds-card__body_inner">
+            <!-- 로딩 스피너 -->
+            <template if:true={isLoading}>
+                <div class="slds-align_absolute-center slds-p-around_large">
+                    <lightning-spinner alternative-text={loadingMessage} size="medium"></lightning-spinner>
+                    <p class="slds-text-heading_small slds-m-top_small">{loadingMessage}</p>
+                </div>
+            </template>
+            
+            <!-- 오류 메시지 -->
+            <template if:true={error}>
+                <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error">
+                    <span class="slds-assistive-text">오류</span>
+                    <h2>갱신 가능한 Asset을 불러오는 중 오류가 발생했습니다.</h2>
+                </div>
+            </template>
+            
+            <!-- Assets 목록 -->
+            <template if:true={hasAssets}>
+                <!-- 대량 처리 액션 바 -->
+                <template if:true={showBulkActions}>
+                    <div class="slds-card slds-m-bottom_small bulk-actions">
+                        <div class="slds-card__body slds-card__body_inner">
+                            <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center">
+                                <div class="slds-col">
+                                    <label class="slds-checkbox_toggle slds-grid">
+                                        <span class="slds-form-element__label slds-m-bottom_none">전체 선택</span>
+                                        <input type="checkbox" name="selectAll" aria-describedby="selectAll" onchange={handleSelectAll} />
+                                        <span id="selectAll" class="slds-checkbox_toggle__slider">
+                                            <span class="slds-checkbox_toggle__handle"></span>
+                                        </span>
+                                    </label>
+                                </div>
+                                <div class="slds-col slds-no-flex">
+                                    <template if:true={hasSelectedAssets}>
+                                        <lightning-button 
+                                            variant="brand" 
+                                            label={bulkActionLabel}
+                                            icon-name="utility:multi_select_checkbox"
+                                            onclick={handleBulkRenewal}
+                                            disabled={bulkProcessing}>
+                                        </lightning-button>
+                                    </template>
+                                    <template if:false={hasSelectedAssets}>
+                                        <span class="slds-text-color_weak">갱신할 Asset을 선택하세요</span>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                
+                <!-- Assets 카드 리스트 -->
+                <div class="assets-container">
+                    <template for:each={renewableAssets} for:item="asset">
+                        <div key={asset.Id} class="slds-card slds-m-bottom_small asset-card">
+                            <div class="slds-card__body slds-card__body_inner">
+                                <div class="slds-grid slds-grid_align-spread">
+                                    <!-- 왼쪽: Asset 정보 -->
+                                    <div class="slds-col slds-size_2-of-3">
+                                        <div class="slds-media">
+                                            <template if:true={showBulkActions}>
+                                                <div class="slds-media__figure">
+                                                    <label class="slds-checkbox">
+                                                        <input type="checkbox" 
+                                                               data-asset-id={asset.Id} 
+                                                               onchange={handleAssetSelection} />
+                                                        <span class="slds-checkbox_faux"></span>
+                                                        <span class="slds-assistive-text">선택</span>
+                                                    </label>
+                                                </div>
+                                            </template>
+                                            <div class="slds-media__body">
+                                                <h3 class="slds-text-heading_small">
+                                                    <lightning-button variant="base" 
+                                                                     label={asset.Name}
+                                                                     title="Asset 상세보기"
+                                                                     data-asset-id={asset.Id}
+                                                                     onclick={navigateToAsset}
+                                                                     class="asset-name-link">
+                                                    </lightning-button>
+                                                </h3>
+                                                <p class="slds-text-body_small slds-text-color_weak">
+                                                    Serial: {asset.SerialNumber}
+                                                </p>
+                                                <div class="slds-grid slds-gutters_xx-small slds-m-top_xx-small">
+                                                    <div class="slds-col">
+                                                        <lightning-button variant="base" 
+                                                                         label={asset.Account.Name}
+                                                                         title="Account 보기"
+                                                                         data-account-id={asset.AccountId}
+                                                                         onclick={navigateToAccount}
+                                                                         class="account-link">
+                                                        </lightning-button>
+                                                    </div>
+                                                    <template if:true={asset.Contact.Name}>
+                                                        <div class="slds-col">
+                                                            <span class="slds-text-body_small">
+                                                                👤 {asset.Contact.Name}
+                                                            </span>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 오른쪽: 갱신 정보 및 액션 -->
+                                    <div class="slds-col slds-size_1-of-3 slds-text-align_right">
+                                        <div class="renewal-info">
+                                            <!-- 갱신 긴급도 -->
+                                            <div class="slds-m-bottom_xx-small">
+                                                <template for:each={asset} for:item="item">
+                                                    <span key={item.Id} 
+                                                          class="slds-badge slds-text-body_small"
+                                                          data-urgency={item.InstallDate}>
+                                                        <lightning-icon icon-name="utility:clock" size="xx-small"></lightning-icon>
+                                                        <template if:true={item.InstallDate}>
+                                                            갱신 {item.InstallDate} 일 경과
+                                                        </template>
+                                                        <template if:false={item.InstallDate}>
+                                                            설치일 미확인
+                                                        </template>
+                                                    </span>
+                                                </template>
+                                            </div>
+                                            
+                                            <!-- 예상 매출 -->
+                                            <div class="slds-m-bottom_small">
+                                                <span class="slds-text-heading_small">
+                                                    ₩<lightning-formatted-number value={asset.Price} format-style="decimal"></lightning-formatted-number>
+                                                </span>
+                                            </div>
+                                            
+                                            <!-- 갱신 버튼 -->
+                                            <lightning-button 
+                                                variant="brand" 
+                                                label="🚀 갱신 시작"
+                                                title="원클릭 갱신 프로세스 시작"
+                                                data-asset-id={asset.Id}
+                                                data-asset-name={asset.Name}
+                                                onclick={handleRenewalClick}
+                                                disabled={isLoading}
+                                                class="renewal-button">
+                                            </lightning-button>
+                                            
+                                            <!-- 로딩 표시 (개별 Asset용) -->
+                                            <template if:true={processingAssetId}>
+                                                <template if:true={asset.Id}>
+                                                    <div class="slds-m-top_xx-small">
+                                                        <lightning-spinner size="small" alternative-text="처리 중"></lightning-spinner>
+                                                    </div>
+                                                </template>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 추가 정보 (접을 수 있는 영역) -->
+                                <div class="slds-m-top_small slds-border_top slds-p-top_small additional-info">
+                                    <div class="slds-grid slds-gutters_small">
+                                        <div class="slds-col slds-size_1-of-2">
+                                            <span class="slds-text-body_small slds-text-color_weak">설치일:</span>
+                                            <span class="slds-text-body_small">
+                                                <lightning-formatted-date-time value={asset.InstallDate} 
+                                                                               year="numeric" 
+                                                                               month="short" 
+                                                                               day="2-digit">
+                                                </lightning-formatted-date-time>
+                                            </span>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-2">
+                                            <span class="slds-text-body_small slds-text-color_weak">상태:</span>
+                                            <span class="slds-text-body_small">{asset.Status}</span>
+                                        </div>
+                                    </div>
+                                    <template if:true={asset.Contact.Email}>
+                                        <div class="slds-m-top_xx-small">
+                                            <span class="slds-text-body_small slds-text-color_weak">이메일:</span>
+                                            <span class="slds-text-body_small">{asset.Contact.Email}</span>
+                                        </div>
+                                    </template>
+                                    <template if:true={asset.Account.Phone}>
+                                        <div class="slds-m-top_xx-small">
+                                            <span class="slds-text-body_small slds-text-color_weak">전화:</span>
+                                            <span class="slds-text-body_small">{asset.Account.Phone}</span>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                
+                <!-- 요약 통계 -->
+                <div class="slds-card slds-m-top_small">
+                    <div class="slds-card__header">
+                        <h3 class="slds-text-heading_small">📊 갱신 현황 요약</h3>
+                    </div>
+                    <div class="slds-card__body slds-p-horizontal_small">
+                        <div class="slds-grid slds-gutters_small">
+                            <div class="slds-col slds-size_1-of-3 slds-text-align_center">
+                                <div class="slds-text-heading_large">{renewableAssets.length}</div>
+                                <div class="slds-text-body_small slds-text-color_weak">갱신 가능</div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3 slds-text-align_center">
+                                <div class="slds-text-heading_large">{selectedCount}</div>
+                                <div class="slds-text-body_small slds-text-color_weak">선택됨</div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3 slds-text-align_center">
+                                <div class="slds-text-heading_large">⚡</div>
+                                <div class="slds-text-body_small slds-text-color_weak">5초 처리</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            
+            <!-- Assets 없음 메시지 -->
+            <template if:false={hasAssets}>
+                <template if:false={isLoading}>
+                    <template if:false={error}>
+                        <div class="slds-illustration slds-illustration_small">
+                            <div class="slds-text-align_center">
+                                <lightning-icon icon-name="utility:asset_object" size="large" class="slds-m-bottom_small"></lightning-icon>
+                                <h3 class="slds-text-heading_medium">갱신 가능한 Asset이 없습니다</h3>
+                                <p class="slds-text-body_regular slds-m-top_small">
+                                    설치 후 300일 이상 경과된 Asset이 있을 때 갱신 프로세스를 시작할 수 있습니다.
+                                </p>
+                            </div>
+                        </div>
+                    </template>
+                </template>
+            </template>
+        </div>
+    </article>
+</template>

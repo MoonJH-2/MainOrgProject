@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="SOCAR B2B Security Rules"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 
+                            https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+    <description>SOCAR B2B Salesforce 프로젝트 보안 및 품질 규칙</description>
+    
+    <!-- Security Rules -->
+    <rule ref="category/apex/security.xml"/>
+    <rule ref="category/apex/errorprone.xml"/>
+    <rule ref="category/apex/performance.xml"/>
+    <rule ref="category/apex/design.xml"/>
+    
+    <!-- SOCAR 특화 보안 규칙 -->
+    <rule ref="category/apex/security.xml/ApexSOQLInjection"/>
+    <rule ref="category/apex/security.xml/ApexXSSFromURLParam"/>
+    <rule ref="category/apex/security.xml/ApexOpenRedirect"/>
+    <rule ref="category/apex/security.xml/ApexDangerousMethodsUsage"/>
+    <rule ref="category/apex/security.xml/ApexSuggestUsingNamedCred"/>
+    
+    <!-- 결제 시스템 보안 -->
+    <rule ref="category/apex/errorprone.xml/AvoidDirectAccessTriggerMap"/>
+    <rule ref="category/apex/errorprone.xml/AvoidHardcodingId"/>
+    
+    <!-- 성능 최적화 -->
+    <rule ref="category/apex/performance.xml/AvoidDmlStatementsInLoops"/>
+    <rule ref="category/apex/performance.xml/AvoidSoqlInLoops"/>
+    
+    <!-- 커스텀 규칙 - 민감한 데이터 보호 -->
+    <rule name="NoHardcodedCredentials"
+          language="apex"
+          message="하드코딩된 인증 정보를 사용하지 마세요"
+          class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <description>
+            API 키, 비밀번호, 토큰 등을 하드코딩하지 마세요.
+        </description>
+        <priority>1</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+//Literal[matches(@Image, '(?i).*(password|token|key|secret).*')]
+                </value>
+            </property>
+        </properties>
+    </rule>
+    
+    <!-- SOCAR 도메인별 규칙 제외 -->
+    <!-- Test 클래스는 별도 규칙 적용 -->
+</ruleset>

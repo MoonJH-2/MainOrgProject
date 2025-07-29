@@ -1,0 +1,227 @@
+<template>
+    <lightning-card title="자산 상세 정보" icon-name="standard:asset_object">
+        <div slot="actions">
+            <lightning-button-icon
+                icon-name="utility:refresh"
+                variant="border-filled"
+                onclick={handleRefresh}
+                alternative-text="새로고침"
+                disabled={isLoading}>
+            </lightning-button-icon>
+        </div>
+
+        <div class="slds-card__body slds-card__body_inner">
+            <template if:true={isLoading}>
+                <div class="slds-align_absolute-center slds-p-around_large">
+                    <lightning-spinner alternative-text="로딩 중..." size="medium"></lightning-spinner>
+                    <p class="slds-text-color_weak slds-m-top_small">자산 정보를 로드하고 있습니다...</p>
+                </div>
+            </template>
+
+            <template if:true={error}>
+                <div class="slds-scoped-notification slds-media slds-media_center slds-theme_error">
+                    <div class="slds-media__figure">
+                        <lightning-icon icon-name="utility:error" alternative-text="Error" size="small" variant="inverse"></lightning-icon>
+                    </div>
+                    <div class="slds-media__body">
+                        <p><strong>오류가 발생했습니다:</strong> {error.body.message}</p>
+                    </div>
+                </div>
+            </template>
+
+            <template if:true={hasAssetDetails}>
+                <!-- Asset 기본 정보 카드 -->
+                <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                    <!-- Asset 정보 -->
+                    <div class="slds-col slds-size_1-of-3">
+                        <div class="slds-box slds-theme_default">
+                            <h3 class="slds-text-heading_small slds-m-bottom_small">
+                                <lightning-icon icon-name="standard:asset_object" size="small" class="slds-m-right_x-small"></lightning-icon>
+                                Asset 정보
+                            </h3>
+                            <div class="asset-info">
+                                <p><strong>Asset 이름:</strong> {assetDetails.Name}</p>
+                                <p><strong>상태:</strong> 
+                                    <lightning-badge label={assetStatusLabel} variant={assetStatusVariant}></lightning-badge>
+                                </p>
+                                <p><strong>시리얼 번호:</strong> {assetDetails.SerialNumber}</p>
+                                <p><strong>현재 계약 금액:</strong> {formattedPrice}</p>
+                                <p><strong>구매일:</strong> {formattedPurchaseDate}</p>
+                                <p><strong>설치일:</strong> {formattedInstallDate}</p>
+                                <p><strong>수량:</strong> {quantityInfo}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 정보 -->
+                    <div class="slds-col slds-size_1-of-3">
+                        <template if:true={hasProductInfo}>
+                            <div class="slds-box slds-theme_default">
+                                <h3 class="slds-text-heading_small slds-m-bottom_small">
+                                    <lightning-icon icon-name="standard:product" size="small" class="slds-m-right_x-small"></lightning-icon>
+                                    제품 정보
+                                </h3>
+                                <div class="product-info">
+                                    <p><strong>제품명:</strong> {assetDetails.Product2.Name}</p>
+                                    <p><strong>제품 코드:</strong> {productCode}</p>
+                                    <p><strong>제품 패밀리:</strong> {productFamily}</p>
+                                    <p><strong>단가:</strong> {formattedProductPrice}</p>
+                                    <lightning-button
+                                        label="제품 보기"
+                                        onclick={navigateToProduct}
+                                        variant="brand-outline"
+                                        size="small"
+                                        class="slds-m-top_small">
+                                    </lightning-button>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Account & Contact 정보 -->
+                    <div class="slds-col slds-size_1-of-3">
+                        <div class="slds-box slds-theme_default">
+                            <h3 class="slds-text-heading_small slds-m-bottom_small">
+                                <lightning-icon icon-name="standard:account" size="small" class="slds-m-right_x-small"></lightning-icon>
+                                고객 정보
+                            </h3>
+                            <template if:true={hasAccountInfo}>
+                                <div class="account-info slds-m-bottom_small">
+                                    <p><strong>고객명:</strong> {assetDetails.Account.Name}</p>
+                                    <p><strong>고객 유형:</strong> {assetDetails.Account.Type}</p>
+                                    <p><strong>소유자:</strong> {accountOwnerInfo}</p>
+                                    <lightning-button
+                                        label="고객 보기"
+                                        onclick={navigateToAccount}
+                                        variant="brand-outline"
+                                        size="small"
+                                        class="slds-m-top_x-small">
+                                    </lightning-button>
+                                </div>
+                            </template>
+                            
+                            <template if:true={hasContactInfo}>
+                                <div class="contact-info">
+                                    <h4 class="slds-text-heading_x-small slds-m-top_small slds-m-bottom_x-small">담당자</h4>
+                                    <p><strong>이름:</strong> {assetDetails.Contact.Name}</p>
+                                    <template for:each={contactInfoList} for:item="info">
+                                        <p key={info.label}>
+                                            <strong>{info.label}:</strong> {info.value}
+                                        </p>
+                                    </template>
+                                    <lightning-button
+                                        label="담당자 보기"
+                                        onclick={navigateToContact}
+                                        variant="brand-outline"
+                                        size="small"
+                                        class="slds-m-top_x-small">
+                                    </lightning-button>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 탭 섹션 -->
+                <lightning-tabset active-tab-value={activeTab} onactive={handleTabChange}>
+                    
+                    <!-- 연결된 Order 탭 -->
+                    <template if:true={hasOrderInfo}>
+                        <lightning-tab label="연결된 주문" value="order">
+                            <div class="order-info slds-p-around_medium">
+                                <div class="slds-box slds-theme_default">
+                                    <h3 class="slds-text-heading_small slds-m-bottom_medium">
+                                        <lightning-icon icon-name="standard:orders" size="small" class="slds-m-right_x-small"></lightning-icon>
+                                        주문 정보
+                                    </h3>
+                                    <div class="slds-grid slds-gutters">
+                                        <div class="slds-col slds-size_1-of-2">
+                                            <p><strong>주문 번호:</strong> {assetDetails.Order__r.OrderNumber}</p>
+                                            <p><strong>주문 상태:</strong> {assetDetails.Order__r.Status}</p>
+                                            <template if:true={assetDetails.Order__r.ContractNumber__c}>
+                                                <p><strong>계약 번호:</strong> {assetDetails.Order__r.ContractNumber__c}</p>
+                                            </template>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-2">
+                                            <lightning-button
+                                                label="주문 상세 보기"
+                                                onclick={navigateToOrder}
+                                                variant="brand"
+                                                size="small">
+                                            </lightning-button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </lightning-tab>
+                    </template>
+
+                    <!-- 관련 Assets 탭 -->
+                    <lightning-tab label="관련 자산" value="related">
+                        <div class="related-assets slds-p-around_medium">
+                            <template if:true={hasRelatedAssets}>
+                                <h3 class="slds-text-heading_small slds-m-bottom_medium">
+                                    동일 고객의 다른 자산 ({relatedAssets.length}개)
+                                </h3>
+                                <div class="slds-grid slds-gutters slds-wrap">
+                                    <template for:each={relatedAssets} for:item="asset">
+                                        <div key={asset.Id} class="slds-col slds-size_1-of-2 slds-m-bottom_small">
+                                            <div class="slds-box slds-theme_shade">
+                                                <h4 class="slds-text-heading_x-small slds-m-bottom_x-small">{asset.Name}</h4>
+                                                <p class="slds-text-body_small"><strong>상태:</strong> {asset.Status}</p>
+                                                <p class="slds-text-body_small"><strong>시리얼:</strong> {asset.SerialNumber}</p>
+                                                <p class="slds-text-body_small"><strong>설치일:</strong> {asset.InstallDate}</p>
+                                                <lightning-button
+                                                    label="자산 보기"
+                                                    onclick={navigateToAsset}
+                                                    data-asset-id={asset.Id}
+                                                    variant="brand-outline"
+                                                    size="x-small"
+                                                    class="slds-m-top_x-small">
+                                                </lightning-button>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                            <template if:false={hasRelatedAssets}>
+                                <div class="slds-align_absolute-center slds-p-around_large">
+                                    <lightning-icon icon-name="utility:info" size="medium" class="slds-m-bottom_small"></lightning-icon>
+                                    <p class="slds-text-color_weak">동일 고객의 다른 자산이 없습니다.</p>
+                                </div>
+                            </template>
+                        </div>
+                    </lightning-tab>
+
+                    <!-- 상세 정보 탭 -->
+                    <lightning-tab label="상세 정보" value="details">
+                        <div class="asset-details slds-p-around_medium">
+                            <div class="slds-grid slds-gutters">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <div class="slds-box slds-theme_default">
+                                        <h4 class="slds-text-heading_small slds-m-bottom_small">시스템 정보</h4>
+                                        <p><strong>생성일:</strong> {assetDetails.CreatedDate}</p>
+                                        <p><strong>최종 수정일:</strong> {assetDetails.LastModifiedDate}</p>
+                                        <template if:true={assetDetails.LifecycleEndDate}>
+                                            <p><strong>라이프사이클 종료일:</strong> {formattedLifecycleEndDate}</p>
+                                        </template>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <template if:true={assetDetails.Description}>
+                                        <div class="slds-box slds-theme_default">
+                                            <h4 class="slds-text-heading_small slds-m-bottom_small">설명</h4>
+                                            <p class="slds-text-body_regular">{assetDetails.Description}</p>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </lightning-tab>
+
+                </lightning-tabset>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>

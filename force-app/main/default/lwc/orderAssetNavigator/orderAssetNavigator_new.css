@@ -1,0 +1,375 @@
+/* 메인 컨테이너 */
+.asset-navigator-container {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e2e8f0;
+}
+
+/* 헤더 */
+.navigator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.navigator-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+}
+
+.title-icon {
+    color: #0176d3;
+}
+
+.refresh-btn {
+    border-radius: 6px;
+}
+
+/* 로딩 */
+.loading-container {
+    padding: 2rem;
+    text-align: center;
+}
+
+/* 에러 */
+.error-container {
+    padding: 1rem;
+    background: #fee2e2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.error-icon {
+    color: #dc2626;
+}
+
+.error-text {
+    color: #7f1d1d;
+    font-size: 0.875rem;
+}
+
+/* 납부 진행률 카드 */
+.payment-progress-card {
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.progress-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.progress-percentage {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0176d3;
+}
+
+/* 진행률 바 커스터마이징 */
+.modern-progress-bar {
+    margin: 1rem 0;
+    --slds-c-progress-bar-color-background: #f1f5f9;
+    --slds-c-progress-bar-color-background-fill: #0176d3;
+    --slds-c-progress-bar-sizing-height: 8px;
+    border-radius: 4px;
+}
+
+/* 진행률 통계 */
+.progress-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 0.75rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+
+.stat-number {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+.stat-item.completed .stat-number {
+    color: #22c55e;
+}
+
+.stat-item.remaining .stat-number {
+    color: #f59e0b;
+}
+
+.stat-item.total .stat-number {
+    color: #0176d3;
+}
+
+/* 상태 메시지 */
+.status-message {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #f1f5f9;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: #475569;
+}
+
+/* Asset 카드 공통 스타일 */
+.asset-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.2s ease;
+}
+
+.asset-card:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* 연결된 Asset 카드 */
+.asset-card.connected {
+    background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+    border-color: #bbf7d0;
+}
+
+.asset-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.asset-header.centered {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+}
+
+.asset-icon-container {
+    width: 48px;
+    height: 48px;
+    background: #22c55e;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.asset-icon {
+    color: white;
+}
+
+.asset-info {
+    flex: 1;
+}
+
+.asset-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 0.25rem 0;
+}
+
+.asset-serial {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0;
+}
+
+.asset-status {
+    flex-shrink: 0;
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-badge.connected {
+    background: #dcfce7;
+    color: #166534;
+}
+
+/* Asset 상세 정보 */
+.asset-details {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 8px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.detail-row:last-child {
+    margin-bottom: 0;
+}
+
+.detail-label {
+    font-size: 0.875rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.detail-value {
+    font-size: 0.875rem;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+/* Asset 액션 */
+.asset-actions {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+/* Asset 생성 준비 카드 */
+.asset-card.ready {
+    background: linear-gradient(135deg, #fefbf3 0%, #ffffff 100%);
+    border-color: #fed7aa;
+}
+
+.ready-icon-container {
+    width: 64px;
+    height: 64px;
+    background: #22c55e;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+}
+
+.ready-icon {
+    color: white;
+}
+
+.ready-content {
+    text-align: center;
+}
+
+.ready-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 0.5rem 0;
+}
+
+.ready-description {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0 0 1rem 0;
+}
+
+/* 납부 대기 카드 */
+.asset-card.pending {
+    background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+    border-color: #fed7aa;
+}
+
+.pending-icon-container {
+    width: 64px;
+    height: 64px;
+    background: #f59e0b;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+}
+
+.pending-icon {
+    color: white;
+}
+
+.pending-content {
+    text-align: center;
+}
+
+.pending-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 0.5rem 0;
+}
+
+.pending-description {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .asset-navigator-container {
+        padding: 1rem;
+    }
+    
+    .navigator-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .progress-stats {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .asset-header:not(.centered) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+    
+    .detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+}

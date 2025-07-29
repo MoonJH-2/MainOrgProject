@@ -1,191 +1,465 @@
-/* Order Asset Navigator 컴포넌트 스타일 */
-
-.payment-progress-section {
-    border-bottom: 1px solid #e5e5e5;
+/* Enhanced Asset Navigator Styles */
+.asset-navigator-container {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
 }
 
-/* 진행률 바 스타일 */
-.progress-complete .slds-progress-bar__value {
-    background-color: #04844b;
+/* 헤더 스타일 */
+.navigator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-bottom: 1px solid #e5e7eb;
 }
 
-.progress-good .slds-progress-bar__value {
-    background-color: #0176d3;
+.navigator-title {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
 }
 
-.progress-medium .slds-progress-bar__value {
-    background-color: #fe9339;
+.title-icon {
+    margin-right: 8px;
+    --sds-c-icon-color-foreground-default: #6366f1;
 }
 
-.progress-low .slds-progress-bar__value {
-    background-color: #c23934;
+.refresh-btn {
+    --sds-c-button-brand-color-background: transparent;
+    --sds-c-button-brand-color-border: #d1d5db;
+    --sds-c-button-brand-text-color: #6b7280;
 }
 
-/* 통계 박스 스타일 */
-.stat-box {
-    text-align: center;
-    padding: 0.5rem;
-    background-color: #f3f3f3;
-    border-radius: 0.25rem;
+/* 로딩 및 에러 */
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.error-container {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.error-icon {
+    margin-right: 8px;
+    --sds-c-icon-color-foreground-default: #dc2626;
+}
+
+/* 통합 상태 카드 */
+.unified-status-card {
+    background: #ffffff;
+}
+
+/* 납부 진행률 섹션 */
+.payment-section {
+    padding: 20px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.progress-badge {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.progress-visual {
+    margin-bottom: 16px;
+}
+
+.modern-progress-bar {
+    --sds-c-progress-bar-color-background: #f3f4f6;
+    --sds-c-progress-bar-color-background-fill: linear-gradient(90deg, #10b981 0%, #059669 100%);
+    --sds-c-progress-bar-sizing-height: 8px;
+    border-radius: 4px;
+}
+
+.payment-stats {
+    margin-top: 12px;
+}
+
+.stat-group {
+    display: flex;
+    gap: 24px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 80px;
 }
 
 .stat-number {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #0176d3;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1f2937;
+    line-height: 1.2;
 }
 
 .stat-label {
-    font-size: 0.8rem;
-    color: #706e6b;
-    margin-top: 0.25rem;
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 2px;
 }
 
-/* 상태 메시지 스타일 */
-.status-message {
-    background-color: #f8f9fa;
-    border-left: 4px solid #0176d3;
-    padding: 1rem;
-    border-radius: 0.25rem;
+/* 구분선 */
+.section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, #e5e7eb 20%, #e5e7eb 80%, transparent 100%);
+    margin: 0 20px;
+}
+
+/* Asset 섹션 */
+.asset-section {
+    padding: 20px;
+}
+
+/* 상태 헤더 */
+.asset-status-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.status-indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+}
+
+.status-indicator.success {
+    background: #dcfce7;
+}
+
+.status-indicator.warning {
+    background: #fef3c7;
+}
+
+.status-indicator.pending {
+    background: #f3f4f6;
+}
+
+.status-indicator lightning-icon {
+    --sds-c-icon-color-foreground-default: #059669;
+}
+
+.status-indicator.warning lightning-icon {
+    --sds-c-icon-color-foreground-default: #d97706;
+}
+
+.status-indicator.pending lightning-icon {
+    --sds-c-icon-color-foreground-default: #6b7280;
 }
 
 .status-text {
+    font-size: 14px;
     font-weight: 500;
 }
 
-/* Asset 카드 스타일 */
-.asset-card {
-    border: 2px solid #0176d3;
-    border-radius: 0.5rem;
+.status-text.success {
+    color: #059669;
 }
 
-.asset-header {
-    background-color: #f8f9fa;
+.status-text.warning {
+    color: #d97706;
 }
 
-.asset-info h4 {
-    color: #0176d3;
-    margin-bottom: 0.25rem;
+.status-text.pending {
+    color: #6b7280;
 }
 
-.detail-item {
+/* Asset 정보 카드 */
+.asset-info-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+/* 클릭 가능한 카드 스타일 */
+.clickable-card {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    width: 100%;
+    font-family: inherit;
+}
+
+.clickable-card:hover {
+    background: #f1f5f9;
+    border-color: #6366f1;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+    transform: translateY(-2px);
+}
+
+.clickable-card:focus {
+    outline: 2px solid #6366f1;
+    outline-offset: 2px;
+}
+
+.clickable-card:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.1);
+}
+
+.asset-main {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
+    align-items: center;
+    margin-bottom: 12px;
 }
 
-.detail-label {
+.asset-icon {
+    margin-right: 12px;
+}
+
+.asset-icon lightning-icon {
+    --sds-c-icon-color-foreground-default: #6366f1;
+}
+
+.asset-details {
+    flex: 1;
+}
+
+.asset-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 4px 0;
+}
+
+.asset-serial {
+    font-size: 12px;
+    color: #6b7280;
+    margin: 0;
+}
+
+.connection-badge {
+    margin-left: auto;
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge.connected {
+    background: #dcfce7;
+    color: #059669;
+}
+
+.asset-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding-left: 4px;
+}
+
+.meta-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.meta-label {
+    font-size: 10px;
+    color: #6b7280;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.meta-value {
+    font-size: 12px;
+    color: #374151;
     font-weight: 500;
-    color: #706e6b;
 }
 
-.detail-value {
-    color: #080707;
+.asset-action {
+    display: flex;
+    justify-content: center;
 }
 
-.asset-description {
-    background-color: #ffffff;
-    border: 1px solid #e5e5e5;
-    border-radius: 0.25rem;
-    padding: 0.75rem;
+.view-asset-btn {
+    --sds-c-button-brand-color-background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    --sds-c-button-brand-color-background-hover: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+    border-radius: 6px;
+    font-weight: 600;
 }
 
-.asset-actions {
-    padding: 1rem;
-    background-color: #f8f9fa;
+/* Asset 생성 카드 */
+.asset-create-card {
+    background: #fffbeb;
+    border: 1px solid #fed7aa;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
 }
 
-/* Asset 생성 카드 스타일 */
-.create-asset-card {
-    border: 2px dashed #0176d3;
-    border-radius: 0.5rem;
+.create-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
 }
 
 .create-icon {
-    color: #0176d3;
+    margin-right: 12px;
 }
 
-.create-button {
-    min-width: 150px;
+.create-icon-element {
+    --sds-c-icon-color-foreground-default: #d97706;
 }
 
-/* 대기 중 카드 스타일 */
-.pending-card {
-    border: 2px dashed #fe9339;
-    border-radius: 0.5rem;
+.create-text h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #92400e;
+    margin: 0 0 4px 0;
 }
 
-.pending-icon {
-    color: #fe9339;
+.create-text p {
+    font-size: 12px;
+    color: #b45309;
+    margin: 0;
+}
+
+.create-asset-btn {
+    --sds-c-button-brand-color-background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    --sds-c-button-brand-color-background-hover: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+/* 대기 카드 */
+.waiting-card {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+}
+
+.waiting-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.waiting-icon {
+    margin-right: 12px;
+}
+
+.waiting-icon-element {
+    --sds-c-icon-color-foreground-default: #6b7280;
+}
+
+.waiting-text h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin: 0 0 4px 0;
+}
+
+.waiting-text p {
+    font-size: 12px;
+    color: #6b7280;
+    margin: 0;
+}
+
+/* 클릭 힌트 스타일 */
+.click-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 12px;
+    padding: 8px;
+    background: linear-gradient(135deg, #ede9fe 0%, #f3f4f6 100%);
+    border-radius: 6px;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.clickable-card:hover .click-hint {
+    opacity: 1;
+}
+
+.hint-icon {
+    margin-right: 4px;
+    --sds-c-icon-color-foreground-default: #6366f1;
+}
+
+.hint-text {
+    font-size: 11px;
+    color: #6366f1;
+    font-weight: 500;
 }
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
-    .slds-grid.slds-gutters .slds-col {
-        padding: 0.25rem;
+    .asset-main {
+        flex-direction: column;
+        align-items: flex-start;
     }
     
-    .stat-box {
-        margin-bottom: 0.5rem;
+    .connection-badge {
+        margin-left: 0;
+        margin-top: 8px;
     }
     
-    .asset-actions {
+    .asset-meta {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .stat-group {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .create-content,
+    .waiting-content {
+        flex-direction: column;
         text-align: center;
     }
     
-    .asset-actions .slds-button {
-        margin: 0.25rem;
-        width: 100%;
+    .create-icon,
+    .waiting-icon {
+        margin-right: 0;
+        margin-bottom: 8px;
     }
-}
-
-/* 애니메이션 효과 */
-.asset-card,
-.create-asset-card,
-.pending-card {
-    transition: all 0.3s ease;
-}
-
-.asset-card:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
-}
-
-.create-asset-card:hover {
-    border-color: #005fb2;
-    background-color: #f8f9fa;
-}
-
-.pending-card:hover {
-    border-color: #dd7a00;
-    background-color: #fef5e7;
-}
-
-/* 버튼 호버 효과 */
-.create-button:hover {
-    transform: scale(1.05);
-    transition: transform 0.2s ease;
-}
-
-/* 로딩 스피너 컨테이너 */
-.slds-align_absolute-center {
-    min-height: 200px;
-}
-
-/* 진행률 바 애니메이션 */
-.slds-progress-bar__value {
-    transition: width 0.5s ease-in-out;
-}
-
-/* 상태 뱃지 색상 조정 */
-.slds-badge_success {
-    background-color: #04844b;
-}
-
-.slds-badge_warning {
-    background-color: #fe9339;
-}
-
-.slds-badge_inverse {
-    background-color: #706e6b;
 }

@@ -1,0 +1,84 @@
+<template>
+    <div class="payment-timeline-container">
+        <!-- 헤더 -->
+        <div class="timeline-header">
+            <div class="header-content">
+                <h2 class="timeline-title">
+                    <lightning-icon icon-name="utility:clock" size="small" class="title-icon"></lightning-icon>
+                    납부 일정
+                </h2>
+                <lightning-button 
+                    label="PDF" 
+                    icon-name="utility:download"
+                    variant="neutral"
+                    size="small"
+                    onclick={handleDownloadPDF}
+                    disabled={isLoading}
+                    class="download-btn">
+                </lightning-button>
+            </div>
+        </div>
+
+        <template if:true={isLoading}>
+            <div class="loading-container">
+                <lightning-spinner alternative-text="로딩 중..." size="small"></lightning-spinner>
+            </div>
+        </template>
+        
+        <!-- 진행률 카드 -->
+        <template if:true={timelineData}>
+            <div class="progress-card">
+                <div class="progress-header">
+                    <div class="progress-stats">
+                        <span class="progress-percentage">{timelineData.progressPercentage}%</span>
+                        <span class="progress-text">완료</span>
+                    </div>
+                    <div class="progress-count">
+                        <span class="completed-count">{timelineData.completedInstallments}</span>
+                        <span class="total-count">/{timelineData.totalInstallments}</span>
+                    </div>
+                </div>
+                
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style={progressBarStyle}></div>
+                </div>
+                
+                <div class="progress-summary">
+                    <div class="summary-item completed">
+                        <span class="summary-dot"></span>
+                        <span class="summary-label">완납 {timelineData.completedInstallments}건</span>
+                    </div>
+                    <div class="summary-item overdue">
+                        <span class="summary-dot"></span>
+                        <span class="summary-label">연체 {timelineData.overdueInstallments}건</span>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- 납부 항목 리스트 -->
+        <div class="payment-list">
+            <template for:each={filteredPayments} for:item="payment">
+                <div key={payment.Id} class="payment-item">
+                    <div class="payment-indicator">
+                        <div class={payment.indicatorClass}></div>
+                    </div>
+                    
+                    <div class="payment-content">
+                        <div class="payment-header">
+                            <span class="payment-sequence">{payment.Installment_Number__c}차</span>
+                            <span class="payment-amount">{payment.formattedAmount}</span>
+                        </div>
+                        
+                        <div class="payment-details">
+                            <span class="payment-date">{payment.formattedDueDate}</span>
+                            <span class="payment-status" data-status={payment.Status__c}>
+                                {payment.statusLabel}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+</template>

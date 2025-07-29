@@ -1,0 +1,358 @@
+<apex:page controller="TaxInvoicePDFController" 
+           showQuickActionVfHeader="false" 
+           sidebar="false" 
+           showHeader="false" 
+           applyHtmlTag="false" 
+           contentType="text/html;charset=UTF-8"
+           standardStylesheets="false"
+           renderAs="pdf">
+    <html>
+        <head>
+            <meta charset="UTF-8" />
+            <title>세금계산서</title>
+            <style>
+                @page {
+                    margin: 1.0cm;
+                    size: A4;
+                    @bottom-center {
+                        content: "Page " counter(page) " of " counter(pages);
+                        font-size: 10pt;
+                        color: #666;
+                    }
+                }
+                
+                /* Common */
+                body {
+                    font-family: Arial Unicode MS, 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
+                    font-size: 12px;
+                    color: #000;
+                    line-height: 1.3;
+                    margin: 0;
+                    padding: 0;
+                }
+                
+                /* Header */
+                .document-header {
+                    border: 2px solid #000;
+                    padding: 8px;
+                    margin-bottom: 15px;
+                    text-align: center;
+                }
+                
+                .document-type {
+                    font-size: 24px;
+                    font-weight: bold;
+                    letter-spacing: 4px;
+                    margin-bottom: 5px;
+                }
+                
+                .document-info {
+                    font-size: 11px;
+                    color: #666;
+                }
+                
+                /* Company Info */
+                .company-section {
+                    display: table;
+                    width: 100%;
+                    margin-bottom: 20px;
+                }
+                
+                .supplier-info, .buyer-info {
+                    display: table-cell;
+                    width: 48%;
+                    vertical-align: top;
+                    border: 1px solid #000;
+                    padding: 12px;
+                }
+                
+                .supplier-info {
+                    margin-right: 4%;
+                }
+                
+                .company-title {
+                    background: #f0f0f0;
+                    text-align: center;
+                    font-weight: bold;
+                    padding: 6px;
+                    margin-bottom: 10px;
+                    border-bottom: 1px solid #ccc;
+                    font-size: 13px;
+                }
+                
+                .company-field {
+                    margin-bottom: 8px;
+                    font-size: 11px;
+                }
+                
+                .field-label {
+                    display: inline-block;
+                    width: 80px;
+                    font-weight: bold;
+                }
+                
+                /* Items Table */
+                .items-section {
+                    margin: 20px 0;
+                }
+                
+                .section-title {
+                    background: #f0f0f0;
+                    border: 1px solid #000;
+                    padding: 8px;
+                    text-align: center;
+                    font-weight: bold;
+                    margin-bottom: 0;
+                    font-size: 13px;
+                }
+                
+                .items-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    font-size: 11px;
+                }
+                
+                .items-table th {
+                    background: #f0f0f0;
+                    border: 1px solid #000;
+                    padding: 8px 4px;
+                    text-align: center;
+                    font-weight: bold;
+                    font-size: 11px;
+                }
+                
+                .items-table td {
+                    border: 1px solid #000;
+                    padding: 6px 4px;
+                    text-align: center;
+                    font-size: 11px;
+                }
+                
+                .item-name {
+                    text-align: left !important;
+                    padding-left: 8px !important;
+                }
+                
+                .amount-cell {
+                    text-align: right !important;
+                    padding-right: 8px !important;
+                    font-weight: bold;
+                }
+                
+                /* Summary Section */
+                .summary-section {
+                    margin: 20px 0;
+                    border: 2px solid #000;
+                }
+                
+                .summary-header {
+                    background: #f0f0f0;
+                    padding: 8px;
+                    text-align: center;
+                    font-weight: bold;
+                    border-bottom: 1px solid #000;
+                }
+                
+                .summary-table {
+                    width: 100%;
+                }
+                
+                .summary-table td {
+                    border-bottom: 1px solid #ccc;
+                    padding: 8px 12px;
+                    font-size: 12px;
+                }
+                
+                .summary-label {
+                    background: #f9f9f9;
+                    font-weight: bold;
+                    width: 120px;
+                    border-right: 1px solid #ccc;
+                }
+                
+                .summary-value {
+                    font-weight: bold;
+                    text-align: right;
+                }
+                
+                .total-amount {
+                    background: #e9ecef;
+                    font-size: 14px;
+                    color: #1f4e79;
+                    border-top: 2px solid #000 !important;
+                }
+                
+                /* Footer */
+                .footer-section {
+                    margin-top: 30px;
+                    text-align: center;
+                    border: 1px solid #ccc;
+                    padding: 15px;
+                    background: #f8f9fa;
+                }
+                
+                .issue-info {
+                    font-size: 11px;
+                    color: #666;
+                    margin-bottom: 8px;
+                }
+                
+                .company-seal {
+                    margin: 10px 0;
+                    font-size: 12px;
+                    font-weight: bold;
+                }
+                
+                /* Korean Number Format */
+                .krw {
+                    font-weight: bold;
+                }
+            </style>
+        </head>
+        <body>
+            <!-- Document Header -->
+            <div class="document-header">
+                <div class="document-type">세금계산서</div>
+                <div class="document-info">
+                    계산서번호: {!orderNumber} | 발행일자: {!TEXT(TODAY())}
+                </div>
+            </div>
+            
+            <!-- Company Information -->
+            <div class="company-section">
+                <div class="supplier-info">
+                    <div class="company-title">공급자</div>
+                    <div class="company-field">
+                        <span class="field-label">상호(법인명):</span> Tiger 주식회사
+                    </div>
+                    <div class="company-field">
+                        <span class="field-label">대표자:</span> Tiger 대표이사
+                    </div>
+                    <div class="company-field">
+                        <span class="field-label">사업자등록번호:</span> 220-88-93187
+                    </div>
+                    <div class="company-field">
+                        <span class="field-label">주소:</span> 서울특별시 강남구 테헤란로 231
+                    </div>
+                    <div class="company-field">
+                        <span class="field-label">업태:</span> 서비스업
+                    </div>
+                    <div class="company-field">
+                        <span class="field-label">종목:</span> 카셰어링 서비스
+                    </div>
+                </div>
+                
+                <div class="buyer-info">
+                    <div class="company-title">공급받는자</div>
+                    <div class="company-field">
+                        <span class="field-label">상호(법인명):</span> {!accountName}
+                    </div>
+                    <div class="company-field">
+                        <span class="field-label">대표자:</span> {!IF(ISBLANK(accountOwner), '회사 대표', accountOwner)}
+                    </div>
+                    <div class="company-field">
+                        <span class="field-label">사업자등록번호:</span> {!IF(ISBLANK(accountBusinessNumber), '000-00-00000', accountBusinessNumber)}
+                    </div>
+                    <div class="company-field">
+                        <span class="field-label">주소:</span> {!IF(ISBLANK(accountAddress), '사업장 주소', accountAddress)}
+                    </div>
+                    <div class="company-field">
+                        <span class="field-label">업태:</span> {!IF(ISBLANK(accountIndustry), '일반 기업', accountIndustry)}
+                    </div>
+                    <div class="company-field">
+                        <span class="field-label">종목:</span> 카셰어링 이용
+                    </div>
+                    <div class="company-field">
+                        <span class="field-label">연락처:</span> {!IF(ISBLANK(accountPhone), '02-0000-0000', accountPhone)}
+                    </div>
+                    <div class="company-field">
+                        <span class="field-label">홈페이지:</span> {!IF(ISBLANK(accountWebsite), 'www.example.com', accountWebsite)}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Items Section -->
+            <div class="items-section">
+                <div class="section-title">공급받을 재화와 용역의 내용</div>
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th width="8%">순번</th>
+                            <th width="35%">품목명</th>
+                            <th width="10%">규격</th>
+                            <th width="8%">수량</th>
+                            <th width="12%">단가</th>
+                            <th width="12%">공급가액</th>
+                            <th width="15%">비고</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <apex:variable value="{!1}" var="itemNumber"/>
+                        <apex:repeat value="{!orderItems}" var="item">
+                            <tr>
+                                <td>{!itemNumber}</td>
+                                <td class="item-name">{!item.Product2.Name}</td>
+                                <td>EA</td>
+                                <td>{!ROUND(item.Quantity, 0)}</td>
+                                <td class="amount-cell">₩{!TEXT(ROUND(item.UnitPrice, 0))}</td>
+                                <td class="amount-cell">₩{!TEXT(ROUND(item.TotalPrice, 0))}</td>
+                                <td>기업용 카셰어링</td>
+                            </tr>
+                            <apex:variable value="{!itemNumber + 1}" var="itemNumber"/>
+                        </apex:repeat>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Summary Section -->
+            <div class="summary-section">
+                <div class="summary-header">세액 계산</div>
+                <table class="summary-table">
+                    <tr>
+                        <td class="summary-label">공급가액</td>
+                        <td class="summary-value krw">₩{!TEXT(ROUND(supplyAmount, 0))}</td>
+                    </tr>
+                    <tr>
+                        <td class="summary-label">세액 (10%)</td>
+                        <td class="summary-value krw">₩{!TEXT(ROUND(vatAmount, 0))}</td>
+                    </tr>
+                    <tr class="total-amount">
+                        <td class="summary-label">합계금액</td>
+                        <td class="summary-value krw">₩{!TEXT(ROUND(totalAmount, 0))}</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <!-- Additional Info -->
+            <div style="margin: 20px 0; font-size: 11px;">
+                <strong>현금</strong>: ₩{!TEXT(ROUND(totalAmount, 0))} &nbsp;&nbsp;
+                <strong>수표</strong>: ₩0 &nbsp;&nbsp;
+                <strong>어음</strong>: ₩0 &nbsp;&nbsp;
+                <strong>외상</strong>: ₩0
+            </div>
+            
+            <!-- Remarks -->
+            <div style="border: 1px solid #ccc; padding: 10px; margin: 15px 0; min-height: 40px;">
+                <strong>비고:</strong> Tiger B2B 기업용 카셰어링 서비스 이용료
+                <br/>
+                <span style="font-size: 10px; color: #666;">
+                    * 본 세금계산서는 Tiger B2B 시스템에서 자동 발행됩니다.
+                </span>
+            </div>
+            
+            <!-- Footer -->
+                        <!-- Footer -->
+            <div class="footer-section">
+                <div class="issue-info">
+                    위와 같이 세금계산서를 발행합니다.
+                </div>
+                <div class="company-seal">
+                    Tiger 주식회사 (인)
+                </div>
+                <div class="issue-info">
+                    발행담당자: Tiger B2B 영업팀 | 연락처: sales@tiger.kr
+                </div>
+            </div>
+        </body>
+    </html>
+</apex:page>

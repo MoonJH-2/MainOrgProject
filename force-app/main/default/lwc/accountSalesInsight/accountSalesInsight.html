@@ -1,0 +1,55 @@
+<template>
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+
+    <template if:true={error}>
+        <div class="slds-box slds-theme_error slds-m-bottom_small">
+            <h3 class="slds-text-heading_small">오류 발생</h3>
+            <p>{error.body.message}</p>
+        </div>
+    </template>
+
+    <template if:true={hasData}>
+        <!-- Account Summary Card -->
+        <div class="slds-card slds-m-bottom_medium">
+            <div class="slds-card__header slds-grid">
+                <div class="slds-no-flex">
+                    <lightning-badge label={salesData.priorityLevel} variant={priorityVariant}></lightning-badge>
+                </div>
+            </div>
+            
+            <div class="slds-card__body slds-card__body_inner">
+                <!-- 핵심 지표 -->
+                <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                    <div class="slds-col slds-size_1-of-3">
+                        <div class="slds-text-align_center slds-p-around_small insight-box">
+                            <div class="slds-text-heading_large">{formattedRevenue}</div>
+                            <div class="slds-text-body_small slds-text-color_weak">연간 매출</div>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <div class="slds-text-align_center slds-p-around_small insight-box">
+                            <div class="slds-text-heading_large">{opportunityCount}건</div>
+                            <div class="slds-text-body_small slds-text-color_weak">진행중 기회</div>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <div class="slds-text-align_center slds-p-around_small insight-box">
+                            <div class="slds-text-heading_large">{salesData.priorityLevel}</div>
+                            <div class="slds-text-body_small slds-text-color_weak">우선순위</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 퀵 액션 버튼 -->
+                
+            </div>
+        </div>
+
+        <!-- 영업 인사이트 패널 -->
+
+        <!-- 관련 정보 요약 -->
+        
+    </template>
+</template>

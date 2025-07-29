@@ -1,0 +1,293 @@
+/* 전체 대시보드 컨테이너 */
+.minimal-dashboard {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: 100vh;
+    padding: 1rem;
+}
+
+/* 빠른 액션 바 */
+.quick-actions {
+    margin-bottom: 1rem;
+}
+
+/* 메트릭 카드 그리드 */
+.metrics-grid {
+    margin-bottom: 2rem;
+}
+
+/* 메트릭 카드 스타일 */
+.metric-card {
+    border: none;
+    border-radius: 16px;
+    padding: 1.5rem;
+    background: white;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    min-height: 200px;
+    border-left: 4px solid #0176d3;
+}
+
+.metric-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Asset 이름 섹션 */
+.asset-name-section {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.asset-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* 메트릭 헤더 */
+.metric-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #f7fafc;
+}
+
+.metric-header h3 {
+    margin: 0;
+    color: #2d3748;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* 메트릭 컨텐츠 */
+.metric-content {
+    flex-grow: 1;
+}
+
+.metric-label {
+    font-size: 0.75rem;
+    color: #718096;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin: 0.5rem 0 0.25rem 0;
+}
+
+.metric-value {
+    font-size: 0.875rem;
+    color: #2d3748;
+    font-weight: 500;
+    margin: 0;
+    word-break: break-word;
+}
+
+.metric-value-medium {
+    font-size: 1rem;
+    color: #1a202c;
+    font-weight: 600;
+    margin: 0;
+    word-break: break-word;
+}
+
+.metric-value-large {
+    font-size: 1.25rem;
+    color: #0176d3;
+    font-weight: 700;
+    margin: 0;
+    word-break: break-word;
+}
+
+/* 납부 카드 특별 스타일 */
+.payment-card {
+    border-left-color: #38a169;
+}
+
+.payment-card .metric-header h3 {
+    color: #38a169;
+}
+
+/* 진행률 섹션 */
+.progress-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.progress-info {
+    flex-grow: 1;
+}
+
+.progress-percentage {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #38a169;
+    margin: 0;
+    line-height: 1;
+}
+
+.progress-detail {
+    font-size: 0.875rem;
+    color: #718096;
+    margin: 0.25rem 0 0 0;
+}
+
+/* 고객 카드 특별 스타일 */
+.customer-card {
+    border-left-color: #805ad5;
+}
+
+.customer-card .metric-header h3 {
+    color: #805ad5;
+}
+
+/* 액션 버튼 */
+.action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+/* 완료율 표시 */
+.completion-indicator {
+    text-align: center;
+    padding: 0.75rem;
+    background: linear-gradient(135deg, #38a169 0%, #48bb78 100%);
+    border-radius: 8px;
+    color: white;
+}
+
+.completion-text {
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+/* 인사이트 섹션 */
+.insights-section {
+    margin-top: 1.5rem;
+}
+
+.insight-box {
+    padding: 1.25rem;
+    border-radius: 12px;
+    background: #f7fafc;
+    border-left: 4px solid #4299e1;
+}
+
+.compact-insight {
+    min-height: 140px;
+}
+
+.insight-box p {
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #4a5568;
+}
+
+.insight-box strong {
+    color: #2d3748;
+    font-weight: 600;
+}
+
+/* 버튼 스타일 */
+lightning-button {
+    margin-top: 0.5rem;
+}
+
+/* 뱃지 커스텀 스타일 */
+lightning-badge {
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+    .metrics-grid .slds-col {
+        flex-basis: 50%;
+        max-width: 50%;
+    }
+    
+    .progress-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .minimal-dashboard {
+        padding: 0.75rem;
+    }
+    
+    .metrics-grid .slds-col {
+        flex-basis: 100%;
+        max-width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    .metric-card {
+        min-height: 160px;
+        padding: 1.25rem;
+    }
+    
+    .asset-name {
+        font-size: 1.125rem;
+    }
+    
+    .metric-value-large {
+        font-size: 1.125rem;
+    }
+    
+    .progress-percentage {
+        font-size: 1.25rem;
+    }
+    
+    .action-buttons {
+        justify-content: center;
+    }
+    
+    .compact-insight {
+        min-height: 120px;
+        padding: 1rem;
+    }
+}
+
+/* 로딩 상태 */
+.slds-spinner_container {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 16px;
+}
+
+/* 오류 상태 스타일 개선 */
+.slds-scoped-notification {
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    border-left: 4px solid #e53e3e;
+}
+
+/* 카드 그림자 효과 개선 */
+lightning-card {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border: none;
+}
+
+/* 텍스트 가독성 개선 */
+h1, h2, h3, h4 {
+    line-height: 1.3;
+}
+
+p {
+    line-height: 1.5;
+}
+
+/* 프로그레스 링 컨테이너 */
+lightning-progress-ring {
+    --slds-c-progress-ring-color-background: #e2e8f0;
+    --slds-c-progress-ring-color-fill: #38a169;
+}

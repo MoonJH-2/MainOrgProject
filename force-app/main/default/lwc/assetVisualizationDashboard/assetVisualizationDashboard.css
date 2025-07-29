@@ -1,0 +1,408 @@
+/* 전체 대시보드 스타일 */
+.visualization-dashboard {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    padding: 1.5rem;
+}
+
+/* 헤더 스타일 */
+.dashboard-header {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-left: 6px solid #1b96ff;
+}
+
+.dashboard-header h1 {
+    color: #1b96ff;
+    margin: 0;
+    font-weight: 700;
+}
+
+/* KPI 카드 스타일 */
+.kpi-section {
+    margin-bottom: 2rem;
+}
+
+.kpi-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    min-height: 120px;
+}
+
+.kpi-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.kpi-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.kpi-icon {
+    margin-right: 0.5rem;
+    color: #1b96ff;
+}
+
+.kpi-icon.success {
+    color: #4bca81;
+}
+
+.kpi-icon.warning {
+    color: #ffb75d;
+}
+
+.kpi-icon.info {
+    color: #667eea;
+}
+
+.kpi-label {
+    font-size: 0.875rem;
+    color: #706e6b;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.kpi-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #080707;
+    margin-bottom: 0.5rem;
+}
+
+.kpi-progress {
+    margin-top: 0.75rem;
+}
+
+/* 차트 컨테이너 스타일 */
+.chart-container {
+    min-height: 300px;
+    position: relative;
+}
+
+/* 파이 차트 플레이스홀더 */
+.pie-chart-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.chart-visual {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: conic-gradient(
+        #4bca81 0deg 270deg,
+        #ea001e 270deg 360deg
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.chart-visual::before {
+    content: '';
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    background: white;
+    border-radius: 50%;
+}
+
+.chart-legend {
+    display: flex;
+    gap: 1rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+}
+
+.legend-color.completed {
+    background-color: #4bca81;
+}
+
+.legend-color.pending {
+    background-color: #ea001e;
+}
+
+/* 트렌드 차트 플레이스홀더 */
+.trend-chart-placeholder {
+    height: 100%;
+    padding: 1rem;
+}
+
+.trend-visual {
+    position: relative;
+    height: 200px;
+    border-bottom: 2px solid #e5e5e5;
+    border-left: 2px solid #e5e5e5;
+}
+
+.trend-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+    background: linear-gradient(
+        45deg,
+        transparent 49%,
+        #1b96ff 49%,
+        #1b96ff 51%,
+        transparent 51%
+    );
+    background-size: 20px 20px;
+}
+
+.trend-points {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    padding: 0 20px;
+}
+
+.trend-point {
+    width: 12px;
+    height: 12px;
+    background: #1b96ff;
+    border-radius: 50%;
+    position: relative;
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.trend-point.active {
+    background: #4bca81;
+    transform: scale(1.3);
+}
+
+.trend-point::before {
+    content: attr(data-value);
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #080707;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.trend-point:hover::before {
+    opacity: 1;
+}
+
+.trend-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+    padding: 0 20px;
+    font-size: 0.875rem;
+    color: #706e6b;
+}
+
+/* 막대 차트 플레이스홀더 */
+.bar-chart-placeholder {
+    height: 100%;
+    padding: 1rem;
+}
+
+.bar-visual {
+    display: flex;
+    align-items: end;
+    justify-content: space-around;
+    height: 200px;
+    border-bottom: 2px solid #e5e5e5;
+    padding: 0 1rem;
+}
+
+.bar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    margin: 0 0.25rem;
+}
+
+.bar {
+    width: 40px;
+    background: linear-gradient(to top, #1b96ff, #667eea);
+    border-radius: 4px 4px 0 0;
+    min-height: 20px;
+    height: 80px; /* 기본 높이 */
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.bar:hover {
+    background: linear-gradient(to top, #4bca81, #1b96ff);
+    transform: scaleY(1.1);
+}
+
+.bar-label {
+    font-size: 0.75rem;
+    color: #706e6b;
+    text-align: center;
+    max-width: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 상태 분포 스타일 */
+.status-distribution {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem 0;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: #f8f9fb;
+    border-radius: 6px;
+    border-left: 3px solid #1b96ff;
+}
+
+.asset-name {
+    flex-grow: 1;
+    font-size: 0.875rem;
+    color: #080707;
+}
+
+.current-asset-indicator {
+    color: #4bca81;
+}
+
+/* 테이블 스타일 */
+.slds-table {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.slds-table thead th {
+    background: #f8f9fb;
+    color: #080707;
+    font-weight: 600;
+}
+
+.slds-table tbody tr:nth-child(even) {
+    background: #fafafa;
+}
+
+.slds-table tbody tr:hover {
+    background: #f0f8ff;
+}
+
+/* 탭 컨테이너 스타일 */
+lightning-tabset {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Lightning 카드 개선 */
+lightning-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+    .kpi-section .slds-col {
+        flex-basis: 50%;
+        max-width: 50%;
+    }
+    
+    .chart-section .slds-col {
+        flex-basis: 100%;
+        max-width: 100%;
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .visualization-dashboard {
+        padding: 1rem;
+    }
+    
+    .dashboard-header {
+        padding: 1.5rem;
+    }
+    
+    .kpi-section .slds-col {
+        flex-basis: 100%;
+        max-width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    .kpi-card {
+        min-height: 100px;
+        padding: 1rem;
+    }
+    
+    .kpi-value {
+        font-size: 1.5rem;
+    }
+    
+    .chart-visual {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .chart-visual::before {
+        width: 90px;
+        height: 90px;
+    }
+}
+
+/* 스피너 스타일 */
+.slds-spinner_container {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+}
+
+/* 오류 메시지 스타일 */
+.slds-scoped-notification {
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}

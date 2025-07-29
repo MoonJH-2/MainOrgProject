@@ -1,0 +1,190 @@
+/* 로직 1: Assets 우선순위 대시보드 스타일 */
+
+.priority-item {
+    border-left: 4px solid var(--slds-c-border-color-default);
+    transition: all 0.2s ease-in-out;
+}
+
+.priority-item:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+/* 긴급도별 왼쪽 테두리 색상 */
+.priority-item[data-urgency="긴급"] {
+    border-left-color: var(--slds-c-color-border-error);
+}
+
+.priority-item[data-urgency="중요"] {
+    border-left-color: var(--slds-c-color-border-warning);
+}
+
+.priority-item[data-urgency="일반"] {
+    border-left-color: var(--slds-c-color-border-success);
+}
+
+.priority-item[data-urgency="낮음"] {
+    border-left-color: var(--slds-c-color-border-neutral);
+}
+
+/* 순위 번호 스타일 */
+.rank-number {
+    min-width: 2rem;
+}
+
+.rank-number span {
+    color: var(--slds-c-text-color-default-strong);
+    font-weight: bold;
+}
+
+/* 긴급도 표시 */
+.urgency-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.urgency-icon {
+    font-size: 1.2rem;
+}
+
+/* 점수 뱃지 */
+.score-badge {
+    font-weight: bold;
+    font-size: 0.9rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* 고객 정보 영역 */
+.customer-info h3 {
+    margin-bottom: 0.25rem;
+}
+
+.customer-info p {
+    margin-bottom: 0.125rem;
+}
+
+/* Asset 세부 정보 */
+.asset-details > div {
+    margin-bottom: 0.125rem;
+}
+
+/* 액션 추천 영역 */
+.action-recommendation {
+    padding: 0.5rem;
+    background-color: var(--slds-c-color-background-neutral);
+    border-radius: 0.25rem;
+    border-left: 3px solid var(--slds-c-color-border-brand);
+}
+
+/* 통계 섹션 */
+.statistics-visible {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.statistics-hidden {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .priority-item {
+        margin-bottom: 1rem;
+    }
+    
+    .asset-details {
+        text-align: left !important;
+        margin-top: 0.5rem;
+    }
+    
+    .slds-grid_align-spread {
+        display: block !important;
+    }
+    
+    .rank-number span {
+        font-size: 1.5rem;
+    }
+}
+
+/* 터치 디바이스 최적화 */
+@media (hover: none) and (pointer: coarse) {
+    .priority-item:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    lightning-button {
+        min-height: 44px; /* 터치 타겟 최소 크기 */
+    }
+}
+
+/* 다크 모드 지원 */
+@media (prefers-color-scheme: dark) {
+    .priority-item {
+        background-color: var(--slds-c-color-background-alt);
+    }
+    
+    .action-recommendation {
+        background-color: var(--slds-c-color-background-alt-2);
+    }
+}
+
+/* 애니메이션 */
+.priority-item {
+    animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 로딩 상태 */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+/* 접근성 개선 */
+.priority-item:focus-within {
+    outline: 2px solid var(--slds-c-color-border-brand);
+    outline-offset: 2px;
+}
+
+/* 성능 최적화 */
+.priority-item,
+.urgency-indicator,
+.score-badge {
+    will-change: transform;
+}
+
+/* 인쇄 스타일 */
+@media print {
+    .priority-item {
+        break-inside: avoid;
+        border: 1px solid #ccc;
+        margin-bottom: 1rem;
+        padding: 1rem;
+    }
+    
+    lightning-button,
+    .slds-button {
+        display: none;
+    }
+}

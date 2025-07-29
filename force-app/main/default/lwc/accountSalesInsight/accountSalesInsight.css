@@ -1,0 +1,155 @@
+.insight-box {
+    background-color: var(--slds-g-color-neutral-base-95);
+    border: 1px solid var(--slds-g-color-border-base-1);
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+}
+
+.insight-box:hover {
+    background-color: var(--slds-g-color-neutral-base-90);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.action-icon {
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+}
+
+.related-box {
+    background-color: var(--slds-g-color-neutral-base-95);
+    border: 1px solid var(--slds-g-color-border-base-1);
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.related-box:hover {
+    background-color: var(--slds-g-color-brand-base-10);
+    border-color: var(--slds-g-color-brand-base-40);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.related-box:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Priority badge styling */
+.slds-badge[variant="error"] {
+    background-color: var(--slds-g-color-error-base-40);
+    color: white;
+}
+
+.slds-badge[variant="warning"] {
+    background-color: var(--slds-g-color-warning-base-60);
+    color: white;
+}
+
+.slds-badge[variant="success"] {
+    background-color: var(--slds-g-color-success-base-50);
+    color: white;
+}
+
+/* Card enhancements */
+.slds-card {
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s ease;
+}
+
+.slds-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Button enhancements */
+.slds-button {
+    border-radius: 0.375rem;
+    transition: all 0.2s ease;
+}
+
+.slds-button:hover {
+    transform: translateY(-1px);
+}
+
+/* Animation for loading */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.slds-card {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .slds-grid.slds-gutters {
+        flex-direction: column;
+    }
+    
+    .slds-col {
+        width: 100% !important;
+        margin-bottom: 0.5rem;
+    }
+    
+    .insight-box,
+    .related-box {
+        text-align: center;
+        padding: 1rem;
+    }
+    
+    .slds-button {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Enhanced visual hierarchy */
+.slds-text-heading_large {
+    font-weight: 700;
+    color: var(--slds-g-color-brand-base-60);
+}
+
+.slds-text-heading_medium {
+    font-weight: 600;
+    color: var(--slds-g-color-neutral-base-10);
+}
+
+/* Custom theme colors for insights */
+.slds-theme_info {
+    background: linear-gradient(135deg, 
+        var(--slds-g-color-brand-base-95) 0%, 
+        var(--slds-g-color-brand-base-90) 100%);
+    border-left: 4px solid var(--slds-g-color-brand-base-50);
+}
+
+.slds-theme_shade {
+    background: linear-gradient(135deg, 
+        var(--slds-g-color-neutral-base-95) 0%, 
+        var(--slds-g-color-neutral-base-90) 100%);
+    border-left: 3px solid var(--slds-g-color-neutral-base-60);
+}
+
+/* Interactive feedback */
+.slds-box:hover {
+    transform: translateX(2px);
+    transition: transform 0.2s ease;
+}
+
+/* Status indicators */
+.priority-high {
+    background-color: #ff6b6b;
+    color: white;
+}
+
+.priority-medium {
+    background-color: #ffd93d;
+    color: #333;
+}
+
+.priority-low {
+    background-color: #6bcf7f;
+    color: white;
+}

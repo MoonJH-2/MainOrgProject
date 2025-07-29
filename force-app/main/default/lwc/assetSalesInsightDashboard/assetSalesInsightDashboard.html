@@ -1,0 +1,314 @@
+<template>
+    <div class="asset-sales-dashboard">
+        <!-- 대시보드 헤더 -->
+        <div class="slds-card slds-m-bottom_medium">
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__figure">
+                        <lightning-icon icon-name="standard:asset_relationship" size="large"></lightning-icon>
+                    </div>
+                    <div class="slds-media__body">
+                        <h1 class="slds-card__header-title">
+                            <span class="slds-text-heading_medium">
+                                📊 영업 인사이트 대시보드
+                            </span>
+                        </h1>
+                        <p class="slds-text-body_regular slds-text-color_weak">
+                            {assetName} • {assetPrice} • {assetStatus}
+                        </p>
+                    </div>
+                </header>
+                <div class="slds-no-flex">
+                    <lightning-button 
+                        label="새로고침" 
+                        icon-name="utility:refresh"
+                        onclick={handleRefresh}
+                        variant="neutral">
+                    </lightning-button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 요약 카드들 -->
+        <div class="slds-grid slds-gutters slds-wrap summary-cards">
+            <!-- 갱신 기회 요약 -->
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                <div class="slds-card summary-card renewal-card">
+                    <div class="slds-card__body slds-card__body_inner">
+                        <div class="slds-media">
+                            <div class="slds-media__figure">
+                                <lightning-icon icon-name="utility:refresh" size="medium" variant="success"></lightning-icon>
+                            </div>
+                            <div class="slds-media__body">
+                                <div class="slds-text-heading_large">{renewalSummary.totalOpportunities}</div>
+                                <div class="slds-text-body_regular">갱신 기회</div>
+                                <div class="slds-text-body_small">고우선순위: {renewalSummary.highPriorityCount}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 영업 기회 요약 -->
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                <div class="slds-card summary-card sales-card">
+                    <div class="slds-card__body slds-card__body_inner">
+                        <div class="slds-media">
+                            <div class="slds-media__figure">
+                                <lightning-icon icon-name="utility:opportunity" size="medium" variant="brand"></lightning-icon>
+                            </div>
+                            <div class="slds-media__body">
+                                <div class="slds-text-heading_large">{salesSummary.totalValue}</div>
+                                <div class="slds-text-body_regular">영업 기회 가치</div>
+                                <div class="slds-text-body_small">업그레이드: {salesSummary.upgradeCount} | 확장: {salesSummary.crossSellCount}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 리스크 분석 요약 -->
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                <div class="slds-card summary-card risk-card">
+                    <div class="slds-card__body slds-card__body_inner">
+                        <div class="slds-media">
+                            <div class="slds-media__figure">
+                                <lightning-icon icon-name="utility:warning" size="medium" variant="warning"></lightning-icon>
+                            </div>
+                            <div class="slds-media__body">
+                                <lightning-badge label={riskSummary.overallRisk} variant={riskSummary.riskVariant}></lightning-badge>
+                                <div class="slds-text-body_regular slds-m-top_xx-small">고객 리스크</div>
+                                <div class="slds-text-body_small">만족도: {riskSummary.satisfactionScore}%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 상세 분석 탭 -->
+        <div class="slds-tabs_default">
+            <ul class="slds-tabs_default__nav">
+                <li class={renewalTabClass} title="갱신 기회">
+                    <button class="slds-tabs_default__link" data-tab="renewal" onclick={handleTabSelect}>
+                        🔄 갱신 기회
+                    </button>
+                </li>
+                <li class={salesTabClass} title="영업 기회">
+                    <button class="slds-tabs_default__link" data-tab="sales" onclick={handleTabSelect}>
+                        💼 영업 기회
+                    </button>
+                </li>
+                <li class={riskTabClass} title="리스크 분석">
+                    <button class="slds-tabs_default__link" data-tab="risk" onclick={handleTabSelect}>
+                        ⚠️ 리스크 분석
+                    </button>
+                </li>
+            </ul>
+
+            <!-- 갱신 기회 탭 -->
+            <div if:true={isRenewalTab} class="slds-tabs_default__content">
+                <template if:true={renewalOpportunities}>
+                    <template for:each={renewalOpportunities} for:item="renewal">
+                        <div key={renewal.assetId} class="slds-card slds-m-bottom_medium">
+                            <div class="slds-card__header">
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-grow">
+                                        <h3 class="slds-text-heading_small">{renewal.assetName}</h3>
+                                        <p class="slds-text-body_small">{renewal.accountName}</p>
+                                    </div>
+                                    <div class="slds-col slds-no-flex">
+                                        <lightning-badge 
+                                            label={renewal.priorityScore} 
+                                            variant={renewal.priorityVariant}>
+                                        </lightning-badge>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-card__body slds-card__body_inner">
+                                <div class="slds-grid slds-gutters">
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <dl class="slds-list_horizontal slds-wrap">
+                                            <dt class="slds-item_label slds-text-color_weak">갱신일:</dt>
+                                            <dd class="slds-item_detail">
+                                                <lightning-formatted-text value={renewal.renewalDate}></lightning-formatted-text>
+                                            </dd>
+                                            <dt class="slds-item_label slds-text-color_weak">현재 가치:</dt>
+                                            <dd class="slds-item_detail">
+                                                <lightning-formatted-text value={renewal.assetValue}></lightning-formatted-text>
+                                            </dd>
+                                            <dt class="slds-item_label slds-text-color_weak">예상 갱신가:</dt>
+                                            <dd class="slds-item_detail">
+                                                <lightning-formatted-text value={renewal.estimatedRenewalValue}></lightning-formatted-text>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <div class="slds-text-body_small">
+                                            <strong>갱신 전략:</strong>
+                                            <div class="slds-m-top_xx-small">{renewal.renewalStrategy}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-m-top_medium">
+                                    <lightning-button 
+                                        label="Opportunity 생성" 
+                                        data-name={renewal.assetName}
+                                        data-value={renewal.estimatedRenewalValue}
+                                        onclick={handleCreateOpportunity}
+                                        variant="brand"
+                                        class="slds-m-right_x-small">
+                                    </lightning-button>
+                                    <lightning-button 
+                                        label="Task 생성" 
+                                        data-subject={renewal.assetName}
+                                        onclick={handleCreateTask}
+                                        variant="neutral">
+                                    </lightning-button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </template>
+                <template if:false={renewalOpportunities}>
+                    <div class="slds-text-align_center slds-p-vertical_large">
+                        <lightning-icon icon-name="utility:info" variant="neutral" size="large"></lightning-icon>
+                        <div class="slds-text-heading_medium slds-m-top_small">갱신 기회가 없습니다</div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- 영업 기회 탭 -->
+            <div if:true={isSalesTab} class="slds-tabs_default__content">
+                <template if:true={salesOpportunities}>
+                    <template for:each={salesOpportunities} for:item="sales">
+                        <div key={sales.recommendedProduct} class="slds-card slds-m-bottom_medium">
+                            <div class="slds-card__header">
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-grow">
+                                        <h3 class="slds-text-heading_small">{sales.recommendedProduct}</h3>
+                                        <lightning-badge label={sales.opportunityType}></lightning-badge>
+                                    </div>
+                                    <div class="slds-col slds-no-flex">
+                                        <span class="slds-text-body_small">신뢰도: {sales.confidenceLevel}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-card__body slds-card__body_inner">
+                                <div class="slds-grid slds-gutters">
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <dl class="slds-list_horizontal slds-wrap">
+                                            <dt class="slds-item_label slds-text-color_weak">현재:</dt>
+                                            <dd class="slds-item_detail">{sales.currentAsset}</dd>
+                                            <dt class="slds-item_label slds-text-color_weak">예상 가치:</dt>
+                                            <dd class="slds-item_detail">
+                                                <lightning-formatted-text value={sales.estimatedValue}></lightning-formatted-text>
+                                            </dd>
+                                            <dt class="slds-item_label slds-text-color_weak">시간:</dt>
+                                            <dd class="slds-item_detail">{sales.timeframe}</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <div class="slds-text-body_small">
+                                            <strong>추천 근거:</strong>
+                                            <div class="slds-m-top_xx-small">{sales.reasoning}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-m-top_medium">
+                                    <div class="slds-text-body_small">
+                                        <strong>액션 플랜:</strong>
+                                        <div class="slds-m-top_xx-small">{sales.actionPlan}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </template>
+            </div>
+
+            <!-- 리스크 분석 탭 -->
+            <div if:true={isRiskTab} class="slds-tabs_default__content">
+                <div class="slds-card">
+                    <div class="slds-card__header">
+                        <h2 class="slds-card__header-title">
+                            <span class="slds-text-heading_small">🎯 고객 리스크 종합 분석</span>
+                        </h2>
+                    </div>
+                    <div class="slds-card__body slds-card__body_inner">
+                        <!-- 리스크 점수 요약 -->
+                        <div class="slds-grid slds-gutters slds-wrap">
+                            <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                                <div class="risk-metric">
+                                    <div class="slds-text-heading_medium">{riskAnalysis.paymentRiskScore}%</div>
+                                    <div class="slds-text-body_small">납부 리스크</div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                                <div class="risk-metric">
+                                    <div class="slds-text-heading_medium">{riskAnalysis.usageRiskScore}%</div>
+                                    <div class="slds-text-body_small">사용 패턴</div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                                <div class="risk-metric">
+                                    <div class="slds-text-heading_medium">{riskAnalysis.communicationRiskScore}%</div>
+                                    <div class="slds-text-body_small">커뮤니케이션</div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                                <div class="risk-metric">
+                                    <div class="slds-text-heading_medium">{riskAnalysis.competitorRiskScore}%</div>
+                                    <div class="slds-text-body_small">경쟁사 위험</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 종합 평가 -->
+                        <div class="slds-m-top_large">
+                            <div class="slds-grid slds-gutters">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <div class="overall-risk">
+                                        <div class="slds-text-heading_large">{riskAnalysis.overallRiskScore}%</div>
+                                        <lightning-badge 
+                                            label={riskAnalysis.riskLevel} 
+                                            variant={riskAnalysis.riskVariant}>
+                                        </lightning-badge>
+                                        <div class="slds-text-body_small">종합 리스크</div>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <div class="satisfaction-score">
+                                        <div class="slds-text-heading_large">{riskAnalysis.satisfactionPrediction}%</div>
+                                        <lightning-badge 
+                                            label={riskAnalysis.satisfactionLevel} 
+                                            variant="brand">
+                                        </lightning-badge>
+                                        <div class="slds-text-body_small">만족도 예측</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 리스크 완화 액션 -->
+                        <div class="slds-m-top_large">
+                            <h3 class="slds-text-heading_small slds-m-bottom_small">🎯 권장 액션</h3>
+                            <div class="slds-box slds-theme_shade">
+                                <div class="slds-text-body_regular">{riskAnalysis.riskMitigationActions}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 로딩 스피너 -->
+        <template if:true={isLoading}>
+            <div class="slds-backdrop slds-backdrop_open">
+                <div class="slds-align_absolute-center">
+                    <lightning-spinner alternative-text="분석 중..." size="medium"></lightning-spinner>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

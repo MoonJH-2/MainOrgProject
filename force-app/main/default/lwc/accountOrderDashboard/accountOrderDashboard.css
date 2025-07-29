@@ -1,0 +1,359 @@
+/* Tiger B2B 뷰 - 고급 시각화 CSS */
+
+/* 전체 컨테이너 */
+.slds-card__body {
+    padding: 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%);
+    min-height: 600px;
+}
+
+/* 메트릭 카드 컨테이너 */
+.metrics-container {
+    padding: 0 1rem;
+}
+
+/* 개별 메트릭 카드 */
+.metric-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 200px;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.metric-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+}
+
+.metric-card:hover .metric-icon-container {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* 호버 시 아이콘 컨테이너 배경 강화 */
+.order-card:hover .metric-icon-container {
+    background: rgba(1, 118, 211, 0.2);
+    border-color: #1e88e5;
+}
+
+.opportunity-card:hover .metric-icon-container {
+    background: rgba(75, 202, 129, 0.2);
+    border-color: #66bb6a;
+}
+
+.asset-card:hover .metric-icon-container {
+    background: rgba(254, 147, 57, 0.2);
+    border-color: #ff9800;
+}
+
+/* 아이콘 컨테이너 */
+.metric-icon-container {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.order-card .metric-icon-container {
+    background: rgba(1, 118, 211, 0.1);
+    border: 2px solid #0176d3;
+}
+
+.opportunity-card .metric-icon-container {
+    background: rgba(75, 202, 129, 0.1);
+    border: 2px solid #4bca81;
+}
+
+.asset-card .metric-icon-container {
+    background: rgba(254, 147, 57, 0.1);
+    border: 2px solid #fe9339;
+}
+
+.metric-icon {
+    transform: scale(1.2);
+    transition: transform 0.3s ease;
+}
+
+/* 각 카드별 아이콘 색상 */
+.order-card .metric-icon {
+    color: #0176d3;
+}
+
+.opportunity-card .metric-icon {
+    color: #4bca81;
+}
+
+.asset-card .metric-icon {
+    color: #fe9339;
+}
+
+/* 호버 시 아이콘 색상 변화 */
+.order-card:hover .metric-icon {
+    color: #1e88e5;
+    transform: scale(1.3);
+}
+
+.opportunity-card:hover .metric-icon {
+    color: #66bb6a;
+    transform: scale(1.3);
+}
+
+.asset-card:hover .metric-icon {
+    color: #ff9800;
+    transform: scale(1.3);
+}
+
+/* 메트릭 콘텐츠 */
+.metric-content {
+    padding-right: 4rem;
+}
+
+.metric-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.metric-number {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.order-card .metric-number {
+    color: #0176d3;
+}
+
+.opportunity-card .metric-number {
+    color: #4bca81;
+}
+
+.asset-card .metric-number {
+    color: #fe9339;
+}
+
+.metric-unit {
+    font-size: 0.875rem;
+    color: #64748b;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+/* 세부 정보 */
+.metric-details {
+    margin-top: 1rem;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    padding: 0.25rem 0;
+}
+
+.detail-label {
+    font-size: 0.8rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.detail-value {
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.detail-value.active {
+    color: #0176d3;
+}
+
+.detail-value.success {
+    color: #4bca81;
+}
+
+.detail-value.amount {
+    color: #1e293b;
+    font-weight: 700;
+}
+
+.detail-value.managing,
+.detail-value.service {
+    color: #fe9339;
+}
+
+/* 장식 요소 */
+.metric-decoration {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    border-radius: 0 0 16px 16px;
+}
+
+.order-decoration {
+    background: linear-gradient(90deg, #0176d3 0%, #1e88e5 100%);
+}
+
+.opportunity-decoration {
+    background: linear-gradient(90deg, #4bca81 0%, #66bb6a 100%);
+}
+
+.asset-decoration {
+    background: linear-gradient(90deg, #fe9339 0%, #ff9800 100%);
+}
+
+/* 탭 섹션 */
+.tabs-section {
+    padding: 0 1rem;
+}
+
+.tiger-accent {
+    color: #ff6600;
+}
+
+/* 향상된 탭 스타일 */
+.enhanced-tabs {
+    --slds-c-tabs-color-border: #e2e8f0;
+    --slds-c-tabs-item-color-border-active: #ff6600;
+    --slds-c-tabs-item-color-background-active: #fff8f5;
+}
+
+/* 탭 콘텐츠 섹션 */
+.order-section,
+.opportunity-section,
+.asset-section,
+.insights-section {
+    background: white;
+    border-radius: 12px;
+    margin-top: 1rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e2e8f0;
+}
+
+/* 금액 표시 개선 */
+.total-amount-display,
+.total-opportunity-display {
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.75rem;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.total-amount-display span:first-child,
+.total-opportunity-display span:first-child {
+    display: block;
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.total-amount-display span:last-child {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0176d3;
+}
+
+.total-opportunity-display span:last-child {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #4bca81;
+}
+
+/* 데이터 테이블 개선 */
+lightning-datatable {
+    --slds-c-datatable-header-color-background: #f8fafc;
+    --slds-c-datatable-header-text-color: #374151;
+    --slds-c-datatable-cell-color-border: #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* 인사이트 섹션 */
+.performance-metrics,
+.customer-relationship,
+.recommended-actions {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
+}
+
+.performance-metrics:hover,
+.customer-relationship:hover,
+.recommended-actions:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .metric-card {
+        margin-bottom: 1rem;
+        min-height: 160px;
+    }
+    
+    .metric-number {
+        font-size: 2.5rem;
+    }
+    
+    .metric-icon-container {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* 로딩 및 에러 상태 */
+.slds-align_absolute-center {
+    padding: 3rem;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+/* 애니메이션 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.metric-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.metric-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.metric-card:nth-child(3) {
+    animation-delay: 0.3s;
+}

@@ -1,0 +1,238 @@
+<template>
+    <div class="modern-asset-container">
+        <!-- 헤더 섹션 -->
+        <div class="asset-header">
+            <div class="header-content">
+                <div class="asset-title">
+                    <lightning-icon icon-name="standard:asset_object" size="medium" class="title-icon"></lightning-icon>
+                    <div class="title-text">
+                        <h1 class="asset-name">{assetName}</h1>
+                        <p class="asset-subtitle">Serial: {serialNumber}</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <lightning-button-icon
+                        icon-name="utility:refresh"
+                        variant="border"
+                        onclick={handleRefresh}
+                        alternative-text="새로고침"
+                        class="action-button">
+                    </lightning-button-icon>
+                </div>
+            </div>
+        </div>
+
+        <!-- 상태 카드 섹션 -->
+        <div class="status-cards">
+            <div class="status-card primary">
+                <div class="card-icon">
+                    <lightning-icon icon-name="utility:success" size="large" class="status-icon"></lightning-icon>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">Asset 상태</h3>
+                    <p class="card-value status-purchased">{assetStatus}</p>
+                    <p class="card-subtitle">구매 완료</p>
+                </div>
+            </div>
+
+            <div class="status-card secondary">
+                <div class="card-icon">
+                    <lightning-icon icon-name="utility:currency" size="large" class="value-icon"></lightning-icon>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">계약 금액</h3>
+                    <p class="card-value">{formattedTotalValue}</p>
+                    <p class="card-subtitle">총 계약 가치</p>
+                </div>
+            </div>
+
+            <div class="status-card tertiary">
+                <div class="card-icon">
+                    <lightning-icon icon-name="utility:date_time" size="large" class="date-icon"></lightning-icon>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">구매일</h3>
+                    <p class="card-value">{formattedPurchaseDate}</p>
+                    <p class="card-subtitle">설치 완료</p>
+                </div>
+            </div>
+
+            <div class="status-card quaternary">
+                <div class="card-icon">
+                    <lightning-icon icon-name="utility:check" size="large" class="lifecycle-icon"></lightning-icon>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">납부 현황</h3>
+                    <p class="card-value payment-complete">100% 완료</p>
+                    <p class="card-subtitle">2/2 회차 완납</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 상세 정보 섹션 -->
+        <div class="detail-sections">
+            <!-- 고객 정보 카드 -->
+            <div class="detail-card">
+                <div class="card-header">
+                    <lightning-icon icon-name="standard:account" size="small" class="header-icon"></lightning-icon>
+                    <h3 class="section-title">고객 정보</h3>
+                    <lightning-button
+                        label="상세보기"
+                        variant="base"
+                        onclick={navigateToAccount}
+                        class="detail-button">
+                    </lightning-button>
+                </div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <span class="info-label">고객명</span>
+                        <span class="info-value">{accountName}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">고객 유형</span>
+                        <span class="info-value">{accountType}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">연락처</span>
+                        <span class="info-value">{accountPhone}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order 정보 카드 -->
+            <div class="detail-card">
+                <div class="card-header">
+                    <lightning-icon icon-name="standard:orders" size="small" class="header-icon"></lightning-icon>
+                    <h3 class="section-title">연결된 Order</h3>
+                    <lightning-button
+                        label="상세보기"
+                        variant="base"
+                        onclick={navigateToOrder}
+                        class="detail-button">
+                    </lightning-button>
+                </div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <span class="info-label">Order 번호</span>
+                        <span class="info-value">{orderNumber}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Order 상태</span>
+                        <span class="info-value status-active">{orderStatus}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">계약번호</span>
+                        <span class="info-value">{contractNumber}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 제품 정보 카드 -->
+            <div class="detail-card">
+                <div class="card-header">
+                    <lightning-icon icon-name="standard:product" size="small" class="header-icon"></lightning-icon>
+                    <h3 class="section-title">제품 정보</h3>
+                </div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <span class="info-label">제품명</span>
+                        <span class="info-value">{productName}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">단가</span>
+                        <span class="info-value">{unitPrice}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">수량</span>
+                        <span class="info-value">{quantity}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 납부 현황 시각화 -->
+        <div class="payment-visualization">
+            <div class="payment-header">
+                <h3 class="payment-title">납부 현황</h3>
+                <div class="payment-progress">
+                    <span class="progress-text">100% 완료</span>
+                </div>
+            </div>
+            <div class="payment-timeline">
+                <div class="timeline-item completed">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h4>1차 납부</h4>
+                        <p class="payment-amount">₩5,950,000</p>
+                        <p class="payment-date">2025. 7. 25. 완납</p>
+                    </div>
+                </div>
+                <div class="timeline-item completed">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h4>2차 납부</h4>
+                        <p class="payment-amount">₩5,950,000</p>
+                        <p class="payment-date">2026. 1. 25. 완납</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 액션 센터 -->
+        <div class="action-center">
+            <h3 class="action-title">빠른 액션</h3>
+            <div class="action-buttons">
+                <lightning-button
+                    label="납부확인서 다운로드"
+                    variant="brand"
+                    icon-name="utility:download"
+                    onclick={downloadPaymentConfirmation}
+                    class="action-btn primary">
+                </lightning-button>
+                <lightning-button
+                    label="세금계산서 다운로드"
+                    variant="neutral"
+                    icon-name="utility:file"
+                    onclick={downloadTaxInvoice}
+                    class="action-btn">
+                </lightning-button>
+                <lightning-button
+                    label="갱신 검토"
+                    variant="success"
+                    icon-name="utility:refresh"
+                    onclick={reviewRenewal}
+                    class="action-btn">
+                </lightning-button>
+                <lightning-button
+                    label="고객 연락"
+                    variant="neutral"
+                    icon-name="utility:call"
+                    onclick={contactCustomer}
+                    class="action-btn">
+                </lightning-button>
+            </div>
+        </div>
+
+        <!-- 인사이트 카드 -->
+        <div class="insights-card">
+            <div class="insights-header">
+                <lightning-icon icon-name="utility:insights" size="small" class="insights-icon"></lightning-icon>
+                <h3 class="insights-title">비즈니스 인사이트</h3>
+            </div>
+            <div class="insights-content">
+                <div class="insight-item success">
+                    <lightning-icon icon-name="utility:success" size="x-small" class="insight-icon"></lightning-icon>
+                    <p>완납 완료로 갱신 영업 기회가 높습니다</p>
+                </div>
+                <div class="insight-item info">
+                    <lightning-icon icon-name="utility:info" size="x-small" class="insight-icon"></lightning-icon>
+                    <p>고객 만족도가 높은 제품 카테고리입니다</p>
+                </div>
+                <div class="insight-item warning">
+                    <lightning-icon icon-name="utility:warning" size="x-small" class="insight-icon"></lightning-icon>
+                    <p>계약 만료 6개월 전 갱신 논의를 시작하세요</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

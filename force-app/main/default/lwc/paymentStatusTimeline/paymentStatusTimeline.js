@@ -4,6 +4,7 @@ import { refreshApex } from '@salesforce/apex';
 import getPaymentTimeline from '@salesforce/apex/PaymentStatusTimelineController.getPaymentTimeline';
 import updatePaymentStatus from '@salesforce/apex/PaymentStatusTimelineController.updatePaymentStatus';
 import generatePaymentSchedulePDF from '@salesforce/apex/PaymentStatusTimelineController.generatePaymentSchedulePDF';
+import createPaymentStatusManually from '@salesforce/apex/PaymentScheduleService.createPaymentStatusManually';
 
 export default class PaymentStatusTimeline extends LightningElement {
     @api recordId; // Order Id
@@ -160,5 +161,24 @@ export default class PaymentStatusTimeline extends LightningElement {
         if (status === '완납') return 'marker-paid';
         if (isOverdue) return 'marker-overdue';
         return 'marker-unpaid';
+    }
+
+    // 수동으로 PaymentStatus 생성
+    async handleCreatePaymentStatus() {
+        this.isLoading = true;
+        try {
+            const result = await createPaymentStatusManually({ orderId: this.recordId });
+            
+            this.showToast('성공', result, 'success');
+            
+            // 데이터 새로고침
+            await refreshApex(this.wiredTimelineResult);
+            
+        } catch (error) {
+            console.error('PaymentStatus 생성 오류:', error);
+            this.showToast('오류', error.body?.message || 'PaymentStatus 생성에 실패했습니다.', 'error');
+        } finally {
+            this.isLoading = false;
+        }
     }
 }

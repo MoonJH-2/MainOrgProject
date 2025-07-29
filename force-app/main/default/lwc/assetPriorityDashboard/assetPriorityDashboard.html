@@ -1,0 +1,209 @@
+<template>
+    <!-- 로직 1: Assets 우선순위 대시보드 -->
+    <lightning-card title={cardTitle} icon-name="standard:asset_object">
+        
+        <!-- 헤더 액션 버튼들 -->
+        <div slot="actions">
+            <lightning-button-group>
+                <lightning-button 
+                    label="새로고침" 
+                    icon-name="utility:refresh"
+                    onclick={handleRefresh}
+                    disabled={isLoading}>
+                </lightning-button>
+                <lightning-button 
+                    label={viewButtonLabel}
+                    icon-name="utility:expand"
+                    onclick={handleToggleView}
+                    disabled={isLoading}>
+                </lightning-button>
+            </lightning-button-group>
+        </div>
+
+        <!-- 로딩 스피너 -->
+        <template if:true={isLoading}>
+            <div class="slds-is-relative slds-p-around_large">
+                <lightning-spinner alternative-text="우선순위 계산 중..." size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- 오류 메시지 -->
+        <template if:true={error}>
+            <div class="slds-p-around_medium">
+                <div class="slds-notify slds-notify_alert slds-theme_error">
+                    <span class="slds-assistive-text">오류</span>
+                    <h2>오류가 발생했습니다: {error}</h2>
+                </div>
+            </div>
+        </template>
+
+        <!-- 통계 요약 섹션 -->
+        <template if:true={hasData}>
+            <div class="slds-p-horizontal_medium slds-p-vertical_small">
+                <!-- 요약 정보 -->
+                <div class="slds-grid slds-wrap slds-gutters_small">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-4">
+                        <div class="slds-box slds-theme_shade slds-text-align_center">
+                            <div class="slds-text-heading_small">🔥 긴급</div>
+                            <div class="slds-text-heading_large slds-text-color_error">{urgentCount}</div>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-4">
+                        <div class="slds-box slds-theme_shade slds-text-align_center">
+                            <div class="slds-text-heading_small">⚠️ 중요</div>
+                            <div class="slds-text-heading_large slds-text-color_warning">{importantCount}</div>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-4">
+                        <div class="slds-box slds-theme_shade slds-text-align_center">
+                            <div class="slds-text-heading_small">📋 일반</div>
+                            <div class="slds-text-heading_large slds-text-color_success">{normalCount}</div>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-4">
+                        <div class="slds-box slds-theme_shade slds-text-align_center">
+                            <div class="slds-text-heading_small">💰 예상매출</div>
+                            <div class="slds-text-heading_medium slds-text-color_success">{formattedTotalRevenue}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 요약 메시지 -->
+                <template if:true={summary}>
+                    <div class="slds-p-top_small">
+                        <div class="slds-notify slds-notify_toast slds-theme_info">
+                            <span class="slds-assistive-text">정보</span>
+                            <div class="slds-text-body_regular">{summary}</div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <!-- 우선순위 리스트 -->
+        <template if:true={hasData}>
+            <div class="slds-p-horizontal_medium">
+                <template for:each={priorities} for:item="priority" for:index="index">
+                    <div key={priority.asset.Id} class="priority-item slds-box slds-m-bottom_small">
+                        
+                        <!-- 순위 및 긴급도 -->
+                        <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center">
+                            <div class="slds-col slds-shrink">
+                                <div class="slds-grid slds-grid_vertical-align-center">
+                                    <div class="rank-number slds-m-right_small">
+                                        <span class="slds-text-heading_large">{index}.</span>
+                                    </div>
+                                    <div class="urgency-indicator slds-m-right_small">
+                                        <span class="urgency-icon">{priority.urgencyIcon}</span>
+                                        <span class={priority.urgencyClass}>{priority.urgencyLevel}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-shrink">
+                                <div class="score-badge slds-badge slds-theme_neutral">
+                                    {priority.scoreFormatted}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 고객 정보 -->
+                        <div class="slds-grid slds-wrap slds-p-top_small">
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <div class="customer-info">
+                                    <h3 class="slds-text-heading_medium">
+                                        <a href="#" 
+                                           data-account-id={priority.asset.AccountId}
+                                           onclick={handleAccountClick}
+                                           class="slds-link">
+                                            {priority.accountName}
+                                        </a>
+                                    </h3>
+                                    <p class="slds-text-body_regular slds-text-color_weak">
+                                        Asset: 
+                                        <a href="#"
+                                           data-asset-id={priority.asset.Id}
+                                           onclick={handleAssetClick}
+                                           class="slds-link">
+                                            {priority.assetName}
+                                        </a>
+                                    </p>
+                                    <p class="slds-text-body_small">
+                                        📞 {priority.contactInfo}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <div class="asset-details slds-text-align_right">
+                                    <div class="slds-text-body_regular">
+                                        💵 Asset 가치: <strong>{priority.formattedPrice}</strong>
+                                    </div>
+                                    <div class="slds-text-body_regular">
+                                        💰 예상 매출: <strong>{priority.formattedExpectedRevenue}</strong>
+                                    </div>
+                                    <div class="slds-text-body_small slds-text-color_weak">
+                                        📅 사용 기간: {priority.daysFromInstall}일 ({priority.renewalStatus})
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 액션 가이드 -->
+                        <div class="slds-p-top_small">
+                            <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center">
+                                <div class="slds-col">
+                                    <div class="action-recommendation slds-text-body_regular">
+                                        <strong>추천 액션:</strong> {priority.actionRecommendation}
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-shrink">
+                                    <lightning-button-group>
+                                        <!-- 전화 걸기 버튼 -->
+                                        <lightning-button 
+                                            label="📞 전화"
+                                            variant="neutral"
+                                            size="small"
+                                            data-phone={priority.phoneNumber}
+                                            data-account-name={priority.accountName}
+                                            onclick={handleCallCustomer}>
+                                        </lightning-button>
+                                        
+                                        <!-- 갱신 시작 버튼 (높은 점수만) -->
+                                        <template if:true={priority.showCreateOpportunity}>
+                                            <lightning-button 
+                                                label="🔄 갱신 시작"
+                                                variant="brand"
+                                                size="small"
+                                                data-asset-id={priority.asset.Id}
+                                                data-account-name={priority.accountName}
+                                                onclick={handleCreateRenewal}>
+                                            </lightning-button>
+                                        </template>
+                                    </lightning-button-group>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <!-- 데이터 없음 메시지 -->
+        <template if:false={hasData}>
+            <template if:false={isLoading}>
+                <template if:false={error}>
+                    <div class="slds-p-around_large slds-text-align_center">
+                        <div class="slds-illustration slds-illustration_small">
+                            <div class="slds-text-heading_medium slds-p-bottom_small">
+                                📭 우선순위 고객이 없습니다
+                            </div>
+                            <div class="slds-text-body_regular slds-text-color_weak">
+                                분석 가능한 Assets이 없거나 갱신 예정인 고객이 없습니다.
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </template>
+        </template>
+
+    </lightning-card>
+</template>

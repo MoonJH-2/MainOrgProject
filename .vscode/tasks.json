@@ -1,0 +1,20 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Deploy Enhanced Account Details Component",
+			"type": "shell",
+			"command": "sf",
+			"args": [
+				"project",
+				"deploy",
+				"start",
+				"-d",
+				"force-app/main/default/lwc/enhancedAccountDetails"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"isBackground": false
+		}
+	]
+}

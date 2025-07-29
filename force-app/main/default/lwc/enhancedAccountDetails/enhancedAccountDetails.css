@@ -1,0 +1,141 @@
+/* Enhanced Account Details 컴포넌트 스타일 */
+.enhanced-account-details {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+}
+
+/* 계정 헤더 스타일 */
+.enhanced-account-details .slds-card__header {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-bottom: 3px solid #0070d2;
+    border-radius: 0.5rem 0.5rem 0 0;
+    padding: 1.5rem;
+}
+
+.enhanced-account-details h1 span {
+    background: linear-gradient(135deg, #0070d2, #005fb2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+}
+
+/* 탭 네비게이션 스타일 */
+.enhanced-account-details .slds-tabs_default__nav {
+    background: linear-gradient(135deg, #ffffff 0%, #f4f6f9 100%);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+}
+
+.enhanced-account-details .slds-tabs_default__nav li {
+    margin: 0 0.25rem;
+}
+
+.enhanced-account-details .slds-tabs_default__link {
+    background: transparent;
+    border: 2px solid transparent;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    color: #5c6b73;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.enhanced-account-details .slds-is-active .slds-tabs_default__link {
+    background: linear-gradient(135deg, #0070d2, #005fb2);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 112, 210, 0.3);
+    transform: translateY(-2px);
+}
+
+.enhanced-account-details .slds-tabs_default__link:hover {
+    background: linear-gradient(135deg, #f4f6f9, #e8ecef);
+    border-color: #0070d2;
+    transform: translateY(-1px);
+}
+
+/* 요약 카드 스타일 */
+.enhanced-account-details .summary-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 1px solid #e1e5e9;
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.enhanced-account-details .summary-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-color: #0070d2;
+}
+
+/* 상세정보 필드 스타일 */
+.enhanced-account-details .detail-field {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 1px solid #e1e5e9;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    transition: all 0.2s ease;
+}
+
+.enhanced-account-details .detail-field:hover {
+    border-color: #0070d2;
+    box-shadow: 0 4px 12px rgba(0, 112, 210, 0.1);
+}
+
+.enhanced-account-details .detail-field label {
+    color: #5c6b73;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+/* 관련정보 카드 스타일 */
+.enhanced-account-details .related-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f4f6f9 100%);
+    border: 2px solid #e1e5e9;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.enhanced-account-details .related-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    border-color: #0070d2;
+}
+
+.enhanced-account-details .related-card:focus {
+    outline: 3px solid #0070d2;
+    outline-offset: 2px;
+}
+
+/* 탭 컨텐츠 영역 */
+.enhanced-account-details .slds-tabs_default__content {
+    animation: fadeIn 0.3s ease-in;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 0.5rem;
+    backdrop-filter: blur(10px);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

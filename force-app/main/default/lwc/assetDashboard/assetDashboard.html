@@ -1,0 +1,255 @@
+<template>
+    <lightning-card title="Tiger B2B Asset 관리 대시보드" icon-name="standard:asset_object">
+        <div slot="actions">
+            <lightning-button-icon
+                icon-name="utility:refresh"
+                variant="border-filled"
+                onclick={handleRefresh}
+                alternative-text="새로고침"
+                disabled={isLoading}>
+            </lightning-button-icon>
+        </div>
+
+        <div class="slds-card__body slds-card__body_inner">
+            <template if:true={isLoading}>
+                <div class="slds-align_absolute-center slds-p-around_large">
+                    <lightning-spinner alternative-text="로딩 중..." size="medium"></lightning-spinner>
+                    <p class="slds-text-color_weak slds-m-top_small">Asset 정보를 로드하고 있습니다...</p>
+                </div>
+            </template>
+
+            <template if:true={error}>
+                <div class="slds-scoped-notification slds-media slds-media_center slds-theme_error">
+                    <div class="slds-media__figure">
+                        <lightning-icon icon-name="utility:error" alternative-text="Error" size="small" variant="inverse"></lightning-icon>
+                    </div>
+                    <div class="slds-media__body">
+                        <p><strong>오류가 발생했습니다:</strong> {error.body.message}</p>
+                    </div>
+                </div>
+            </template>
+
+            <template if:true={hasAssetInfo}>
+                <!-- Asset 개요 카드 -->
+                <div class="slds-box slds-theme_default slds-m-bottom_medium">
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_1-of-3">
+                            <div class="asset-overview">
+                                <h3 class="slds-text-heading_small slds-m-bottom_small">
+                                    <lightning-icon icon-name="standard:asset_object" size="small" class="slds-m-right_x-small"></lightning-icon>
+                                    Asset 정보
+                                </h3>
+                                <div class="slds-text-body_regular">
+                                    <p><strong>Asset 이름:</strong> {dashboardData.assetInfo.Name}</p>
+                                    <p><strong>상태:</strong> 
+                                        <lightning-badge label={dashboardData.assetInfo.Status} class={assetStatusClass}>
+                                        </lightning-badge>
+                                    </p>
+                                    <p><strong>시리얼 번호:</strong> {serialNumber}</p>
+                                    <p><strong>현재 계약 금액:</strong> {formattedTotalValue}</p>
+                                    <!-- <p><strong>구매일:</strong> {formattedPurchaseDate}</p> -->
+                                    <p><strong>구매일:</strong> {formattedInstallDate}</p>
+                                    <p><strong>라이프사이클 관리:</strong> {lifecycleManagementStatus}</p>
+                                    <p><strong>제품 유형:</strong> {competitorProductStatus}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-3">
+                            <template if:true={hasOrderInfo}>
+                                <div class="order-info">
+                                    <h3 class="slds-text-heading_small slds-m-bottom_small">
+                                        <lightning-icon icon-name="standard:orders" size="small" class="slds-m-right_x-small"></lightning-icon>
+                                        연결된 Order
+                                    </h3>
+                                    <div class="slds-text-body_regular">
+                                        <p><strong>Order 번호:</strong> {dashboardData.assetInfo.Order__r.Name}</p>
+                                        <p><strong>Order 상태:</strong> {dashboardData.assetInfo.Order__r.Status__c}</p>
+                                        <p><strong>계약 금액:</strong> ₩{dashboardData.assetInfo.Order__r.TotalAmount__c}</p>
+                                        <lightning-button
+                                            label="Order 보기"
+                                            onclick={navigateToOrder}
+                                            variant="brand-outline"
+                                            size="small"
+                                            class="slds-m-top_small">
+                                        </lightning-button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-3">
+                            <div class="account-info">
+                                <h3 class="slds-text-heading_small slds-m-bottom_small">
+                                    <lightning-icon icon-name="standard:account" size="small" class="slds-m-right_x-small"></lightning-icon>
+                                    고객 정보
+                                </h3>
+                                <div class="slds-text-body_regular">
+                                    <p><strong>고객명:</strong> {dashboardData.assetInfo.Account.Name}</p>
+                                    <p><strong>고객 유형:</strong> {dashboardData.assetInfo.Account.Type}</p>
+                                    <lightning-button
+                                        label="고객 보기"
+                                        onclick={navigateToAccount}
+                                        variant="brand-outline"
+                                        size="small"
+                                        class="slds-m-top_small">
+                                    </lightning-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 탭 섹션 -->
+                <lightning-tabset active-tab-value={activeTab} onactive={handleTabChange}>
+                    
+                    <!-- 납부 이력 탭 -->
+                    <lightning-tab label="납부 이력" value="payments">
+                        <template if:true={hasPaymentHistory}>
+                            <div class="payment-history slds-p-around_medium">
+                                <h3 class="slds-text-heading_small slds-m-bottom_medium">납부 이력</h3>
+                                <lightning-datatable
+                                    data={dashboardData.paymentHistory}
+                                    columns={paymentColumns}
+                                    key-field="Id"
+                                    hide-checkbox-column>
+                                </lightning-datatable>
+                            </div>
+                        </template>
+                        <template if:false={hasPaymentHistory}>
+                            <div class="slds-align_absolute-center slds-p-around_large">
+                                <lightning-icon icon-name="utility:info" size="medium" class="slds-m-bottom_small"></lightning-icon>
+                                <p class="slds-text-color_weak">납부 이력이 없습니다.</p>
+                            </div>
+                        </template>
+                    </lightning-tab>
+
+                    <!-- 기회 정보 탭 -->
+                    <lightning-tab label="연결된 기회" value="opportunities">
+                        <template if:true={hasOpportunities}>
+                            <div class="opportunities slds-p-around_medium">
+                                <h3 class="slds-text-heading_small slds-m-bottom_medium">연결된 영업 기회</h3>
+                                <lightning-datatable
+                                    data={dashboardData.opportunities}
+                                    columns={opportunityColumns}
+                                    key-field="Id"
+                                    hide-checkbox-column>
+                                </lightning-datatable>
+                            </div>
+                        </template>
+                        <template if:false={hasOpportunities}>
+                            <div class="slds-align_absolute-center slds-p-around_large">
+                                <lightning-icon icon-name="utility:info" size="medium" class="slds-m-bottom_small"></lightning-icon>
+                                <p class="slds-text-color_weak">연결된 영업 기회가 없습니다.</p>
+                            </div>
+                        </template>
+                    </lightning-tab>
+
+                    <!-- 영업 인사이트 탭 -->
+                    <lightning-tab label="영업 인사이트" value="insights">
+                        <div class="sales-insights slds-p-around_medium">
+                            <h3 class="slds-text-heading_small slds-m-bottom_medium">Tiger B2B 영업 인사이트</h3>
+                            
+                            <!-- Asset 기반 분석 -->
+                            <template if:true={assetBusinessInsights}>
+                                <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <div class="slds-box slds-theme_default tiger-branding">
+                                            <h4 class="slds-text-heading_x-small slds-m-bottom_small">
+                                                <lightning-icon icon-name="utility:money" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                                                납부 현황 분석
+                                            </h4>
+                                            <div class="payment-analysis">
+                                                <p><strong>주문 번호:</strong> {assetBusinessInsights.orderNumber}</p>
+                                                <p><strong>계약 금액:</strong> ₩{assetBusinessInsights.totalAmount}</p>
+                                                <p><strong>납부 진행:</strong> {assetBusinessInsights.paymentProgress}</p>
+                                                <p><strong>완납 금액:</strong> ₩{assetBusinessInsights.paidAmount}</p>
+                                                <div class="slds-m-top_small">
+                                                    <lightning-progress-bar 
+                                                        value={paymentCompletionRate} 
+                                                        size="small" 
+                                                        variant="base">
+                                                    </lightning-progress-bar>
+                                                    <p class="slds-text-color_success slds-m-top_x-small">
+                                                        <strong>납부 완료율: {paymentCompletionRate}%</strong>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <div class="slds-box slds-theme_default">
+                                            <h4 class="slds-text-heading_x-small slds-m-bottom_small">
+                                                <lightning-icon icon-name="utility:insights" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                                                고객 관리 포인트
+                                            </h4>
+                                            <div class="customer-insights">
+                                                <p><strong>고객명:</strong> {dashboardData.assetInfo.Account.Name}</p>
+                                                <p><strong>산업군:</strong> {dashboardData.assetInfo.Account.Industry}</p>
+                                                <p><strong>Asset 상태:</strong> {dashboardData.assetInfo.Status}</p>
+                                                <template if:true={dashboardData.assetInfo.Contact}>
+                                                    <p><strong>담당자:</strong> {dashboardData.assetInfo.Contact.Name}</p>
+                                                    <p><strong>연락처:</strong> {dashboardData.assetInfo.Contact.Phone}</p>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <!-- AI 인사이트 (기존) -->
+                            <template if:true={salesInsights}>
+                                <div class="slds-grid slds-gutters">
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <div class="slds-box slds-theme_shade">
+                                            <h4 class="slds-text-heading_x-small slds-m-bottom_small">
+                                                <lightning-icon icon-name="utility:warning" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                                                위험도 분석
+                                            </h4>
+                                            <p><strong>현재 위험도:</strong> {salesInsights.riskLevel}</p>
+                                            <p><strong>위험 요인:</strong> {salesInsights.riskFactors}</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <div class="slds-box slds-theme_shade">
+                                            <h4 class="slds-text-heading_x-small slds-m-bottom_small">
+                                                <lightning-icon icon-name="utility:opportunity" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                                                기회 분석
+                                            </h4>
+                                            <p><strong>확장 기회:</strong> {salesInsights.expansionOpportunity}</p>
+                                            <p><strong>추천 액션:</strong> {salesInsights.recommendedActions}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="slds-m-top_medium">
+                                    <div class="slds-box slds-theme_default">
+                                        <h4 class="slds-text-heading_x-small slds-m-bottom_small">
+                                            <lightning-icon icon-name="utility:summary" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                                            영업 분석 요약
+                                        </h4>
+                                        <p class="slds-text-body_regular">{salesInsights.summary}</p>
+                                    </div>
+                                </div>
+                            </template>
+                            
+                            <!-- 인사이트 로딩 상태 -->
+                            <template if:false={salesInsights}>
+                                <template if:false={assetBusinessInsights}>
+                                    <div class="slds-align_absolute-center slds-p-around_large">
+                                        <lightning-spinner alternative-text="인사이트 로딩 중..." size="small"></lightning-spinner>
+                                        <p class="slds-text-color_weak slds-m-top_small">영업 인사이트를 분석하고 있습니다...</p>
+                                    </div>
+                                </template>
+                            </template>
+                        </div>
+                    </lightning-tab>
+
+                </lightning-tabset>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,173 @@
+<template>
+    <div class="minimal-dashboard">
+        <template if:true={isLoading}>
+            <div class="slds-align_absolute-center slds-p-around_large">
+                <lightning-spinner alternative-text="로딩 중..." size="medium"></lightning-spinner>
+                <p class="slds-text-color_weak slds-m-top_small">Asset 정보를 로드하고 있습니다...</p>
+            </div>
+        </template>
+
+        <template if:true={error}>
+            <div class="slds-scoped-notification slds-media slds-media_center slds-theme_error">
+                <div class="slds-media__figure">
+                    <lightning-icon icon-name="utility:error" alternative-text="Error" size="small" variant="inverse"></lightning-icon>
+                </div>
+                <div class="slds-media__body">
+                    <p><strong>오류가 발생했습니다:</strong> {error.body.message}</p>
+                </div>
+            </div>
+        </template>
+
+        <template if:true={hasAssetData}>
+            <!-- Quick Action Bar -->
+            <div class="quick-actions slds-m-bottom_medium">
+                <div class="slds-grid slds-grid_align-end">
+                    <div class="slds-col slds-no-flex">
+                        <lightning-button-icon
+                            icon-name="utility:refresh"
+                            variant="border"
+                            onclick={handleRefresh}
+                            alternative-text="새로고침"
+                            size="small"
+                            disabled={isLoading}>
+                        </lightning-button-icon>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compact Metrics Grid -->
+            <div class="metrics-grid slds-grid slds-gutters slds-wrap slds-m-bottom_large">
+                
+                <!-- Asset Summary Card -->
+                <div class="slds-col slds-size_1-of-3 slds-medium-size_1-of-2 slds-small-size_1-of-1">
+                    <div class="metric-card slds-box slds-theme_default">
+                        <div class="metric-header">
+                            <div class="asset-name-section">
+                                <h3 class="asset-name">{assetData.Name}</h3>
+                                <lightning-badge label={assetStatusLabel} variant={assetStatusVariant} class="slds-m-left_small"></lightning-badge>
+                            </div>
+                        </div>
+                        <div class="metric-content">
+                            <div class="slds-grid slds-gutters_small">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <p class="metric-label">계약 금액</p>
+                                    <p class="metric-value-large">{formattedPrice}</p>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <p class="metric-label">시리얼</p>
+                                    <p class="metric-value">{assetData.SerialNumber}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Progress Card -->
+                <template if:true={hasPaymentInfo}>
+                    <div class="slds-col slds-size_1-of-3 slds-medium-size_1-of-2 slds-small-size_1-of-1">
+                        <div class="metric-card payment-card slds-box slds-theme_default">
+                            <div class="metric-header">
+                                <h3 class="slds-text-heading_small">납부 현황</h3>
+                                <lightning-badge label={paymentStatusLabel} variant={paymentStatusVariant} class="slds-m-left_small"></lightning-badge>
+                            </div>
+                            <div class="metric-content">
+                                <div class="progress-section slds-m-bottom_small">
+                                    <lightning-progress-ring 
+                                        value={paymentCompletionRate} 
+                                        size="large" 
+                                        variant="base">
+                                    </lightning-progress-ring>
+                                    <div class="progress-info">
+                                        <p class="progress-percentage">{paymentCompletionRate}%</p>
+                                        <p class="progress-detail">{paymentProgress}차 진행</p>
+                                    </div>
+                                </div>
+                                <template if:true={formattedPaidAmount}>
+                                    <p class="metric-label">완납 금액</p>
+                                    <p class="metric-value-medium">{formattedPaidAmount}</p>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Customer & Actions Card -->
+                <div class="slds-col slds-size_1-of-3 slds-medium-size_1-of-2 slds-small-size_1-of-1">
+                    <div class="metric-card customer-card slds-box slds-theme_default">
+                        <div class="metric-header">
+                            <h3 class="slds-text-heading_small">고객 정보</h3>
+                        </div>
+                        <div class="metric-content">
+                            <p class="metric-label">고객명</p>
+                            <p class="metric-value-medium">{customerName}</p>
+                            <p class="metric-label slds-m-top_small">산업군</p>
+                            <p class="metric-value">{industryInfo}</p>
+                            
+                            <div class="action-buttons slds-m-top_medium">
+                                <lightning-button
+                                    label="고객 보기"
+                                    onclick={navigateToAccount}
+                                    variant="brand-outline"
+                                    size="small"
+                                    class="slds-m-right_x-small">
+                                </lightning-button>
+                                <template if:true={orderNumber}>
+                                    <lightning-button
+                                        label="주문 보기"
+                                        onclick={navigateToOrder}
+                                        variant="neutral"
+                                        size="small">
+                                    </lightning-button>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Compact Business Insights -->
+            <template if:true={hasPaymentInfo}>
+                <div class="insights-section">
+                    <lightning-card title="결제 상세 정보" icon-name="utility:money">
+                        <div class="slds-card__body slds-card__body_inner">
+                            <div class="slds-grid slds-gutters">
+                                
+                                <!-- Payment Analysis -->
+                                <div class="slds-col slds-size_1-of-2">
+                                    <div class="insight-box compact-insight">
+                                        <template if:true={orderNumber}>
+                                            <p><strong>주문:</strong> #{orderNumber}</p>
+                                        </template>
+                                        <template if:true={formattedTotalAmount}>
+                                            <p><strong>계약 총액:</strong> {formattedTotalAmount}</p>
+                                        </template>
+                                        <p><strong>납부 진행:</strong> {paymentProgress}</p>
+                                        <div class="completion-indicator slds-m-top_small">
+                                            <span class="completion-text">{paymentCompletionRate}% 완료</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Customer Timeline -->
+                                <div class="slds-col slds-size_1-of-2">
+                                    <div class="insight-box compact-insight">
+                                        <p><strong>구매일:</strong> {formattedPurchaseDate}</p>
+                                        <p><strong>설치일:</strong> {formattedInstallDate}</p>
+                                        <p><strong>Asset 상태:</strong> {assetStatusLabel}</p>
+                                        <template if:true={assetData.Contact}>
+                                            <p><strong>담당자:</strong> {assetData.Contact.Name}</p>
+                                        </template>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </lightning-card>
+                </div>
+            </template>
+
+        </template>
+
+    </div>
+</template>

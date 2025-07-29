@@ -1,0 +1,207 @@
+/* 대시보드 전체 스타일 */
+.asset-sales-dashboard {
+    padding: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 요약 카드 스타일 */
+.summary-cards {
+    margin-bottom: 2rem;
+}
+
+.summary-card {
+    border-left: 4px solid #0070d2;
+    transition: all 0.3s ease;
+    height: 100px;
+}
+
+.summary-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+.renewal-card {
+    border-left-color: #04844b;
+}
+
+.sales-card {
+    border-left-color: #0070d2;
+}
+
+.risk-card {
+    border-left-color: #fe9339;
+}
+
+/* 탭 스타일 */
+.slds-tabs_default__nav {
+    border-bottom: 2px solid #e5e5e5;
+}
+
+.slds-tabs_default__link {
+    padding: 1rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.slds-tabs_default__link:hover {
+    background-color: #f4f6f9;
+}
+
+/* 활성 탭 스타일 */
+.slds-is-active .slds-tabs_default__link {
+    background-color: #0070d2;
+    color: white;
+    border-radius: 4px 4px 0 0;
+}
+
+/* 리스크 메트릭 스타일 */
+.risk-metric {
+    text-align: center;
+    padding: 1rem;
+    background-color: #f4f6f9;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+}
+
+.overall-risk,
+.satisfaction-score {
+    text-align: center;
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e5e5e5;
+}
+
+/* 배지 스타일 커스터마이징 */
+lightning-badge[label="높음"] {
+    --lwc-badgeColorBackground: #c23934;
+    --lwc-badgeColorForeground: white;
+}
+
+lightning-badge[label="보통"] {
+    --lwc-badgeColorBackground: #fe9339;
+    --lwc-badgeColorForeground: white;
+}
+
+lightning-badge[label="낮음"] {
+    --lwc-badgeColorBackground: #04844b;
+    --lwc-badgeColorForeground: white;
+}
+
+/* 카드 애니메이션 */
+.slds-card {
+    transition: all 0.3s ease;
+}
+
+.slds-card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 버튼 그룹 */
+.slds-card__body .slds-button-group {
+    margin-top: 1rem;
+}
+
+/* 로딩 상태 */
+.slds-backdrop {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .summary-cards .slds-col {
+        margin-bottom: 1rem;
+    }
+    
+    .slds-tabs_default__link {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    .asset-sales-dashboard {
+        padding: 0.5rem;
+    }
+}
+
+/* 데이터 리스트 스타일 */
+.slds-list_horizontal dt {
+    font-weight: 600;
+    color: #3e3e3c;
+    margin-right: 0.5rem;
+}
+
+.slds-list_horizontal dd {
+    margin-bottom: 0.5rem;
+}
+
+/* 액션 박스 스타일 */
+.slds-box {
+    background: linear-gradient(135deg, #f4f6f9 0%, #e8edf5 100%);
+    border-left: 4px solid #0070d2;
+}
+
+/* 아이콘 스타일 */
+lightning-icon {
+    margin-right: 0.5rem;
+}
+
+/* 그리드 간격 조정 */
+.slds-gutters {
+    margin: 0 -0.5rem;
+}
+
+.slds-gutters > .slds-col {
+    padding: 0 0.5rem;
+}
+
+/* 텍스트 강조 */
+.slds-text-heading_large {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #181818;
+}
+
+.slds-text-heading_medium {
+    color: #181818;
+    font-weight: 600;
+}
+
+/* 상태별 색상 */
+.status-success {
+    color: #04844b;
+}
+
+.status-warning {
+    color: #fe9339;
+}
+
+.status-error {
+    color: #c23934;
+}
+
+/* 프로그레스 바 스타일 */
+.progress-container {
+    width: 100%;
+    background-color: #e5e5e5;
+    border-radius: 4px;
+    overflow: hidden;
+    height: 8px;
+}
+
+.progress-bar {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.progress-success {
+    background-color: #04844b;
+}
+
+.progress-warning {
+    background-color: #fe9339;
+}
+
+.progress-error {
+    background-color: #c23934;
+}

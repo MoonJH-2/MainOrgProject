@@ -1,0 +1,261 @@
+<template>
+    <div class="enhanced-account-details">
+        <!-- Account Header -->
+        <div class="slds-card slds-m-bottom_medium">
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__figure">
+                        <lightning-icon icon-name="standard:account" size="large"></lightning-icon>
+                    </div>
+                    <div class="slds-media__body">
+                        <h1 class="slds-card__header-title">
+                            <span class="slds-text-heading_medium">
+                                🏢 {accountName}
+                            </span>
+                        </h1>
+                        <p class="slds-text-body_regular slds-text-color_weak">
+                            <lightning-formatted-phone value={accountPhone}></lightning-formatted-phone>
+                            <template if:true={accountWebsite}>
+                                • <lightning-formatted-url value={accountWebsite} target="_blank"></lightning-formatted-url>
+                            </template>
+                        </p>
+                    </div>
+                </header>
+                <div class="slds-no-flex">
+                    <lightning-badge label={priorityLabel} variant={priorityVariant}></lightning-badge>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="slds-tabs_default">
+            <ul class="slds-tabs_default__nav" role="tablist">
+                <li class={summaryTabClass} title="Summary">
+                    <button class="slds-tabs_default__link" role="tab" data-tab="summary" onclick={handleTabSelect}>
+                        📊 요약
+                    </button>
+                </li>
+                <li class={detailsTabClass} title="Details">
+                    <button class="slds-tabs_default__link" role="tab" data-tab="details" onclick={handleTabSelect}>
+                        📋 상세정보
+                    </button>
+                </li>
+                <li class={relatedTabClass} title="Related">
+                    <button class="slds-tabs_default__link" role="tab" data-tab="related" onclick={handleTabSelect}>
+                        🔗 관련정보
+                    </button>
+                </li>
+                <li class={newsTabClass} title="News">
+                    <button class="slds-tabs_default__link" role="tab" data-tab="news" onclick={handleTabSelect}>
+                        📰 뉴스
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Summary Tab Content -->
+            <div if:true={isSummaryTab} class="slds-tabs_default__content" role="tabpanel">
+                <div class="slds-grid slds-gutters slds-wrap">
+                    <template for:each={accountSummaryData} for:item="field">
+                        <div key={field.label} class="slds-col slds-size_1-of-2 slds-large-size_1-of-3 slds-m-bottom_medium">
+                            <div class="slds-box slds-theme_shade summary-card">
+                                <div class="slds-media slds-media_center">
+                                    <div class="slds-media__figure">
+                                        <lightning-icon icon-name={field.icon} size="small" variant={field.variant}></lightning-icon>
+                                    </div>
+                                    <div class="slds-media__body">
+                                        <div class="slds-text-body_small slds-text-color_weak">{field.label}</div>
+                                        <div class="slds-text-heading_small slds-truncate">
+                                            <template if:true={field.value}>
+                                                {field.value}
+                                            </template>
+                                            <template if:false={field.value}>
+                                                <span class="slds-text-color-weak">-</span>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="slds-card slds-m-top_medium">
+                    <div class="slds-card__header">
+                        <h2 class="slds-card__header-title">
+                            <span class="slds-text-heading_small">⚡ 빠른 작업</span>
+                        </h2>
+                    </div>
+                    <div class="slds-card__body slds-card__body_inner">
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col">
+                                <lightning-button 
+                                    label="📞 전화걸기" 
+                                    onclick={handlePhoneClick}
+                                    variant="neutral" 
+                                    class="slds-m-right_x-small">
+                                </lightning-button>
+                                <lightning-button 
+                                    label="🌐 웹사이트 방문" 
+                                    onclick={handleWebsiteClick}
+                                    variant="neutral"
+                                    class="slds-m-right_x-small">
+                                </lightning-button>
+                                <lightning-button 
+                                    label="👥 연락처 추가" 
+                                    data-object="Contact"
+                                    onclick={handleNewRecord}
+                                    variant="brand"
+                                    class="slds-m-right_x-small">
+                                </lightning-button>
+                                <lightning-button 
+                                    label="💼 기회 생성" 
+                                    data-object="Opportunity"
+                                    onclick={handleNewRecord}
+                                    variant="success">
+                                </lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details Tab Content -->
+            <div if:true={isDetailsTab} class="slds-tabs_default__content" role="tabpanel">
+                <div class="slds-card">
+                    <div class="slds-card__header">
+                        <h2 class="slds-card__header-title">
+                            <span class="slds-text-heading_small">📋 계정 상세 정보</span>
+                        </h2>
+                    </div>
+                    <div class="slds-card__body slds-card__body_inner">
+                        <div class="slds-grid slds-gutters slds-wrap">
+                            <template for:each={detailFields} for:item="field">
+                                <div key={field.apiName} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_medium">
+                                    <div class="detail-field">
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label slds-text-body_small">
+                                                {field.label}
+                                                <span class="slds-text-color_weak">({field.apiName})</span>
+                                            </label>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-text-body_regular">
+                                                    <template if:true={field.value}>
+                                                        {field.value}
+                                                    </template>
+                                                    <template if:false={field.value}>
+                                                        <span class="slds-text-color_weak">-</span>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Tab Content -->
+            <div if:true={isRelatedTab} class="slds-tabs_default__content" role="tabpanel">
+                <div class="slds-grid slds-gutters slds-wrap">
+                    <template for:each={relatedSummary} for:item="related">
+                        <div key={related.name} class="slds-col slds-size_1-of-2 slds-large-size_1-of-4 slds-m-bottom_medium">
+                            <div class="slds-card related-card" tabindex="0" role="button" data-object={related.name} onclick={handleViewRelated} onkeydown={handleKeyDown}>
+                                <div class="slds-card__body slds-card__body_inner slds-text-align_center">
+                                    <lightning-icon icon-name={related.icon} size="large" variant={related.variant}></lightning-icon>
+                                    <div class="slds-text-heading_large slds-m-top_small">{related.count}</div>
+                                    <div class="slds-text-body_regular">{related.name}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Quick Create Buttons -->
+                <div class="slds-card slds-m-top_medium">
+                    <div class="slds-card__header">
+                        <h2 class="slds-card__header-title">
+                            <span class="slds-text-heading_small">➕ 새로 만들기</span>
+                        </h2>
+                    </div>
+                    <div class="slds-card__body slds-card__body_inner">
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col">
+                                <lightning-button 
+                                    label="+ 연락처" 
+                                    data-object="Contact"
+                                    onclick={handleNewRecord}
+                                    variant="neutral"
+                                    class="slds-m-right_x-small">
+                                </lightning-button>
+                                <lightning-button 
+                                    label="+ 영업기회" 
+                                    data-object="Opportunity"
+                                    onclick={handleNewRecord}
+                                    variant="success"
+                                    class="slds-m-right_x-small">
+                                </lightning-button>
+                                <lightning-button 
+                                    label="+ 케이스" 
+                                    data-object="Case"
+                                    onclick={handleNewRecord}
+                                    variant="warning"
+                                    class="slds-m-right_x-small">
+                                </lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- News Tab Content -->
+            <div if:true={isNewsTab} class="slds-tabs_default__content" role="tabpanel">
+                <div class="slds-card">
+                    <div class="slds-card__header">
+                        <h2 class="slds-card__header-title">
+                            <span class="slds-text-heading_small">📰 관련 뉴스</span>
+                        </h2>
+                    </div>
+                    <div class="slds-card__body slds-card__body_inner">
+                        <template if:true={sampleNewsData}>
+                            <template for:each={sampleNewsData} for:item="news">
+                                <div key={news.id} class="slds-box slds-theme_shade slds-m-bottom_medium">
+                                    <div class="slds-media">
+                                        <div class="slds-media__figure">
+                                            <lightning-icon icon-name="standard:news" size="medium" variant="brand"></lightning-icon>
+                                        </div>
+                                        <div class="slds-media__body">
+                                            <h3 class="slds-text-heading_small slds-m-bottom_x-small">{news.title}</h3>
+                                            <p class="slds-text-body_regular slds-m-bottom_small">{news.summary}</p>
+                                            <div class="slds-grid slds-grid_align-spread">
+                                                <div class="slds-col">
+                                                    <span class="slds-text-body_small slds-text-color_weak">
+                                                        📅 {news.date} • 📰 {news.source}
+                                                    </span>
+                                                </div>
+                                                <div class="slds-col slds-no-flex">
+                                                    <lightning-badge label={news.category} variant="brand"></lightning-badge>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </template>
+                        <template if:false={sampleNewsData}>
+                            <div class="slds-text-align_center slds-p-vertical_large">
+                                <lightning-icon icon-name="standard:news" size="large" variant="neutral"></lightning-icon>
+                                <div class="slds-text-heading_medium slds-m-top_small">관련 뉴스가 없습니다</div>
+                                <div class="slds-text-body_regular slds-text-color_weak">
+                                    이 계정과 관련된 최신 뉴스를 찾을 수 없습니다.
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

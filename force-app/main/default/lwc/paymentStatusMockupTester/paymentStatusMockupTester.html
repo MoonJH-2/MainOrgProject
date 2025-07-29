@@ -1,0 +1,88 @@
+<template>
+    <div class="mockup-tester-container">
+        <!-- 테스트 컨트롤 헤더 -->
+        <div class="tester-header">
+            <h3 class="tester-title">
+                <lightning-icon icon-name="utility:test" size="small"></lightning-icon>
+                PaymentStatus 테스트 시나리오
+            </h3>
+            <div class="control-buttons">
+                <lightning-button
+                    label="실제 데이터 복원"
+                    variant="neutral"
+                    icon-name="utility:refresh"
+                    onclick={handleRestoreRealData}
+                    size="small">
+                </lightning-button>
+                <lightning-button
+                    label="새로고침"
+                    variant="brand"
+                    icon-name="utility:sync"
+                    onclick={handleRefreshMockup}
+                    disabled={isLoading}
+                    size="small">
+                </lightning-button>
+            </div>
+        </div>
+
+        <!-- 시나리오 선택 -->
+        <div class="scenario-selector">
+            <lightning-combobox
+                name="scenario"
+                label="테스트 시나리오 선택"
+                value={currentScenario}
+                options={scenarioOptions}
+                onchange={handleScenarioChange}
+                variant="label-inline"
+                disabled={isLoading}>
+            </lightning-combobox>
+        </div>
+
+        <!-- 로딩 상태 -->
+        <template if:true={isLoading}>
+            <div class="loading-container">
+                <lightning-spinner alternative-text="Mockup 데이터 로딩 중..." size="small"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- Mockup 데이터 미리보기 -->
+        <template if:true={mockupData}>
+            <div class="mockup-preview">
+                <div class="preview-header">
+                    <h4>📊 현재 시나리오 미리보기</h4>
+                </div>
+                
+                <div class="preview-content">
+                    <div class="summary-card">
+                        <div class="summary-item">
+                            <span class="label">진행률:</span>
+                            <span class="value progress">{mockupData.paymentSummary.progressPercentage}%</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="label">완납:</span>
+                            <span class="value completed">{mockupData.paymentSummary.completedPayments}개</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="label">연체:</span>
+                            <span class="value overdue">{mockupData.paymentSummary.overduePayments}개</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="label">미납:</span>
+                            <span class="value remaining">{mockupData.paymentSummary.remainingPayments}개</span>
+                        </div>
+                    </div>
+
+                    <div class="payments-list">
+                        <template for:each={mockupData.mockupPayments} for:item="payment">
+                            <div key={payment.installmentNumber} class="payment-item">
+                                <span class="installment">{payment.installmentNumber}차</span>
+                                <span class="status-badge" data-status={payment.status}>{payment.status}</span>
+                                <span class="amount">₩{payment.amount}</span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

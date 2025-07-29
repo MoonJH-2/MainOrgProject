@@ -1,345 +1,276 @@
-/* 헤더 액션 영역 */
-.header-actions {
-    display: flex;
-    gap: 0.5rem;
+/* 메인 컨테이너 */
+.payment-timeline-container {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e2e8f0;
 }
 
-/* 진행률 섹션 */
-.progress-section {
-    background: #f3f3f3;
-    padding: 1rem;
-    border-radius: 0.5rem;
+/* 헤더 */
+.timeline-header {
     margin-bottom: 1.5rem;
 }
 
-.progress-container {
-    width: 100%;
-    height: 1rem;
-    background-color: #e5e5e5;
-    border-radius: 0.5rem;
-    overflow: hidden;
-    margin: 0.5rem 0;
-}
-
-.progress-complete {
-    height: 100%;
-    background: linear-gradient(90deg, #04844b, #06c167);
-    border-radius: 0.5rem;
-    width: var(--progress-width, 0%);
-    transition: width 0.3s ease;
-}
-
-.progress-good {
-    height: 100%;
-    background: linear-gradient(90deg, #0176d3, #1ab3ff);
-    border-radius: 0.5rem;
-    width: var(--progress-width, 0%);
-    transition: width 0.3s ease;
-}
-
-.progress-low {
-    height: 100%;
-    background: linear-gradient(90deg, #fe9339, #ffb75d);
-    border-radius: 0.5rem;
-    width: var(--progress-width, 0%);
-    transition: width 0.3s ease;
-}
-
-.progress-info {
+.header-content {
     display: flex;
-    gap: 1rem;
-    font-size: 0.875rem;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.completed {
-    color: #04844b;
+.header-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.timeline-title {
+    font-size: 1.125rem;
     font-weight: 600;
-}
-
-.overdue {
-    color: #c23934;
-    font-weight: 600;
-}
-
-/* 필터 섹션 */
-.filter-section {
-    border-bottom: 1px solid #e5e5e5;
-    padding-bottom: 1rem;
-}
-
-/* 가로 타임라인 컨테이너 */
-.horizontal-timeline-container {
-    position: relative;
-    padding: 2rem 1rem;
-    overflow-x: auto;
-    overflow-y: visible;
-}
-
-/* 가로 타임라인 라인 */
-.horizontal-timeline-line {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #0176d3, #1ab3ff);
-    border-radius: 1.5px;
-    transform: translateY(-50%);
-    z-index: 1;
-}
-
-/* 타임라인 아이템들 래퍼 */
-.timeline-items-wrapper {
+    color: #1e293b;
     display: flex;
     align-items: center;
-    gap: 1rem;
-    min-width: max-content;
-    position: relative;
-    z-index: 2;
+    gap: 0.5rem;
+    margin: 0;
 }
 
-/* 가로 타임라인 아이템 */
-.horizontal-timeline-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    min-width: 200px;
+.title-icon {
+    color: #0176d3;
 }
 
-/* 가로 타임라인 마커 */
-.horizontal-timeline-marker {
-    position: relative;
-    background: white;
-    border-radius: 50%;
-    padding: 0.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    z-index: 10;
+.create-btn, .download-btn {
+    border-radius: 6px;
+}
+
+/* 로딩 */
+.loading-container {
+    padding: 2rem;
+    text-align: center;
+}
+
+/* 진행률 카드 */
+.progress-card {
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.progress-header {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
 }
 
-.installment-number {
-    font-size: 0.75rem;
-    font-weight: bold;
-    color: #747474;
-    margin-top: 0.25rem;
-}
-
-/* 연결선 */
-.timeline-connector {
-    position: absolute;
-    top: 50%;
-    right: -1rem;
-    width: 2rem;
-    height: 3px;
-    background: linear-gradient(90deg, #0176d3, #1ab3ff);
-    transform: translateY(-50%);
-    z-index: 1;
-}
-
-/* 가로 타임라인 콘텐츠 */
-.horizontal-timeline-content {
-    width: 100%;
-    max-width: 250px;
-}
-
-.marker-paid {
-    background: #04844b;
-    color: white;
-}
-
-.marker-unpaid {
-    background: #747474;
-    color: white;
-}
-
-.marker-overdue {
-    background: #c23934;
-    color: white;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(194, 57, 52, 0.7); }
-    70% { box-shadow: 0 0 0 10px rgba(194, 57, 52, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(194, 57, 52, 0); }
-}
-
-/* 타임라인 콘텐츠 */
-.timeline-content {
-    width: 45%;
-    margin: 0 2.5%;
-}
-
-.timeline-item-left .timeline-content {
-    text-align: right;
-}
-
-.timeline-item-right .timeline-content {
-    text-align: left;
-}
-
-/* 납부 카드 스타일 수정 */
-.payment-card {
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    margin-top: 0.5rem;
-}
-
-.payment-card:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
-}
-
-.payment-card-paid {
-    border-top: 4px solid #04844b;
-}
-
-.payment-card-unpaid {
-    border-top: 4px solid #747474;
-}
-
-.payment-card-overdue {
-    border-top: 4px solid #c23934;
-    background: #fef7f7;
-}
-
-/* 납부 헤더 - 가로 타임라인용 수정 */
-.payment-header {
+.progress-stats {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0.75rem 1rem 0.5rem 1rem;
+    align-items: baseline;
+    gap: 0.5rem;
 }
 
-.payment-info {
+.progress-percentage {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0176d3;
+}
+
+.progress-text {
+    font-size: 0.875rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.progress-count {
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.completed-count {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.total-count {
+    color: #94a3b8;
+}
+
+/* 진행률 바 커스터마이징 */
+.modern-progress-bar {
+    margin: 1rem 0;
+    --slds-c-progress-bar-color-background: #f1f5f9;
+    --slds-c-progress-bar-color-background-fill: #0176d3;
+    --slds-c-progress-bar-sizing-height: 8px;
+    border-radius: 4px;
+}
+
+/* 진행률 요약 */
+.progress-summary {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.summary-item {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.summary-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.summary-item.completed .summary-dot {
+    background: #22c55e;
+}
+
+.summary-item.overdue .summary-dot {
+    background: #ef4444;
+}
+
+.summary-label {
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* 납부 항목 리스트 */
+.payment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.payment-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.payment-item:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.payment-indicator {
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.payment-indicator > div {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+/* 상태별 인디케이터 색상 */
+.indicator-completed {
+    background: #22c55e;
+}
+
+.indicator-pending {
+    background: #f59e0b;
+}
+
+.indicator-overdue {
+    background: #ef4444;
+}
+
+.indicator-draft {
+    background: #94a3b8;
+}
+
+.payment-content {
     flex: 1;
 }
 
-.payment-title {
-    margin: 0;
-    font-size: 1rem;
+.payment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.25rem;
+}
+
+.payment-sequence {
     font-weight: 600;
-    color: #0176d3;
-}
-
-/* 납부 상세 정보 - 가로 타임라인용 수정 */
-.payment-details {
-    padding: 0 1rem;
-    text-align: center;
-}
-
-.detail-item {
-    margin-bottom: 0.5rem;
-    display: block;
-}
-
-.amount {
-    color: #0176d3;
-    font-size: 1.1rem;
-    font-weight: bold;
-    display: block;
-}
-
-.due-date {
+    color: #1e293b;
     font-size: 0.875rem;
-    color: #747474;
-    display: block;
-    margin-bottom: 0.5rem;
 }
 
-/* 납부 푸터 */
-.payment-footer {
-    padding: 0.5rem 1rem 1rem 1rem;
-    text-align: center;
+.payment-amount {
+    font-weight: 700;
+    color: #0176d3;
+    font-size: 1rem;
 }
 
-.toggle-button {
-    width: 100%;
+.payment-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* 반응형 디자인 - 가로 타임라인용 */
+.payment-date {
+    font-size: 0.8125rem;
+    color: #64748b;
+}
+
+.payment-status {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.payment-status[data-status="완납"] {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.payment-status[data-status="대기"] {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.payment-status[data-status="연체"] {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* 반응형 디자인 */
 @media (max-width: 768px) {
-    .horizontal-timeline-container {
-        padding: 1rem 0.5rem;
+    .payment-timeline-container {
+        padding: 1rem;
     }
     
-    .timeline-items-wrapper {
+    .progress-header {
+        flex-direction: column;
+        align-items: flex-start;
         gap: 0.5rem;
     }
     
-    .horizontal-timeline-item {
-        min-width: 150px;
-    }
-    
-    .horizontal-timeline-content {
-        max-width: 180px;
-    }
-    
-    .payment-title {
-        font-size: 0.875rem;
-    }
-    
-    .amount {
-        font-size: 1rem;
-    }
-    
-    .due-date {
-        font-size: 0.75rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .horizontal-timeline-item {
-        min-width: 120px;
-    }
-    
-    .horizontal-timeline-content {
-        max-width: 140px;
+    .progress-summary {
+        flex-direction: column;
+        gap: 0.75rem;
     }
     
     .payment-header {
-        padding: 0.5rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
     }
     
     .payment-details {
-        padding: 0 0.5rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
     }
-    
-    .payment-footer {
-        padding: 0.5rem;
-    }
-}
-
-/* 모달 스타일 */
-.slds-modal {
-    z-index: 9999;
-}
-
-.slds-backdrop {
-    z-index: 9998;
-}
-
-/* 유틸리티 클래스 */
-.text-center {
-    text-align: center;
-}
-
-.text-success {
-    color: #04844b;
-}
-
-.text-warning {
-    color: #fe9339;
-}
-
-.text-error {
-    color: #c23934;
 }

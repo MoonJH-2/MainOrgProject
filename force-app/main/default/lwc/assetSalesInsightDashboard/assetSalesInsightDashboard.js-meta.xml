@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>59.0</apiVersion>
+    <isExposed>true</isExposed>
+    <description>Asset 기반 영업 인사이트 대시보드 - 갱신 기회, 영업 기회, 리스크 분석을 통합 제공</description>
+    <masterLabel>Asset Sales Insight Dashboard</masterLabel>
+    <targets>
+        <target>lightning__RecordPage</target>
+        <target>lightning__AppPage</target>
+        <target>lightning__HomePage</target>
+        <target>lightningCommunity__Page</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__RecordPage">
+            <objects>
+                <object>Asset</object>
+                <object>Account</object>
+                <object>Opportunity</object>
+            </objects>
+            <property name="recordId" type="String" default="{!recordId}" />
+        </targetConfig>
+        <targetConfig targets="lightning__AppPage,lightning__HomePage">
+            <property name="recordId" type="String" label="Asset Record ID" description="분석할 Asset의 Record ID" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

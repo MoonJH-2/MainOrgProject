@@ -1,0 +1,118 @@
+# GitHub Actions 워크플로우 - SARIF 보안 스캔
+name: SOCAR B2B Security Scan
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # 매일 오전 3시 정기 스캔
+    - cron: '0 3 * * *'
+
+jobs:
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install Salesforce CLI
+      run: |
+        npm install -g @salesforce/cli
+        echo "${{ secrets.SFDX_URL }}" > ./sfdx_url.txt
+        sfdx auth:sfdxurl:store -f ./sfdx_url.txt --set-default-dev-hub
+
+    - name: Install ESLint Security Plugin
+      run: |
+        npm install -g eslint @salesforce/eslint-plugin-lightning
+        npm install -g @microsoft/eslint-formatter-sarif
+
+    - name: Run Apex Security Scan
+      run: |
+        mkdir -p .sarif
+        sfdx scanner:run \
+          --target "force-app/main/default/classes,force-app/main/default/triggers" \
+          --format sarif \
+          --outfile ".sarif/apex-security-scan.sarif" \
+          --severity-threshold 2 \
+          --pmdconfig "security-config/pmd-ruleset.xml"
+
+    - name: Run LWC Security Scan
+      run: |
+        eslint "force-app/main/default/lwc" \
+          --config "security-config/.eslintrc-security.json" \
+          --format @microsoft/eslint-formatter-sarif \
+          --output-file ".sarif/lwc-security-scan.sarif" || true
+
+    - name: Run Visualforce Security Scan
+      run: |
+        sfdx scanner:run \
+          --target "force-app/main/default/pages" \
+          --format sarif \
+          --outfile ".sarif/visualforce-security-scan.sarif" \
+          --severity-threshold 3 || true
+
+    - name: Upload Apex Security Results to GitHub
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: .sarif/apex-security-scan.sarif
+        category: 'apex-security'
+
+    - name: Upload LWC Security Results to GitHub
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: .sarif/lwc-security-scan.sarif
+        category: 'lwc-security'
+
+    - name: Upload Visualforce Security Results to GitHub
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: .sarif/visualforce-security-scan.sarif
+        category: 'visualforce-security'
+
+    - name: Archive Security Scan Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: security-scan-results
+        path: .sarif/
+        retention-days: 30
+
+    - name: Security Summary
+      if: always()
+      run: |
+        echo "## 🛡️ SOCAR B2B 보안 스캔 결과" >> $GITHUB_STEP_SUMMARY
+        echo "| 스캔 타겟 | 이슈 수 | 상태 |" >> $GITHUB_STEP_SUMMARY
+        echo "|----------|---------|------|" >> $GITHUB_STEP_SUMMARY
+        
+        for sarif_file in .sarif/*.sarif; do
+          if [ -f "$sarif_file" ]; then
+            filename=$(basename "$sarif_file" .sarif)
+            issue_count=$(jq '.runs[0].results | length' "$sarif_file" 2>/dev/null || echo "0")
+            if [ "$issue_count" -eq 0 ]; then
+              status="✅ 통과"
+            else
+              status="⚠️ 검토 필요"
+            fi
+            echo "| $filename | $issue_count | $status |" >> $GITHUB_STEP_SUMMARY
+          fi
+        done
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "📊 **결과 확인**: Repository → Security → Code scanning alerts" >> $GITHUB_STEP_SUMMARY

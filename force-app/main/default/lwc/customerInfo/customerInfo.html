@@ -1,0 +1,53 @@
+<template>
+    <form class="slds-box slds-p-around_medium">
+        <h1 class="slds-text-heading_large slds-p-around_small">AI Quick Consulting</h1>
+        <lightning-textarea 
+            label="유학 목적"
+            placeholder="고객의 유학 목적과 학습 희망 분야를 상세하게 작성해주세요."
+            required 
+            value={formData.purpose}
+            name="purpose"
+            onchange={handleChange}></lightning-textarea>
+
+        <lightning-combobox
+            label="국가"
+            placeholder="진학을 희망하는 국가를 선택해주세요"
+            name="country"
+            value={formData.country}
+            options={countryOptions}
+            required
+            onchange={handleChange}
+        ></lightning-combobox>
+
+        <lightning-combobox
+            label="지원 서비스"
+            placeholder="어떤 서비스에 관심 있으신가요?"
+            name="service"
+            value={formData.service}
+            options={serviceOptions}
+            required
+            onchange={handleChange}
+        ></lightning-combobox>
+
+        <lightning-input 
+            type="number" 
+            label="총 예상 유학 비용 (원화)"
+            name="budget"
+            formatter="currency"
+            required
+            value={formData.budget}
+            onchange={handleChange}>
+        </lightning-input>
+
+
+        <div class="slds-m-top_medium">
+        <lightning-button
+        label="빠른 결과 조회"
+        variant="brand"
+        icon-name="utility:recipe"
+        stretch
+         onclick={generateResults}
+        ></lightning-button>
+    </div>
+    </form>
+</template>

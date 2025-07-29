@@ -1,0 +1,97 @@
+<template>
+
+    <div class="slds-p-around_medium app-container">
+        
+        <lightning-layout multiple-row="true">
+            <lightning-layout-item size="12" medium-device-size="4" padding="horizontal-small">
+                <c-customer-info ongenerate={generateResults}></c-customer-info>
+                <template lwc:if={error}>
+                <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                    <h2>{error}</h2>
+                </div>
+            </template>
+            </lightning-layout-item>
+
+ 
+            <lightning-layout-item size="12" medium-device-size="8" padding="horizontal-small">
+               <template for:each={results} for:item="result">
+                    <div key={result.result_number} class="slds-box slds-m-bottom_medium">
+                        <h2 class="slds-text-heading_large">{result.result_name}</h2>
+                        <p class="slds-p-vertical_small">{result.description}</p>
+
+                        <template for:each={result.tags} for:item="tag">
+                            <lightning-badge key={tag} label={tag} class="slds-badge_inverse slds-m-vertical_medium"></lightning-badge>
+                        </template>
+
+
+
+                        <!--Recipe Stat Box-->
+                        <lightning-layout vertical-align="center" multiple-rows="true">
+                            <lightning-layout-item size="3"    padding="around-small">
+                                <c-result-higlight title="과정명/대학교" value={result.institution_name} icon-name="utility:clock"></c-result-higlight>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="3"    padding="around-small">
+                                <c-result-higlight title="국가" value={result.country} icon-name="utility:real_time"></c-result-higlight>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="3"    padding="around-small">
+                                <c-result-higlight title="기간" value={result.study_period} icon-name="utility:data_model"></c-result-higlight>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="3"    padding="around-small">
+                                <c-result-higlight title="난이도" value={result.difficulty} icon-name="utility:user"></c-result-higlight>
+                            </lightning-layout-item>
+                        </lightning-layout>
+
+
+
+                        <!--Instructions and ingredients-->
+                        <lightning-layout multiple-rows="true">
+                            <lightning-layout-item size="6"    padding="around-small">
+                                <h3 class="slds-text-heading_small slds-p-bottom_small slds-border_bottom">진학 준비</h3>
+                                <ol class="slds-list_ordered">
+                                    <template for:each={result.preparations} for:item="preparation">
+                                        <li key={preparation} class="slds-p-vertical_x-small">
+                                            {preparation}
+                                        </li>
+                                    </template>
+                                </ol>
+                            </lightning-layout-item>
+
+
+                            <lightning-layout-item size="6"    padding="around-small">
+                                <h3 class="slds-text-heading_small slds-p-bottom_small slds-border_bottom">컨설팅 가이드라인</h3>
+                                <ol class="slds-list_ordered">
+                                    <template for:each={result.guidelines} for:item="guideline">
+                                        <li key={guideline} class="slds-p-vertical_x-small">
+                                            {guideline}
+                                        </li>
+                                    </template>
+                                </ol>
+                            </lightning-layout-item>
+                        </lightning-layout>
+
+
+
+
+                        <!--Chef Tip-->
+                        <div class="tips">
+                            <div class="slds-grid">
+                                <lightning-icon icon-name="utility:light_bulb" size="small"></lightning-icon>
+                                <h3 class="slds-text-heading_small"> campus tip</h3>
+                            </div>
+                            <p>{result.tips}</p>
+                        </div>
+                        
+                        
+                    </div>
+               </template>
+
+
+               <template lwc:if={isGenerating}>
+                    <lightning-spinner size="medium"></lightning-spinner>
+               </template>
+
+
+            </lightning-layout-item>
+        </lightning-layout>
+    </div>
+</template>

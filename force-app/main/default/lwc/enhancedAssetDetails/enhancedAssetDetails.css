@@ -1,0 +1,82 @@
+.asset-info p,
+.product-info p,
+.account-info p,
+.contact-info p {
+    margin-bottom: 0.25rem;
+}
+
+.asset-info .slds-m-top_small,
+.product-info .slds-m-top_small,
+.account-info .slds-m-top_small,
+.contact-info .slds-m-top_small {
+    margin-top: 0.5rem;
+}
+
+/* Asset 상태별 색상 */
+.status-purchased {
+    background-color: #4bca81;
+    color: white;
+}
+
+.status-shipped {
+    background-color: #ffb75d;
+    color: white;
+}
+
+.status-installed {
+    background-color: #1b96ff;
+    color: white;
+}
+
+.status-registered {
+    background-color: #8e35ff;
+    color: white;
+}
+
+.status-obsolete {
+    background-color: #ea001e;
+    color: white;
+}
+
+/* 카드 간격 조정 */
+.slds-box {
+    min-height: 200px;
+}
+
+/* 연락처 정보 스타일링 */
+.contact-info h4 {
+    border-bottom: 1px solid #dddbda;
+    padding-bottom: 0.25rem;
+}
+
+/* 관련 자산 카드 스타일링 */
+.related-assets .slds-box {
+    min-height: 120px;
+    position: relative;
+}
+
+.related-assets .slds-button {
+    position: absolute;
+    bottom: 0.5rem;
+    right: 0.5rem;
+}
+
+/* 텍스트 줄바꿈 방지 */
+.asset-info p strong,
+.product-info p strong,
+.account-info p strong {
+    white-space: nowrap;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .slds-col {
+        flex-basis: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .slds-box {
+        min-height: auto;
+        margin-bottom: 1rem;
+    }
+}

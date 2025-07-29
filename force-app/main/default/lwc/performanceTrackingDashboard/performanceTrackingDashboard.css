@@ -1,0 +1,635 @@
+/* Performance Tracking Dashboard 스타일 */
+
+/* 로딩 및 에러 상태 */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.loading-text {
+    margin-top: 16px;
+    color: #706e6b;
+    font-size: 1rem;
+}
+
+.error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    color: #c23934;
+}
+
+.error-container h3 {
+    margin: 16px 0 8px 0;
+    font-size: 1.5rem;
+}
+
+/* 대시보드 메인 컨테이너 */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+/* 헤더 */
+.dashboard-header {
+    background: linear-gradient(135deg, #1589ee, #0070d2);
+    color: white;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dashboard-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.last-updated {
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+/* 지표 그리드 */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+}
+
+.metric-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.metric-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.metric-icon {
+    font-size: 2rem;
+}
+
+.metric-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    color: #181818;
+}
+
+.metric-main-value {
+    font-size: 2.25rem;
+    font-weight: bold;
+    color: #1589ee;
+    margin-bottom: 8px;
+}
+
+.metric-target {
+    color: #706e6b;
+    font-size: 0.875rem;
+    margin-bottom: 12px;
+}
+
+/* 진행률 바 */
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: #e0e5ee;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #04844b, #00a651);
+    border-radius: 4px;
+    transition: width 0.6s ease-in-out;
+}
+
+.progress-fill[data-progress] {
+    width: calc(var(--progress-width, 0) * 1%);
+}
+
+/* 성취 상태 */
+.status-ahead {
+    color: #04844b;
+    font-weight: 600;
+}
+
+.status-on-track {
+    color: #ff6900;
+    font-weight: 600;
+}
+
+.status-behind {
+    color: #c23934;
+    font-weight: 600;
+}
+
+.metric-detail {
+    font-size: 0.875rem;
+    color: #706e6b;
+    margin-top: 8px;
+}
+
+/* 월간 갱신 통계 */
+.renewal-stats {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 16px;
+}
+
+.stat-item {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.stat-item.completed {
+    background-color: #f8fff9;
+    border: 2px solid #04844b;
+}
+
+.stat-item.in-progress {
+    background-color: #fff8f0;
+    border: 2px solid #ff6900;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.75rem;
+    color: #706e6b;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.stat-amount {
+    display: block;
+    font-size: 0.875rem;
+    color: #706e6b;
+}
+
+.total-expected {
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.monthly-target {
+    text-align: center;
+    font-size: 0.875rem;
+    color: #706e6b;
+}
+
+/* 고객 건강도 */
+.health-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.health-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.health-icon {
+    font-size: 1.25rem;
+    width: 24px;
+    text-align: center;
+}
+
+.health-info {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.health-label {
+    font-weight: 600;
+}
+
+.health-count {
+    font-size: 0.875rem;
+    color: #706e6b;
+}
+
+.health-percentage {
+    font-weight: bold;
+    min-width: 40px;
+    text-align: right;
+}
+
+.health-bar {
+    width: 60px;
+    height: 6px;
+    background-color: #e0e5ee;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.health-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease-in-out;
+}
+
+.health-fill[data-color="#04844b"] {
+    background-color: #04844b;
+}
+
+.health-fill[data-color="#ff6900"] {
+    background-color: #ff6900;
+}
+
+.health-fill[data-color="#c23934"] {
+    background-color: #c23934;
+}
+
+.health-fill[data-width] {
+    width: calc(var(--width-percentage, 0) * 1%);
+}
+
+/* 효율성 지표 */
+.efficiency-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.efficiency-item {
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.efficiency-item.highlight {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+
+.efficiency-label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 4px;
+    opacity: 0.8;
+}
+
+.efficiency-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.time-saved {
+    color: #00ff94;
+}
+
+.efficiency-item small {
+    display: block;
+    font-size: 0.65rem;
+    margin-top: 4px;
+    opacity: 0.8;
+}
+
+/* 게임화 섹션 */
+.gamification-section {
+    margin-bottom: 32px;
+}
+
+.level-card {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+}
+
+.level-header {
+    margin-bottom: 24px;
+}
+
+.level-header h2 {
+    font-size: 1.5rem;
+    margin: 0 0 16px 0;
+}
+
+.level-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 12px 24px;
+    border-radius: 24px;
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.level-icon {
+    font-size: 2rem;
+}
+
+.level-progress {
+    margin-bottom: 20px;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+.level-progress-bar {
+    width: 100%;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.level-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00ff94, #00d4aa);
+    border-radius: 6px;
+    transition: width 0.8s ease-in-out;
+}
+
+.level-progress-fill[data-progress] {
+    width: calc(var(--progress-percentage, 0) * 1%);
+}
+
+.progress-percentage {
+    font-size: 1.125rem;
+    font-weight: bold;
+}
+
+.encouragement-message {
+    font-size: 1rem;
+    line-height: 1.4;
+    opacity: 0.95;
+}
+
+/* 알림 섹션 */
+.notifications-section {
+    margin-bottom: 32px;
+}
+
+.notifications-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.notifications-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.notification-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: white;
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    width: 100%;
+}
+
+.notification-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.notification-item[data-priority="high"] {
+    border-left: 4px solid #c23934;
+}
+
+.notification-item[data-priority="medium"] {
+    border-left: 4px solid #ff6900;
+}
+
+.notification-item[data-priority="low"] {
+    border-left: 4px solid #1589ee;
+}
+
+.notification-icon {
+    font-size: 1.5rem;
+    width: 32px;
+    text-align: center;
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-title {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 4px;
+    color: #181818;
+}
+
+.notification-message {
+    font-size: 0.875rem;
+    color: #706e6b;
+    line-height: 1.4;
+    margin-bottom: 4px;
+}
+
+.notification-time {
+    font-size: 0.75rem;
+    color: #a8a8a8;
+}
+
+.notification-priority {
+    flex-shrink: 0;
+}
+
+.no-notifications {
+    text-align: center;
+    padding: 40px 20px;
+    color: #706e6b;
+}
+
+.no-notifications p {
+    margin: 8px 0;
+}
+
+/* 빠른 액션 */
+.quick-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 16px;
+    }
+    
+    .metrics-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+    }
+    
+    .renewal-stats {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .efficiency-stats {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .quick-actions {
+        flex-direction: column;
+    }
+    
+    .level-card {
+        padding: 24px 16px;
+    }
+    
+    .notification-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+    }
+}
+
+/* 애니메이션 */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.metric-card:not(.loading) {
+    animation: slideIn 0.6s ease-out;
+}
+
+.notification-item:not(.loading) {
+    animation: slideIn 0.4s ease-out;
+}
+
+/* CSS 커스텀 프로퍼티 설정 */
+.progress-fill[data-progress="0"] { --progress-width: 0; }
+.progress-fill[data-progress="10"] { --progress-width: 10; }
+.progress-fill[data-progress="20"] { --progress-width: 20; }
+.progress-fill[data-progress="30"] { --progress-width: 30; }
+.progress-fill[data-progress="40"] { --progress-width: 40; }
+.progress-fill[data-progress="50"] { --progress-width: 50; }
+.progress-fill[data-progress="60"] { --progress-width: 60; }
+.progress-fill[data-progress="70"] { --progress-width: 70; }
+.progress-fill[data-progress="80"] { --progress-width: 80; }
+.progress-fill[data-progress="90"] { --progress-width: 90; }
+.progress-fill[data-progress="100"] { --progress-width: 100; }
+
+.level-progress-fill[data-progress="0"] { --progress-percentage: 0; }
+.level-progress-fill[data-progress="10"] { --progress-percentage: 10; }
+.level-progress-fill[data-progress="20"] { --progress-percentage: 20; }
+.level-progress-fill[data-progress="30"] { --progress-percentage: 30; }
+.level-progress-fill[data-progress="40"] { --progress-percentage: 40; }
+.level-progress-fill[data-progress="50"] { --progress-percentage: 50; }
+.level-progress-fill[data-progress="60"] { --progress-percentage: 60; }
+.level-progress-fill[data-progress="70"] { --progress-percentage: 70; }
+.level-progress-fill[data-progress="80"] { --progress-percentage: 80; }
+.level-progress-fill[data-progress="90"] { --progress-percentage: 90; }
+.level-progress-fill[data-progress="100"] { --progress-percentage: 100; }
+
+.health-fill[data-width="0"] { --width-percentage: 0; }
+.health-fill[data-width="10"] { --width-percentage: 10; }
+.health-fill[data-width="20"] { --width-percentage: 20; }
+.health-fill[data-width="30"] { --width-percentage: 30; }
+.health-fill[data-width="40"] { --width-percentage: 40; }
+.health-fill[data-width="50"] { --width-percentage: 50; }
+.health-fill[data-width="60"] { --width-percentage: 60; }
+.health-fill[data-width="70"] { --width-percentage: 70; }
+.health-fill[data-width="80"] { --width-percentage: 80; }
+.health-fill[data-width="90"] { --width-percentage: 90; }
+.health-fill[data-width="100"] { --width-percentage: 100; }

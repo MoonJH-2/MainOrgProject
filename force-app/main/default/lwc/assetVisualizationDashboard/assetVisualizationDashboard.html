@@ -1,0 +1,333 @@
+<template>
+    <div class="visualization-dashboard">
+        <template if:true={isLoading}>
+            <div class="slds-align_absolute-center slds-p-around_large">
+                <lightning-spinner alternative-text="로딩 중..." size="medium"></lightning-spinner>
+                <p class="slds-text-color_weak slds-m-top_small">데이터를 분석하고 있습니다...</p>
+            </div>
+        </template>
+
+        <template if:true={error}>
+            <div class="slds-scoped-notification slds-media slds-media_center slds-theme_error">
+                <div class="slds-media__figure">
+                    <lightning-icon icon-name="utility:error" alternative-text="Error" size="small" variant="inverse"></lightning-icon>
+                </div>
+                <div class="slds-media__body">
+                    <p><strong>오류가 발생했습니다:</strong> {error.body.message}</p>
+                </div>
+            </div>
+        </template>
+
+        <template if:true={hasAssetData}>
+            <!-- 헤더 섹션 -->
+            <div class="dashboard-header slds-m-bottom_large">
+                <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center">
+                    <div class="slds-col">
+                        <h1 class="slds-text-heading_large">📊 Asset 분석 대시보드</h1>
+                        <p class="slds-text-body_regular">{assetData.Name} - 시각화 및 분석</p>
+                    </div>
+                    <div class="slds-col slds-no-flex">
+                        <lightning-button-icon
+                            icon-name="utility:refresh"
+                            variant="brand"
+                            onclick={handleRefresh}
+                            alternative-text="새로고침"
+                            disabled={isLoading}>
+                        </lightning-button-icon>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI 카드 섹션 -->
+            <div class="kpi-section slds-grid slds-gutters slds-wrap slds-m-bottom_large">
+                
+                <!-- 총 계약 금액 -->
+                <div class="slds-col slds-size_1-of-4 slds-medium-size_1-of-2 slds-small-size_1-of-1">
+                    <div class="kpi-card slds-box">
+                        <div class="kpi-header">
+                            <lightning-icon icon-name="utility:money" size="small" class="kpi-icon"></lightning-icon>
+                            <span class="kpi-label">총 계약 금액</span>
+                        </div>
+                        <div class="kpi-value">{formattedTotalAmount}</div>
+                    </div>
+                </div>
+
+                <!-- 완납 금액 -->
+                <div class="slds-col slds-size_1-of-4 slds-medium-size_1-of-2 slds-small-size_1-of-1">
+                    <div class="kpi-card slds-box">
+                        <div class="kpi-header">
+                            <lightning-icon icon-name="utility:success" size="small" class="kpi-icon success"></lightning-icon>
+                            <span class="kpi-label">완납 금액</span>
+                        </div>
+                        <div class="kpi-value">{formattedPaidAmount}</div>
+                    </div>
+                </div>
+
+                <!-- 납부 완료율 -->
+                <div class="slds-col slds-size_1-of-4 slds-medium-size_1-of-2 slds-small-size_1-of-1">
+                    <div class="kpi-card slds-box">
+                        <div class="kpi-header">
+                            <lightning-icon icon-name="utility:chart" size="small" class="kpi-icon warning"></lightning-icon>
+                            <span class="kpi-label">납부 완료율</span>
+                        </div>
+                        <div class="kpi-value">{paymentCompletionRate}%</div>
+                        <div class="kpi-progress">
+                            <lightning-progress-bar value={paymentCompletionRate} size="small"></lightning-progress-bar>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 총 Assets 수 -->
+                <div class="slds-col slds-size_1-of-4 slds-medium-size_1-of-2 slds-small-size_1-of-1">
+                    <div class="kpi-card slds-box">
+                        <div class="kpi-header">
+                            <lightning-icon icon-name="standard:asset_object" size="small" class="kpi-icon info"></lightning-icon>
+                            <span class="kpi-label">고객 총 Assets</span>
+                        </div>
+                        <div class="kpi-value">{customerAssets.length}</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 탭 섹션 -->
+            <lightning-tabset active-tab-value={activeTab} onactive={handleTabChange}>
+                
+                <!-- 납부 현황 차트 탭 -->
+                <lightning-tab label="📈 납부 현황" value="payment-chart">
+                    <div class="chart-section slds-p-around_medium">
+                        <div class="slds-grid slds-gutters">
+                            
+                            <!-- 납부 상태 파이 차트 -->
+                            <template if:true={hasPaymentHistory}>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-card title="납부 상태 분포" icon-name="utility:pie_chart">
+                                        <div class="chart-container slds-p-around_medium">
+                                            <div class="pie-chart-placeholder">
+                                                <div class="chart-visual">
+                                                    <div class="pie-segment completed" style="--percentage: 75%;">
+                                                        <span class="segment-label">완납 {completedPayments}건</span>
+                                                    </div>
+                                                    <div class="pie-segment pending">
+                                                        <span class="segment-label">미납 {pendingPayments}건</span>
+                                                    </div>
+                                                </div>
+                                                <div class="chart-legend">
+                                                    <div class="legend-item">
+                                                        <span class="legend-color completed"></span>
+                                                        <span>완납 ({paymentCompletionRate}%)</span>
+                                                    </div>
+                                                    <div class="legend-item">
+                                                        <span class="legend-color pending"></span>
+                                                        <span>미납 ({pendingPaymentRate}%)</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </lightning-card>
+                                </div>
+                            </template>
+
+                            <!-- 월별 납부 트렌드 -->
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning-card title="납부 트렌드" icon-name="utility:chart">
+                                    <div class="chart-container slds-p-around_medium">
+                                        <div class="trend-chart-placeholder">
+                                            <div class="trend-visual">
+                                                <div class="trend-line"></div>
+                                                <div class="trend-points">
+                                                    <div class="trend-point" data-value="2.5M"></div>
+                                                    <div class="trend-point" data-value="2.7M"></div>
+                                                    <div class="trend-point active" data-value="3.0M"></div>
+                                                    <div class="trend-point" data-value="2.8M"></div>
+                                                    <div class="trend-point" data-value="2.9M"></div>
+                                                    <div class="trend-point" data-value="3.1M"></div>
+                                                </div>
+                                                <div class="trend-labels">
+                                                    <span>1월</span>
+                                                    <span>2월</span>
+                                                    <span>3월</span>
+                                                    <span>4월</span>
+                                                    <span>5월</span>
+                                                    <span>6월</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </lightning-card>
+                            </div>
+
+                        </div>
+                    </div>
+                </lightning-tab>
+
+                <!-- 납부 내역 테이블 탭 -->
+                <lightning-tab label="📋 납부 내역" value="payment-table">
+                    <div class="table-section slds-p-around_medium">
+                        <template if:true={hasPaymentHistory}>
+                            <lightning-card title="납부 내역 상세" icon-name="utility:table">
+                                <div class="slds-p-around_medium">
+                                    <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                                        <thead>
+                                            <tr class="slds-line-height_reset">
+                                                <th class="slds-text-title_caps" scope="col">차수</th>
+                                                <th class="slds-text-title_caps" scope="col">납부 금액</th>
+                                                <th class="slds-text-title_caps" scope="col">상태</th>
+                                                <th class="slds-text-title_caps" scope="col">납부일</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template for:each={paymentTableData} for:item="payment">
+                                                <tr key={payment.installment} class="slds-hint-parent">
+                                                    <td data-label="차수">
+                                                        <span class="slds-truncate">{payment.installment}차</span>
+                                                    </td>
+                                                    <td data-label="납부 금액">
+                                                        <span class="slds-truncate">{payment.formattedAmount}</span>
+                                                    </td>
+                                                    <td data-label="상태">
+                                                        <lightning-badge label={payment.status} variant={payment.statusVariant}></lightning-badge>
+                                                    </td>
+                                                    <td data-label="납부일">
+                                                        <span class="slds-truncate">{payment.paidDate}</span>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </lightning-card>
+                        </template>
+                        <template if:false={hasPaymentHistory}>
+                            <div class="slds-align_absolute-center slds-p-around_large">
+                                <lightning-icon icon-name="utility:info" size="medium" class="slds-m-bottom_small"></lightning-icon>
+                                <p class="slds-text-color_weak">납부 내역이 없습니다.</p>
+                            </div>
+                        </template>
+                    </div>
+                </lightning-tab>
+
+                <!-- 고객 Assets 분석 탭 -->
+                <lightning-tab label="🏢 고객 Assets" value="customer-assets">
+                    <div class="assets-section slds-p-around_medium">
+                        <template if:true={hasCustomerAssets}>
+                            <div class="slds-grid slds-gutters">
+                                
+                                <!-- Assets 가치 분포 차트 -->
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-card title="Assets 가치 분포" icon-name="utility:pie_chart">
+                                        <div class="chart-container slds-p-around_medium">
+                                            <div class="bar-chart-placeholder">
+                                                <div class="bar-visual">
+                                                    <template for:each={assetTableData} for:item="asset" for:index="index">
+                                                        <div key={asset.Id} class="bar-item">
+                                                            <div class="bar" data-price={asset.Price}></div>
+                                                            <div class="bar-label">{asset.Name}</div>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </lightning-card>
+                                </div>
+
+                                <!-- Assets 상태 분포 -->
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-card title="Assets 상태 현황" icon-name="utility:chart">
+                                        <div class="chart-container slds-p-around_medium">
+                                            <div class="status-distribution">
+                                                <template for:each={assetTableData} for:item="asset">
+                                                    <div key={asset.Id} class="status-item">
+                                                        <lightning-badge 
+                                                            label={asset.Status} 
+                                                            variant={asset.statusVariant}
+                                                            class="slds-m-right_x-small">
+                                                        </lightning-badge>
+                                                        <span class="asset-name">{asset.Name}</span>
+                                                        <template if:true={asset.isCurrentAsset}>
+                                                            <lightning-icon icon-name="utility:check" size="xx-small" class="current-asset-indicator"></lightning-icon>
+                                                        </template>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </lightning-card>
+                                </div>
+
+                            </div>
+
+                            <!-- Assets 상세 테이블 -->
+                            <div class="slds-m-top_medium">
+                                <lightning-card title="고객 Assets 상세" icon-name="utility:table">
+                                    <div class="slds-p-around_medium">
+                                        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                                            <thead>
+                                                <tr class="slds-line-height_reset">
+                                                    <th class="slds-text-title_caps" scope="col">Asset 이름</th>
+                                                    <th class="slds-text-title_caps" scope="col">상태</th>
+                                                    <th class="slds-text-title_caps" scope="col">가격</th>
+                                                    <th class="slds-text-title_caps" scope="col">설치일</th>
+                                                    <th class="slds-text-title_caps" scope="col">액션</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <template for:each={assetTableData} for:item="asset">
+                                                    <tr key={asset.Id} class="slds-hint-parent">
+                                                        <td data-label="Asset 이름">
+                                                            <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center">
+                                                                <span class="slds-truncate">{asset.Name}</span>
+                                                                <template if:true={asset.isCurrentAsset}>
+                                                                    <lightning-badge label="현재" variant="brand" size="small"></lightning-badge>
+                                                                </template>
+                                                            </div>
+                                                        </td>
+                                                        <td data-label="상태">
+                                                            <lightning-badge label={asset.Status} variant={asset.statusVariant}></lightning-badge>
+                                                        </td>
+                                                        <td data-label="가격">
+                                                            <span class="slds-truncate">{asset.formattedPrice}</span>
+                                                        </td>
+                                                        <td data-label="설치일">
+                                                            <span class="slds-truncate">{asset.formattedInstallDate}</span>
+                                                        </td>
+                                                        <td data-label="액션">
+                                                            <template if:false={asset.isCurrentAsset}>
+                                                                <lightning-button
+                                                                    label="보기"
+                                                                    onclick={navigateToAsset}
+                                                                    data-asset-id={asset.Id}
+                                                                    variant="brand-outline"
+                                                                    size="small">
+                                                                </lightning-button>
+                                                            </template>
+                                                        </td>
+                                                    </tr>
+                                                </template>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </lightning-card>
+                            </div>
+
+                        </template>
+                        <template if:false={hasCustomerAssets}>
+                            <div class="slds-align_absolute-center slds-p-around_large">
+                                <lightning-icon icon-name="utility:info" size="medium" class="slds-m-bottom_small"></lightning-icon>
+                                <p class="slds-text-color_weak">추가 Assets이 없습니다.</p>
+                                <lightning-button
+                                    label="고객 계정 보기"
+                                    onclick={navigateToAccount}
+                                    variant="brand"
+                                    class="slds-m-top_small">
+                                </lightning-button>
+                            </div>
+                        </template>
+                    </div>
+                </lightning-tab>
+
+            </lightning-tabset>
+
+        </template>
+
+    </div>
+</template>
