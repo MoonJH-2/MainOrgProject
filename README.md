@@ -101,12 +101,70 @@ flowchart TD
     O --> P["📄 납부확인서<br><small>납부 완료 증명</small>"]
     O --> Q["📄 세금계산서<br><small>세무 신고용</small>"]
     
+    P --> R["👤 영업사원<br><small>고객 관리 정보</small>"]
+    P --> S["🏢 고객<br><small>회계 처리용</small>"]
+    P --> AssetDoc["💾 Asset 증빙저장<br><small>납부확인서 저장</small>"]
+    
+    Q --> R
+    Q --> S
+    Q --> AssetDoc
+    
     I --> |전체완료시| N["🏢 자산생성<br><small>Asset 자동 생성</small>"]
+    AssetDoc --> N
     
     N --> AccountB2B["📊 Account B2B 뷰"]
-    AccountB2B --> Insight360["🔍 360도 인사이트<br><small>완전한 고객 뷰 실현</small>"]
     
-    Insight360 --> T["🎉 고객 360도 리사이클 실현"]
+    AccountB2B --> OrderStatus["📈 Order 현황"]
+    AccountB2B --> OpportunityStatus["🎯 Opportunity 현황"]
+    AccountB2B --> AssetStatus["🏢 Asset 현황"]
+    
+    OrderStatus --> OrderList["📋 Order 목록"]
+    OrderList --> Insight360["🔍 360도 인사이트<br><small>완전한 고객 뷰 실현</small>"]
+    
+    OpportunityStatus --> Insight360
+    AssetStatus --> Insight360
+    
+    R --> T["🎉 고객 360도 리사이클 실현"]
+    S --> T
+    Insight360 --> T
+    
+    %% 스타일 정의
+    A:::main
+    B:::main
+    C:::main
+    D:::main
+    E:::main
+    F:::main
+    G:::customer
+    H:::customer
+    I:::main
+    J:::task
+    K:::task
+    L:::task
+    M:::task
+    O:::pdf
+    N:::main
+    P:::pdf
+    Q:::pdf
+    R:::people
+    S:::people
+    AssetDoc:::pdf
+    AccountB2B:::b2b
+    OrderStatus:::b2b
+    OpportunityStatus:::b2b
+    AssetStatus:::b2b
+    OrderList:::b2b
+    Insight360:::insight
+    T:::people
+    
+    %% 클래스 스타일 정의
+    classDef main fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef customer fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef task fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef pdf fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef people fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef b2b fill:#f1f8e9,stroke:#558b2f,stroke-width:2px
+    classDef insight fill:#e1f5fe,stroke:#0277bd,stroke-width:3px
 ```
 
 ---
