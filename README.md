@@ -547,7 +547,7 @@ public void processOrders(List<Order> orders) {
 ### ⚡ 빠른 시작 (5분 설정)
 ```bash
 # 1️⃣ 프로젝트 클론
-git clone https://github.com/SOCAR-B2B-Innovation-Team/MainOrgProject.git
+git clone https://github.com/Salesforce-Socar-B2B-Team/MainOrgProject.git
 cd MainOrgProject
 
 # 2️⃣ 의존성 설치
