@@ -1,7 +1,7 @@
-# 🏢 Salesforce Socar B2B Team Organization 설정 가이드
+# 🏢 Salesforce Sales B2B Socar Organization 설정 가이드
 
 ## 📋 Organization 정보
-- **이름**: Salesforce-Socar-B2B-Team
+- **이름**: Salesforce-Sales-B2B-Socar
 - **목적**: SOCAR B2B 혁신 프로젝트 통합 관리
 - **플랫폼**: Salesforce Low Code/Vibe Coding
 
@@ -12,8 +12,8 @@
 1. **GitHub 프로필 → Your organizations → New organization**
 2. **Organization 정보 입력:**
    ```
-   Organization account name: Salesforce-Socar-B2B-Team
-   Contact email: team-leader@socar.kr
+   Organization account name: Salesforce-Sales-B2B-Socar
+   Contact email: eetd0000@gmail.com
    Plan: Free (시작용) → Team (필요시 업그레이드)
    ```
 
@@ -33,7 +33,7 @@ Team creation: Allow members to create teams
 **개발팀 구조:**
 ```
 ```
-🏢 Salesforce-Socar-B2B-Team
+🏢 Salesforce-Sales-B2B-Socar
 ├── � MainOrgProject (메인 프로젝트)
 ├── 📦 docs-repository (문서 전용)
 ├── � deployment-scripts (배포 스크립트)
@@ -47,7 +47,7 @@ Team creation: Allow members to create teams
 1. **기존 개인 저장소 Settings로 이동**
 2. **"Transfer ownership" 섹션에서:**
    ```
-   New owner: Salesforce-Socar-B2B-Team
+   New owner: Salesforce-Sales-B2B-Socar
    Repository name: MainOrgProject
    ```
 
@@ -57,10 +57,10 @@ Team creation: Allow members to create teams
 2. **로컬에서 원격 저장소 변경:**
    ```bash
    # 자동화 스크립트 사용
-   ./scripts/change-remote-to-new-org.sh Salesforce-Socar-B2B-Team
+   ./scripts/change-remote-to-new-org.sh Salesforce-Sales-B2B-Socar
    
    # 또는 수동으로
-   git remote set-url origin git@github.com:Salesforce-Socar-B2B-Team/MainOrgProject.git
+   git remote set-url origin git@github.com:Salesforce-Sales-B2B-Socar/MainOrgProject.git
    git push -u origin main
    ```
 
@@ -142,8 +142,8 @@ Required status checks:
 
 ## 🔗 관련 링크
 
-- **Organization**: https://github.com/Salesforce-Socar-B2B-Team
-- **MainOrgProject**: https://github.com/Salesforce-Socar-B2B-Team/MainOrgProject
+- **Organization**: https://github.com/Salesforce-Sales-B2B-Socar
+- **MainOrgProject**: https://github.com/Salesforce-Sales-B2B-Socar/MainOrgProject
 - **브랜치 보호 가이드**: [BRANCH_PROTECTION_GUIDE.md](./BRANCH_PROTECTION_GUIDE.md)
 - **팀 협업 가이드**: [TEAM_COLLABORATION_GUIDE.md](../TEAM_COLLABORATION_GUIDE.md)
 

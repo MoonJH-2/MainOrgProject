@@ -5,7 +5,7 @@
 
 set -e
 
-NEW_ORG_NAME=${1:-"Salesforce-Socar-B2B-Team"}
+NEW_ORG_NAME=${1:-"Salesforce-Sales-B2B-Socar"}
 REPO_NAME="MainOrgProject"
 
 echo "🔄 새 Organization으로 원격 저장소 변경 중..."
