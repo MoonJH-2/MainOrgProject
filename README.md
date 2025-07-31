@@ -129,7 +129,7 @@ flowchart TD
 
 #### 1단계: 영업 및 주문 프로세스
 ```mermaid
-flowchart TD
+flowchart LR
     A["💼 기회<br>영업 기회 발생"] --> B["📦 기회제품<br>제품 정보 확인"]
     B --> C["🚀 주문시작<br>정식 주문 개시"]
     C --> D["📋 주문제품<br>기회제품→주문제품"]
@@ -154,7 +154,7 @@ flowchart TD
 
 #### 2단계: 납부 및 모니터링 프로세스
 ```mermaid
-flowchart TD
+flowchart LR
     G["📱 고객납부앱<br>Slack 앱 연동"] --> H["💰 납부진행<br>고객 직접 납부"]
     H --> I["📈 납부현황<br>실시간 모니터링"]
     
@@ -182,7 +182,7 @@ flowchart TD
 
 #### 3단계: 문서 생성 및 자산 관리 프로세스
 ```mermaid
-flowchart TD
+flowchart LR
     L["📄 PDF생성Task<br>증빙서류 요청"] --> O["🖨️ PDF생성<br>버튼 클릭 생성"]
     
     O --> P["📄 납부확인서<br>납부 완료 증명"]
@@ -216,7 +216,7 @@ flowchart TD
 
 #### 4단계: 360도 고객 뷰 및 인사이트
 ```mermaid
-flowchart TD
+flowchart LR
     N["🏢 자산생성<br>Asset 자동 생성"] --> AccountB2B["📊 Account B2B 뷰"]
     
     AccountB2B --> OrderStatus["📈 Order 현황"]
@@ -246,6 +246,18 @@ flowchart TD
     classDef insight fill:#e1f5fe,stroke:#0277bd,stroke-width:3px
     classDef people fill:#fce4ec,stroke:#c2185b,stroke-width:2px
 ```
+
+### 🌟 Salesforce 프로젝트 기대 효과
+- **Customer Success**: 고객 중심의 360도 서비스 경험
+- **Equality**: 모든 고객에게 공평한 서비스 기회 제공
+- **Innovation**: AI와 자동화를 통한 지속적 혁신
+- **Trust**: 투명하고 신뢰할 수 있는 비즈니스 프로세스
+- **Sustainability**: 지속 가능한 성장과 발전
+
+### 🧰 핵심 기술 스택
+<table>
+<tr>
+<td width="33%">
 
 ---
 
@@ -290,11 +302,6 @@ flowchart LR
     D:::soql
     E:::lds
 ```
-
-### 🧰 핵심 기술 스택
-<table>
-<tr>
-<td width="33%">
 
 #### 💻 **Frontend**
 ![Lightning](https://img.shields.io/badge/Lightning_Web_Components-FF6B35?style=for-the-badge&logo=salesforce&logoColor=white)
