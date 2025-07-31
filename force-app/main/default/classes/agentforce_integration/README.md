@@ -1,7 +1,7 @@
 # 🤖 Agentforce Integration Domain
 
 ## 🎯 목적
-Salesforce Agentforce AI 플랫폼과의 통합, VIBA AI 어시스턴트, AI 기반 영업 자동화 등 AI 관련 모든 기능을 관리하는 도메인입니다.
+Salesforce Agentforce AI 플랫폼과의 통합, Sales Agent AI 어시스턴트, AI 기반 영업 자동화 등 AI 관련 모든 기능을 관리하는 도메인입니다.
 
 ## 📁 폴더 구조
 
@@ -21,17 +21,17 @@ Agentforce 핵심 서비스들
 - `AgentforceAdvancedAnalyticsService.cls`: 고급 분석 서비스
 - `AgentforceSimpleAnalyticsService.cls`: 간단 분석 서비스
 
-### 🧠 viba_core/
-VIBA (Vibe-driven Intelligence Business Assistant) 핵심 기능
-- `VIBA_Core/` 폴더의 모든 파일들
+### 🧠 sales_agent_core/
+Sales Agent (Sales-driven Intelligence Business Assistant) 핵심 기능
+- `Sales_Agent_Core/` 폴더의 모든 파일들
 - 핵심 AI 로직 및 자연어 처리
 
-### 🚀 viba_enhanced/
-VIBA 확장 기능들
-- `VIBA_Enhanced/` 폴더의 모든 파일들
+### 🚀 sales_agent_enhanced/
+Sales Agent 확장 기능들
+- `Sales_Agent_Enhanced/` 폴더의 모든 파일들
 - 고급 AI 기능 및 개인화
 
-## 🤖 VIBA AI 어시스턴트 특징
+## 🤖 Sales Agent AI 어시스턴트 특징
 
 ### 🎭 페르소나 기반 설계
 - **친근하고 전문적**: 영업팀과의 자연스러운 상호작용
@@ -46,7 +46,7 @@ VIBA 확장 기능들
 
 ## 🔄 주요 AI 워크플로우
 ```
-사용자 질의 → VIBA 자연어 처리 → 데이터 분석 → AI 인사이트 생성 → 실행 가능한 액션 제안 → 피드백 학습
+사용자 질의 → Sales Agent 자연어 처리 → 데이터 분석 → AI 인사이트 생성 → 실행 가능한 액션 제안 → 피드백 학습
 ```
 
 ## 📊 AI 분석 영역

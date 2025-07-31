@@ -1,0 +1,139 @@
+name: 📋 GitHub Projects 자동화
+
+on:
+  issues:
+    types: [opened, closed, reopened]
+  pull_request:
+    types: [opened, closed, review_requested]
+  issue_comment:
+    types: [created]
+  schedule:
+    - cron: '0 9 * * 1'  # 매주 월요일 오전 9시
+
+jobs:
+  # 이슈 생성 시 프로젝트에 자동 추가
+  add-to-project:
+    name: 📌 프로젝트에 추가
+    runs-on: ubuntu-latest
+    if: github.event.action == 'opened'
+    
+    steps:
+    - name: 📋 이슈를 프로젝트에 추가
+      uses: actions/add-to-project@v0.4.0
+      with:
+        project-url: https://github.com/orgs/Salesforce-Sales-B2B-Socar/projects/1
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  # PR 상태에 따른 자동 이동
+  update-pr-status:
+    name: 🔄 PR 상태 업데이트
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: 📝 PR 생성 시 "In Review"로 이동
+      if: github.event.action == 'opened'
+      uses: alex-page/github-project-automation-plus@v0.8.3
+      with:
+        project: https://github.com/orgs/Salesforce-Sales-B2B-Socar/projects/1
+        column: In Review
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: ✅ PR 머지 시 "Done"으로 이동
+      if: github.event.action == 'closed' && github.event.pull_request.merged == true
+      uses: alex-page/github-project-automation-plus@v0.8.3
+      with:
+        project: https://github.com/orgs/Salesforce-Sales-B2B-Socar/projects/1
+        column: Done
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+  # 이슈 라벨에 따른 자동 분류
+  auto-triage:
+    name: 🏷️ 자동 라벨링
+    runs-on: ubuntu-latest
+    if: github.event.action == 'opened' && github.event_name == 'issues'
+    
+    steps:
+    - name: 🤖 Agentforce 관련 이슈 라벨링
+      if: contains(github.event.issue.title, '[AGENTFORCE]') || contains(github.event.issue.body, 'agentforce') || contains(github.event.issue.body, 'Agentforce')
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.issues.addLabels({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            labels: ['component: agentforce', 'area: ai']
+          })
+          
+    - name: 🐛 버그 이슈 우선순위 설정
+      if: contains(github.event.issue.title, '[BUG]')
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.issues.addLabels({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            labels: ['priority: high']
+          })
+
+  # 오래된 이슈 정리
+  stale-issues:
+    name: 🧹 오래된 이슈 정리
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    
+    steps:
+    - name: 🏷️ 오래된 이슈에 stale 라벨 추가
+      uses: actions/stale@v8
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        stale-issue-message: |
+          🕐 이 이슈가 30일 동안 활동이 없었습니다. 
+          
+          여전히 유효한 이슈라면 댓글을 달아 주세요. 
+          7일 후에도 활동이 없으면 자동으로 닫힙니다.
+          
+          **Vibe Coding Tip**: 때로는 잠시 쉬어가는 것도 좋은 전략입니다! 🌱
+        close-issue-message: |
+          🔒 활동이 없어서 이 이슈를 자동으로 닫습니다.
+          
+          필요하다면 언제든지 다시 열어주세요!
+        stale-issue-label: 'status: stale'
+        days-before-stale: 30
+        days-before-close: 7
+        exempt-issue-labels: 'priority: critical,type: bug,status: blocked'
+
+  # 주간 프로젝트 상태 리포트
+  weekly-report:
+    name: 📊 주간 상태 리포트
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    
+    steps:
+    - name: 📈 프로젝트 통계 생성
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const { data: issues } = await github.rest.issues.listForRepo({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            state: 'all',
+            since: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+          });
+          
+          const stats = {
+            created: issues.filter(i => new Date(i.created_at) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)).length,
+            closed: issues.filter(i => i.state === 'closed' && new Date(i.closed_at) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)).length,
+            bugs: issues.filter(i => i.labels.some(l => l.name === 'type: bug')).length,
+            features: issues.filter(i => i.labels.some(l => l.name === 'type: feature')).length,
+            agentforce: issues.filter(i => i.labels.some(l => l.name === 'type: agentforce')).length
+          };
+          
+          console.log('📊 주간 SOCAR B2B 프로젝트 현황:');
+          console.log(`🆕 새로운 이슈: ${stats.created}개`);
+          console.log(`✅ 완료된 이슈: ${stats.closed}개`);
+          console.log(`🐛 버그 이슈: ${stats.bugs}개`);
+          console.log(`🆕 기능 요청: ${stats.features}개`);
+          console.log(`🤖 Agentforce 관련: ${stats.agentforce}개`);

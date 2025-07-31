@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 질문 및 토론
+    url: https://github.com/Salesforce-Sales-B2B-Socar/MainOrgProject/discussions
+    about: 기술적 질문이나 아이디어 논의는 여기에서 해주세요
+  - name: 🚨 보안 취약점 신고
+    url: https://github.com/Salesforce-Sales-B2B-Socar/MainOrgProject/security/advisories/new
+    about: 보안 관련 이슈는 비공개로 신고해주세요
+  - name: 📧 직접 연락
+    url: mailto:socar-b2b-dev@example.com
+    about: 긴급한 사항이나 민감한 내용은 이메일로 연락해주세요
