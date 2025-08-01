@@ -7,7 +7,7 @@
 [![Vibe Coding](https://img.shields.io/badge/Vibe%20Coding-Philosophy-FF6B6B?style=flat-square)](https://github.com)
 
 ---
-
+    
 ## 📋 프로젝트 개요
 
 **SOCAR B2B 혁신 프로젝트**는 기존의 분산된 비즈니스 프로세스를 통합하고, 고객 중심의 360도 서비스를 제공하는 혁신적인 B2B 플랫폼입니다.
