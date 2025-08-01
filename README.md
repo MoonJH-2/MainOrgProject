@@ -784,6 +784,31 @@ git push origin main  # CI/CD가 자동으로 보안 스캔 실행
 
 ---
 
+## 📊 발표 자료
+
+### 🎯 최종 발표 자료
+[![발표 자료 미리보기](./presentation_images/slide_1.png)](./최종%20발표%20자료.pdf)
+
+**📄 [최종 발표 자료 PDF 다운로드](./최종%20발표%20자료.pdf)**
+
+> 클릭하여 전체 발표 자료를 확인하세요. GitHub에서 바로 열리며 다운로드도 가능합니다.
+
+#### 📋 발표 자료 미리보기
+<details>
+<summary>🖼️ 주요 슬라이드 미리보기 (클릭하여 펼치기)</summary>
+
+| 슬라이드 1 | 슬라이드 2 | 슬라이드 3 |
+|:---:|:---:|:---:|
+| ![Slide 1](./presentation_images/slide_1.png) | ![Slide 2](./presentation_images/slide_2.png) | ![Slide 3](./presentation_images/slide_3.png) |
+
+</details>
+
+### 📋 추가 프로젝트 자료
+- 📄 [프로젝트 개요 문서](./Untitled.pdf)
+- 📊 [프로젝트 분석 보고서](./improved_socar_b2b_doc.md)
+
+---
+
 <div align="center">
 
 **🎯 "검증된 도구를 창의적으로 활용하여 혁신적 솔루션을 만드는 실용적 개발자"**
